@@ -1,0 +1,127 @@
+info:
+#  businessSide: 研发部
+#  serviceName: ${artifactId}
+#  version: @version@
+#  jdk-version: @java.version@
+#  spring-boot.version: @spring-boot.version@
+#  spring-cloud.version: @spring-cloud.version@
+  author: tbclient
+server:
+  port: 8888
+  context-path: /
+  tomcat:
+#    basedir: file:.
+    basedir: file
+    accesslog:
+      enabled: true
+      directory: /app/Logs/tb-firecontrol
+      pattern: "%{X-Forwarded-For}i %a %{X-B3-TraceId}i %t %m %U %s %b %D"
+      rename-on-rotate: true
+      suffix: .log
+      prefix: access
+      rotate: true
+      buffered: false
+      file-date-format: yyyy-MM-dd
+    uri-encoding: UTF-8
+
+spring:
+  application:
+    name: firecontroal
+      #    name: ${artifactId}
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  profiles:
+    active: st
+    #    active: @profileActive@
+  aop:
+    proxyTargetClass: true
+    auto: true
+
+  #spring新提供的模板引擎
+  thymeleaf:
+  #不太严格的html5格式：
+    mode: LEGACYHTML5
+  #严格的html5格式
+  #mode:html5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false
+
+  jmx:
+    enabled: true
+    #当遇到404这种错误时，会自动抛出异常，被handler捕获，并返回json，有需要时，可以将下面两项配置放开
+    #  mvc:
+    #    throw-exception-if-no-handler-found: true
+    #  #不再映射到前端页面，如果有需要将false改为true
+    #  resources:
+    #    add-mappings: true
+    #
+  datasource:
+    url: jdbc:mysql://172.16.20.191:3306/fire_protection?characterEncoding=UTF-8
+    username: root
+    password: 123456
+
+
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 5
+      min-idle: 5
+      max-active: 200
+      max-wait: 10000
+      #test-while-idle: true
+      #validation-query: SELECT 1 FROM DUAL
+      test-on-borrow: false
+      test-on-return: false
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 15000
+      default-auto-commit: true
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 30000
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      #filters: stat,wall,slf4j
+      #有多个数据源时，配置公用监控数据
+      use-global-data-source-stat: true
+      filter:
+        stat:
+          enabled: false
+          db-type: mysql
+          log-slow-sql: true
+          slow-sql-millis: 3000
+        slf4j:
+          data-source-log-enabled: true
+          data-source-logger-name: DRUID
+          statement-executable-sql-log-enable: true
+          statement-logger-name: DRUID
+
+mybatis:
+  mapper-locations: classpath*:sqlmap/*Mapper.xml
+  type-aliases-package: com.dxh.base.domain.entity
+  configuration:
+    # 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。
+    lazy-loading-enabled: false
+    # 使全局的映射器启用或禁用缓存
+    cache-enabled: true
+    # 当启用时，有延迟加载属性的对象在被调用时将会完全加载任意属性。否则，每种属性将会按需要加载。
+    aggressive-lazy-loading: false
+    # 是否允许单条sql 返回多个数据集  (取决于驱动的兼容性) default:true
+    multiple-result-sets-enabled: true
+    # 是否可以使用列的别名 (取决于驱动的兼容性) default:true
+    use-column-label: true
+    # 允许JDBC 生成主键。需要驱动器支持。如果设为了true，这个设置将强制使用被生成的主键，有一些驱动器不兼容不过仍然可以执行。  default:false
+    use-generated-keys: false
+    # 指定 MyBatis 如何自动映射 数据基表的列 NONE：不隐射　PARTIAL:部分  FULL:全部
+    auto-mapping-behavior: partial
+    # 这是默认的执行类型  （SIMPLE: 简单； REUSE: 执行器可能重复使用prepared statements语句；BATCH: 执行器可以重复执行语句和批量更新）
+    default-executor-type: simple
+    # 使用驼峰命名法转换字段。
+    map-underscore-to-camel-case: true
+    # 设置本地缓存范围 session:就会有数据的共享  statement:语句范围 (这样就不会有数据的共享 ) defalut:session
+    local-cache-scope: session
+    # 设置但JDBC类型为空时,某些驱动程序 要指定值,default:OTHER，插入空值时不需要指定类型
+    jdbc-type-for-null: 'null'
+
+

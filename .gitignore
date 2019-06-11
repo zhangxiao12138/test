@@ -1,0 +1,12 @@
+firecontrol.iml
+
+firecontrol-webapp/target/*
+/firecontrol-webapp/firecontrol-webapp.iml
+
+firecontrol-service/target/*
+/firecontrol-service/firecontrol-service.iml
+
+
+/.idea/*
+/work/*
+/.idea/
