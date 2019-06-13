@@ -56,9 +56,9 @@
 				<profileActive>st</profileActive>
 			</properties>
 			<!-- 是否主动启用profile中定义的properties参数 -->
-			<activation>
+<!--			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
+			</activation>-->
 		</profile>
 
 		<profile>
