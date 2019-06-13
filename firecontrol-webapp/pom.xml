@@ -50,6 +50,7 @@
 	</dependencies>
 
 	<profiles>
+
 		<profile>
 			<id>firecontrol-st</id>
 			<properties>
@@ -62,30 +63,31 @@
 		</profile>
 
 		<profile>
-			<id>firecontrol-pt</id>
-			<properties>
-				<profileActive>pt</profileActive>
-			</properties>
-			<!-- 是否主动启用profile中定义的properties参数 -->
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-
-		<profile>
 			<id>firecontrol-pro</id>
 			<properties>
 				<profileActive>pro</profileActive>
 			</properties>
 			<!-- 是否主动启用profile中定义的properties参数 -->
-			<activation>
+<!--			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
+			</activation>-->
 		</profile>
 
+
+
+		<profile>
+			<id>firecontrol-pt</id>
+			<properties>
+				<profileActive>pt</profileActive>
+			</properties>
+			<!-- 是否主动启用profile中定义的properties参数 -->
+<!--			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>-->
+		</profile>
+
+
 	</profiles>
-
-
 
 
 	<build>

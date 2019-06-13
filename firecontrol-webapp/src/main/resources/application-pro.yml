@@ -1,0 +1,6 @@
+spring:
+ datasourcd:
+  url: jdbc:mysql://172.16.20.83:3306/fire_cloud_server?characterEncoding=UTF-8
+  username: root
+  password: S!@#s123
+
