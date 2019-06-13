@@ -12,9 +12,17 @@
 	<groupId>com.firecontrol</groupId>
 	<artifactId>firecontrol-webapp</artifactId>
 	<packaging>jar</packaging>
+
 	<properties>
 		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- 版本问题卡半天，要死啦要死啦 -->
+		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<thymeleaf-layout-dialect.version>2.1.1</thymeleaf-layout-dialect.version>
+		<skipTests>true</skipTests>
 	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -26,6 +34,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
 		<dependency>
@@ -42,6 +55,21 @@
 			<properties>
 				<profileActive>st</profileActive>
 			</properties>
+			<!-- 是否主动启用profile中定义的properties参数 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+
+		<profile>
+			<id>firecontrol-pt</id>
+			<properties>
+				<profileActive>pt</profileActive>
+			</properties>
+			<!-- 是否主动启用profile中定义的properties参数 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 
 		<profile>
@@ -49,9 +77,15 @@
 			<properties>
 				<profileActive>pro</profileActive>
 			</properties>
+			<!-- 是否主动启用profile中定义的properties参数 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 
 	</profiles>
+
+
 
 
 	<build>
@@ -62,14 +96,10 @@
 				<directory>src/main/resources</directory>
 				<includes>
 					<include>application.yml</include>
-					<!--<include>application-${profileActive}.yml</include>-->
+					<include>application-${profileActive}.yml</include>
 					<include>logback-spring.xml</include>
 					<include>static/**</include>
-					<!--					<include>vm/**</include>
-                                        <include>common/**</include>
-                                        <include>layout/**</include>
-                                        <include>ueditor/**</include>-->
-					<include>META-INF/**</include>
+					<include>templates/**</include>
 				</includes>
 			</resource>
 		</resources>

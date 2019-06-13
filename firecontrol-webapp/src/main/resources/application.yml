@@ -7,22 +7,21 @@ info:
 #  spring-cloud.version: @spring-cloud.version@
   author: tbclient
 server:
-  port: 8888
-  context-path: /
-  tomcat:
+  port: 80
+#  context-path: /
+#  tomcat:
 #    basedir: file:.
-    basedir: file
-    accesslog:
-      enabled: true
-      directory: /app/Logs/tb-firecontrol
-      pattern: "%{X-Forwarded-For}i %a %{X-B3-TraceId}i %t %m %U %s %b %D"
-      rename-on-rotate: true
-      suffix: .log
-      prefix: access
-      rotate: true
-      buffered: false
-      file-date-format: yyyy-MM-dd
-    uri-encoding: UTF-8
+#    accesslog:
+#      enabled: true
+#      directory: /app/Logs/tb-firecontrol
+#      pattern: "%{X-Forwarded-For}i %a %{X-B3-TraceId}i %t %m %U %s %b %D"
+#      rename-on-rotate: true
+#      suffix: .log
+#      prefix: access
+#      rotate: true
+#      buffered: false
+#      file-date-format: yyyy-MM-dd
+#    uri-encoding: UTF-8
 
 spring:
   application:
@@ -40,7 +39,7 @@ spring:
     proxyTargetClass: true
     auto: true
 
-  #spring新提供的模板引擎
+  #spring推荐使用的模板引擎
   thymeleaf:
   #不太严格的html5格式：
     mode: LEGACYHTML5
@@ -49,6 +48,10 @@ spring:
     encoding: UTF-8
     content-type: text/html
     cache: false
+    check-template-location: false
+    enable: true
+    prefix: classpath:/templates/
+    suffix: .html
 
   jmx:
     enabled: true
@@ -60,9 +63,9 @@ spring:
     #    add-mappings: true
     #
   datasource:
-    url: jdbc:mysql://172.16.20.191:3306/fire_protection?characterEncoding=UTF-8
-    username: root
-    password: 123456
+#    url: jdbc:mysql://172.16.20.191:3306/fire_protection?characterEncoding=UTF-8
+#    username: root
+#    password: 123456
 
 
     type: com.alibaba.druid.pool.DruidDataSource
