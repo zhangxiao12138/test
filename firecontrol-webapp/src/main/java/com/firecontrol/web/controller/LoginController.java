@@ -18,7 +18,8 @@ import java.util.Map;
  * Created by mariry on 2019/6/11.
  */
 
-@RestController
+@Controller
+@RequestMapping(value = "/v1")
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(FirecontrolWebappApplication.class);
 
@@ -30,19 +31,21 @@ public class LoginController {
     /**
      * 登录
      */
-    @RequestMapping(value = "/")
-    @PostMapping
+    @RequestMapping(value = "/index")
     public ModelAndView index(Model model) {
-        return new ModelAndView("hello");
+        return new ModelAndView("index");
     }
 
+/*    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView login(Model model) {
+
+        return new ModelAndView("mainPage");
+    }*/
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @PostMapping
     public String login(Model model) {
-        Map map = new HashMap<>();
-        map.put("name", "mary");
-        model.addAllAttributes(map);
-        return "success";
+
+        return "mainPage";
     }
 
 

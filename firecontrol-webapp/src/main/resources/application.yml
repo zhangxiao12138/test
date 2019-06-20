@@ -34,7 +34,7 @@ spring:
       enabled: true
   profiles:
     active: st
-    #    active: @profileActive@
+     #active: @profileActive@
   aop:
     proxyTargetClass: true
     auto: true
@@ -66,9 +66,9 @@ spring:
 #    url: jdbc:mysql://172.16.20.191:3306/fire_protection?characterEncoding=UTF-8
 #    username: root
 #    password: 123456
-    url: jdbc:mysql://172.16.20.83:3306/fire_cloud_server?characterEncoding=UTF-8
-    username: root
-    password: S!@#s123
+    #url: jdbc:mysql://172.16.20.83:3306/fire_cloud_server?characterEncoding=UTF-8
+    #username: root
+    #password: S!@#s123
 
     type: com.alibaba.druid.pool.DruidDataSource
     druid:

@@ -26,6 +26,7 @@ import java.util.List;
 @EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
 @ComponentScan(basePackages = {
 		"com.firecontrol.service.impl",
+		"com.firecontrol.web.controller",
 })
 @MapperScan(basePackages = "com.firecontrol.mapper")
 public class FirecontrolWebappApplication {
