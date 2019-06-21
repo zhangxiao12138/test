@@ -143,7 +143,7 @@
 
             <h2>这里是一些监控数据</h2>
             <div id="toolbar">
-                <button id="loadbutton" class="btn btn-secondary">load</button>
+                <button id="loadbutton" class="btn btn-secondary">刷新</button>
             </div>
             <div class="table-responsive">
                 <table id="mytable"
@@ -153,8 +153,9 @@
                     <thead>
                         <tr>
                             <th data-field="id">ID</th>
-                            <th data-field="name">Item Name</th>
-                            <th data-field="price">Item Price</th>
+                            <th data-field="itemName">名称</th>
+                            <th data-field="price">价格</th>
+                            <th data-field="amount">数量</th>
                         </tr>
                     </thead>
                 </table>
@@ -312,8 +313,9 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"><\/script>')</script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <!--<script src="https://v4.bootcss.com/assets/js/vendor/popper.min.js"></script>-->
 <script th:src="@{/js/popper.min.js}"></script>
 <script th:src="@{/js/mainpage-grid.js}"></script>

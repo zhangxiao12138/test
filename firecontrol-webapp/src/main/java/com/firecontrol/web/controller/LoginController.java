@@ -19,7 +19,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/")
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(FirecontrolWebappApplication.class);
 
@@ -31,7 +31,7 @@ public class LoginController {
     /**
      * 登录
      */
-    @RequestMapping(value = "/index")
+    @RequestMapping(value = "index")
     public ModelAndView index(Model model) {
         return new ModelAndView("index");
     }
