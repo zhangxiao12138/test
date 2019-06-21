@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
@@ -23,7 +24,8 @@ import java.util.List;
 @RestController
 @SpringBootApplication
 //TODO:添加config Bean, 把druid的依赖加进来。暂时直接加载yml配置，注释掉druid
-@EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
+@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
 @ComponentScan(basePackages = {
 		"com.firecontrol.service.impl",
 		"com.firecontrol.web.controller",

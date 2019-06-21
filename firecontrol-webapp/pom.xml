@@ -51,8 +51,13 @@
 			<artifactId>firecontrol-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>com.firecontrol</groupId>
+            <artifactId>firecontrol-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<profiles>
 

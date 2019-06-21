@@ -70,6 +70,7 @@ spring:
     #username: root
     #password: S!@#s123
 
+
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
