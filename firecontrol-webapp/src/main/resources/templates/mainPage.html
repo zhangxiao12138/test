@@ -144,6 +144,19 @@
             <h2>这里是一些监控数据</h2>
             <div id="toolbar">
                 <button id="loadbutton" class="btn btn-secondary">刷新</button>
+                <form class="form-horizontal" th:action="@{/demo/hkws}"  method="get">
+<!--                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="用户名">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <div class="form-group help">
+                        <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="密　码">
+                        <i class="fa fa-lock"></i>
+                    </div>-->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">视频</button>
+                    </div>
+                </form>
             </div>
             <div class="table-responsive">
                 <table id="mytable"

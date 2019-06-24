@@ -4,7 +4,9 @@ import com.firecontrol.domain.entity.DemoEntity;
 import com.firecontrol.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -29,6 +31,11 @@ public class DemoController {
         return demoService.getAllDemoEntity();
     }
 
+
+    @RequestMapping(value = "/hkws")
+    public String buttonJumpHKWS() {
+        return "demo";
+    }
 
 
 }
