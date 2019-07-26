@@ -1,5 +1,11 @@
 var $table = $('#mytable');
 var $button = $('#loadbutton');
+var $vb = $('#videobutton');
+
+var $up = $('#upbutton');
+var $down = $('#downbutton');
+var $left = $('#leftbutton');
+var $right = $('#rightbutton');
 
 var data1 = [
     {
@@ -130,6 +136,22 @@ var data1 = [
     }
 ];
 
+function clickVideoButton() {
+    alert("here in clickVideoButton");
+    $('#testpage').load("/demo/hkws");
+}
+function click3DButton() {
+    alert("here in click3D button!");
+    $('#testpage').load("/demo/3Ddemo");
+}
+function clickFrontPage(){
+    $('#testpage').load("/demo/frontPage");
+}
+
+function clickEchartsButton() {
+    $('#testpage').load("/demo/echartsDemo");
+}
+
 function randomData() {
     var startId = ~~(Math.random() * 100);
     var rows = [];
@@ -160,15 +182,90 @@ function findDataMethod() {
 
 $(function() {
     $button.click(function () {
-        alert("button clicked!");
-        $table.bootstrapTable('load', [{
+        alert("video button clicked!");
+        $.ajax({
+            url:'demo/hkws',
+            type:'GET',
+            success:function(){
+                alert("success!");
+            }
+        });
+        /*$table.bootstrapTable('load', [{
             "id": 20,
             "itemName": "Item 20",
             "price": "$20",
             "amount": 109
-        }]);
+        }]);*/
     });
+    $vb.click(function () {
+        alert("video button clicked!");
+        $.ajax({
+            url:'demo/hkws',
+            type:'GET',
+            success:function(){
+                alert("success!");
+            }
+        });
+    });
+
+    $up.click(function () {
+        alert("up clicked!");
+        $.ajax({
+            url:'demo/direction?d=u',
+            type:'GET',
+            success:function(){
+                //alert("success!");
+            }
+        });
+    });
+
+        $down.click(function () {
+            alert("down clicked!");
+            $.ajax({
+                url:'demo/direction?d=d',
+                type:'GET',
+                success:function(){
+                    alert("success!");
+                }
+            });
+        });
+
+        $left.click(function () {
+            alert("left clicked!");
+            $.ajax({
+                url:'demo/direction?d=l',
+                type:'GET',
+                success:function(){
+                    alert("success!");
+                }
+            });
+        });
+
+        $right.click(function () {
+            alert("right clicked!");
+            $.ajax({
+                url:'demo/direction?d=r',
+                type:'GET',
+                success:function(){
+                    alert("success!");
+                }
+            });
+        });
 }
-
-
 )
+
+
+/*
+$(function() {
+        $vb.click(function () {
+            alert("video button clicked!");
+            $.ajax({
+                url:'demo/hkws',
+                type:'GET',
+                success:function(){
+                    alert("success!");
+                }
+            });
+        });
+    }
+)*/

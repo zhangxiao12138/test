@@ -27,6 +27,7 @@ import java.util.List;
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 //@EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
 @ComponentScan(basePackages = {
+		"com.firecontrol.common",
 		"com.firecontrol.service.impl",
 		"com.firecontrol.web.controller",
 })
@@ -36,7 +37,19 @@ public class FirecontrolWebappApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FirecontrolWebappApplication.class, args);
-		log.info("======================here start FirecontrolApplication!===================");
+/*
+
+		byte[]b={0x3e, 0x69, 0x35};
+			int accum = 0;
+			accum = accum|(b[0] & 0xff) << 0;
+			accum = accum|(b[1] & 0xff) << 8;
+			accum = accum|(b[2] & 0xff) << 16;
+			//accum = accum|(b[3] & 0xff) << 24;
+			log.info("accum: " + accum);
+*/
+
+
+		log.info("======================0702 here start FirecontrolApplication!===================");
 	}
 
 

@@ -11,4 +11,6 @@ public interface DemoService {
 
     List<DemoEntity> getAllDemoEntity();
 
+    String setDirection(String d);
+
 }

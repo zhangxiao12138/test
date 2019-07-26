@@ -11,10 +11,12 @@
 
     <!-- Bootstrap core CSS -->
     <link href="https://v4.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="https://v4.bootcss.com/docs/4.0/examples/dashboard/dashboard.css" rel="stylesheet">
-<!--    <link href="https://v4.bootcss.com/docs/4.0/examples/dashboard/dashboard.css" rel="stylesheet">-->
+
+    <link href="http://vjs.zencdn.net/5.5.3/video-js.css" rel="stylesheet">
+    <!-- If you'd like to support IE8 -->
+    <script src="http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js"></script>
 </head>
 
 <style>
@@ -29,13 +31,6 @@
 <body>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">中国电科</a>
-<!--    <div class="header-logo-box" >
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" >
-            <img src="http://219.147.8.30:801/upload/organization_1_/20181224/986baa04ae9cfac1a78e0045baa4f3e.png"  >
-
-        </a>
-    </div>-->
-
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -50,28 +45,28 @@
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" href="#" onclick="clickFrontPage()">
                             <span data-feather="home"></span>
-                            首页 <span class="sr-only">(current)</span>
+                            首页
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="#" onclick="clickVideoButton()">
                             <span data-feather="file"></span>
-                            报警中心
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <!--<span class="glyphicon glyphicon-film"></span>-->
-                            <span data-feather="shopping-cart"></span>
                             视频监控
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="#" onclick="click3DButton()">
+                            <!--<span class="glyphicon glyphicon-film"></span>-->
+                            <span data-feather="shopping-cart"></span>
+                            3D模型中心
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="clickEchartsButton()">
                             <span data-feather="users"></span>
-                            消防教育培训
+                            echarts示例
                         </a>
                     </li>
                     <li class="nav-item">
@@ -87,256 +82,39 @@
                         </a>
                     </li>
                 </ul>
-<!--
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Saved reports</span>
-                    <a class="d-flex align-items-center text-muted" href="#">
-                        <span data-feather="plus-circle"></span>
-                    </a>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Current month
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Last quarter
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Social engagement
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            Year-end sale
-                        </a>
-                    </li>
-                </ul>
--->
+
             </div>
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 class="h2">这是一张趋势图</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group mr-2">
-                        <button class="btn btn-sm btn-outline-secondary">Share</button>
-                        <button class="btn btn-sm btn-outline-secondary">Export</button>
-                    </div>
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                        <span data-feather="calendar"></span>
-                        This week
-                    </button>
-                </div>
-            </div>
+            <div id="testpage">
 
-            <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
 
-            <h2>这里是一些监控数据</h2>
-            <div id="toolbar">
-                <button id="loadbutton" class="btn btn-secondary">刷新</button>
-                <form class="form-horizontal" th:action="@{/demo/hkws}"  method="get">
-<!--                    <div class="form-group">
-                        <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="用户名">
-                        <i class="fa fa-user"></i>
-                    </div>
-                    <div class="form-group help">
-                        <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="密　码">
-                        <i class="fa fa-lock"></i>
-                    </div>-->
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-default">视频</button>
-                    </div>
-                </form>
-            </div>
-            <div class="table-responsive">
-                <table id="mytable"
-                        class="table table-striped table-sm"
-                       data-toolbar="#toolbar"
-                       data-url="demo/data">
-                    <thead>
-                        <tr>
-                            <th data-field="id">ID</th>
-                            <th data-field="itemName">名称</th>
-                            <th data-field="price">价格</th>
-                            <th data-field="amount">数量</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+        </div>
 
-<!--                <table
-                        id="table"
-                        data-toggle="table"
-                        data-toolbar="#toolbar"
-                        data-height="460"
-                        data-url="json/data1.json">
-                    <thead>
-                    <tr>
-                        <th data-field="id">ID</th>
-                        <th data-field="name">Item Name</th>
-                        <th data-field="price">Item Price</th>
-                    </tr>
-                    </thead>
-                </table>
-
-            </div>-->
-
- <!--       <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1,001</td>
-                        <td>Lorem</td>
-                        <td>ipsum</td>
-                        <td>dolor</td>
-                        <td>sit</td>
-                    </tr>
-                    <tr>
-                        <td>1,002</td>
-                        <td>amet</td>
-                        <td>consectetur</td>
-                        <td>adipiscing</td>
-                        <td>elit</td>
-                    </tr>
-                    <tr>
-                        <td>1,003</td>
-                        <td>Integer</td>
-                        <td>nec</td>
-                        <td>odio</td>
-                        <td>Praesent</td>
-                    </tr>
-                    <tr>
-                        <td>1,003</td>
-                        <td>libero</td>
-                        <td>Sed</td>
-                        <td>cursus</td>
-                        <td>ante</td>
-                    </tr>
-                    <tr>
-                        <td>1,004</td>
-                        <td>dapibus</td>
-                        <td>diam</td>
-                        <td>Sed</td>
-                        <td>nisi</td>
-                    </tr>
-                    <tr>
-                        <td>1,005</td>
-                        <td>Nulla</td>
-                        <td>quis</td>
-                        <td>sem</td>
-                        <td>at</td>
-                    </tr>
-                    <tr>
-                        <td>1,006</td>
-                        <td>nibh</td>
-                        <td>elementum</td>
-                        <td>imperdiet</td>
-                        <td>Duis</td>
-                    </tr>
-                    <tr>
-                        <td>1,007</td>
-                        <td>sagittis</td>
-                        <td>ipsum</td>
-                        <td>Praesent</td>
-                        <td>mauris</td>
-                    </tr>
-                    <tr>
-                        <td>1,008</td>
-                        <td>Fusce</td>
-                        <td>nec</td>
-                        <td>tellus</td>
-                        <td>sed</td>
-                    </tr>
-                    <tr>
-                        <td>1,009</td>
-                        <td>augue</td>
-                        <td>semper</td>
-                        <td>porta</td>
-                        <td>Mauris</td>
-                    </tr>
-                    <tr>
-                        <td>1,010</td>
-                        <td>massa</td>
-                        <td>Vestibulum</td>
-                        <td>lacinia</td>
-                        <td>arcu</td>
-                    </tr>
-                    <tr>
-                        <td>1,011</td>
-                        <td>eget</td>
-                        <td>nulla</td>
-                        <td>Class</td>
-                        <td>aptent</td>
-                    </tr>
-                    <tr>
-                        <td>1,012</td>
-                        <td>taciti</td>
-                        <td>sociosqu</td>
-                        <td>ad</td>
-                        <td>litora</td>
-                    </tr>
-                    <tr>
-                        <td>1,013</td>
-                        <td>torquent</td>
-                        <td>per</td>
-                        <td>conubia</td>
-                        <td>nostra</td>
-                    </tr>
-                    <tr>
-                        <td>1,014</td>
-                        <td>per</td>
-                        <td>inceptos</td>
-                        <td>himenaeos</td>
-                        <td>Curabitur</td>
-                    </tr>
-                    <tr>
-                        <td>1,015</td>
-                        <td>sodales</td>
-                        <td>ligula</td>
-                        <td>in</td>
-                        <td>libero</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-     -->
         </main>
     </div>
 </div>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
-<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"><\/script>')</script>
+
+<!--<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"><\/script>')</script>-->
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <!--<script src="https://v4.bootcss.com/assets/js/vendor/popper.min.js"></script>-->
 <script th:src="@{/js/popper.min.js}"></script>
 <script th:src="@{/js/mainpage-grid.js}"></script>
+<script src="http://vjs.zencdn.net/5.5.3/video.js"></script>
+
 <script src="https://v4.bootcss.com/dist/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
 
 <!-- Icons -->
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script th:src="@{/js/echarts/echarts.js}"></script>
+<script th:src="@{/js/echarts/echarts-gl.js}"></script>
+<script th:src="@{/js/jQuery-1.7.1.min.js}"></script>
+<script th:src="@{/js/echartsDemo.js}"></script>
 <script>
     feather.replace()
 </script>

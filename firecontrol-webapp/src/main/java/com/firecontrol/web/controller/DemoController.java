@@ -21,8 +21,10 @@ public class DemoController {
 
     @Autowired
     private DemoService demoService;
+
     /**
-     * 登录
+     * 数据获取demo
+     * @return
      */
     @RequestMapping(value = "/data")
     @ResponseBody
@@ -31,11 +33,45 @@ public class DemoController {
         return demoService.getAllDemoEntity();
     }
 
+    /**
+     * 控制设备方向
+     * @return
+     */
+    @RequestMapping(value = "/direction")
+    @ResponseBody
+    public String setDirection(String d) {
+
+        return demoService.setDirection(d);
+    }
+
+    /**
+     * 动态
+     * @return
+     */
+
 
     @RequestMapping(value = "/hkws")
     public String buttonJumpHKWS() {
-        return "demo";
+        return "video";
     }
+
+
+    @RequestMapping(value = "/3Ddemo")
+    public String buttonJump3DDemo() {
+        return "3Dframe";
+    }
+
+    @RequestMapping(value = "/frontPage")
+    public String buttonJumpTablePage() {
+        return "tablePage";
+    }
+
+    @RequestMapping(value = "/echartsDemo")
+    public String buttonJumpEchartsDemo() {
+        return "echartsDemo";
+    }
+
+
 
 
 }

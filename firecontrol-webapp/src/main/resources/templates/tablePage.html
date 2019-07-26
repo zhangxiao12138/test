@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+    <!-- Bootstrap core CSS -->
+    <link href="https://v4.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="https://v4.bootcss.com/docs/4.0/examples/dashboard/dashboard.css" rel="stylesheet">
+
+    <link href="http://vjs.zencdn.net/5.5.3/video-js.css" rel="stylesheet">
+    <!-- If you'd like to support IE8 -->
+    <script src="http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js"></script>
+</head>
+
+<style>
+    .header-logo-box img {
+        vertical-align: middle;
+        max-width: 180px;
+        max-height: 55px;
+    }
+
+</style>
+
+<body>
+
+
+<div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">这是一张趋势图</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group mr-2">
+                        <button class="btn btn-sm btn-outline-secondary">Share</button>
+                        <button class="btn btn-sm btn-outline-secondary">Export</button>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                        <span data-feather="calendar"></span>
+                        This week
+                    </button>
+                </div>
+            </div>
+
+            <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
+
+            <h2>这里是一些实时监控数据</h2>
+            <div id="toolbar">
+
+                <button id="loadbutton" class="btn btn-secondary">刷新</button>
+
+                <button id="upbutton" class="btn btn-secondary">上</button>
+                <button id="downbutton" class="btn btn-secondary">下</button>
+                <button id="leftbutton" class="btn btn-secondary">左</button>
+                <button id="rightbutton" class="btn btn-secondary">右</button>
+                <!--                <form class="form-horizontal" th:action="@{/demo/hkws}"  method="get">
+                                    <div class="form-group">
+                                        <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="用户名">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <div class="form-group help">
+                                        <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="密　码">
+                                        <i class="fa fa-lock"></i>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-default">视频</button>
+                                    </div>
+                                </form>-->
+            </div>
+
+            <div>
+
+                <video id="my-video" class="video-js" controls preload="auto" width="640" height="300"
+                       poster="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2174909441,2495215020&fm=27&gp=0.jpg" data-setup="{}">
+                    <source src="rtmp://172.16.20.83:1935/live/ttstream" type="rtmp/flv">
+                    <!-- 如果上面的rtmp流无法播放，就播放hls流 -->
+                    <!--<source src="http://10.10.5.119/live/livestream.m3u8" type='application/x-mpegURL'>-->
+                    <p class="vjs-no-js">播放视频需要启用 JavaScript，推荐使用支持HTML5的浏览器访问。
+                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                    </p>
+                </video>
+
+            </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+
+<!--<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"><\/script>')</script>-->
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<!--<script src="https://v4.bootcss.com/assets/js/vendor/popper.min.js"></script>-->
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/mainpage-grid.js}"></script>
+<script src="http://vjs.zencdn.net/5.5.3/video.js"></script>
+
+<script src="https://v4.bootcss.com/dist/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["2019-06-17", "2019-06-18", "2019-06-19", "2019-06-20", "2019-06-21", "2019-06-22", "2019-06-23"],
+            datasets: [{
+                data: [15339, 21345, 18483, 14003, 13489, 14092, 12034],
+                lineTension: 0,
+                backgroundColor: 'transparent',
+                borderColor: '#007bff',
+                borderWidth: 3,
+                pointBackgroundColor: '#007bff'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    }
+                }]
+            },
+            legend: {
+                display: false,
+            }
+        }
+    });
+</script>
+</body>
+</html>

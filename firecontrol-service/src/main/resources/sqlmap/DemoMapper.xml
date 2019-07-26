@@ -22,14 +22,12 @@
     </insert>
 
 
-
     <select id="getAll" resultMap="BaseResultMap">
             select
             <include refid="Base_Column_List" />
             from tb_server_demo
             where df=0
     </select>
-
 <!--        <delete id="deleteDetail">
             delete from adjustdetail where vendorId = #{vendorId,jdbcType=BIGINT} and orderNo=#{orderNo,jdbcType=VARCHAR}
         </delete>-->
