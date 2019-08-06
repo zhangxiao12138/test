@@ -4,6 +4,8 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.mycorp.vodplatform.server.Startup;
+import com.mycorp.vodplatform.server.TerminalServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @SpringBootApplication
@@ -27,6 +32,7 @@ import java.util.List;
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 //@EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
 @ComponentScan(basePackages = {
+		"com.firecontrol.config",
 		"com.firecontrol.common",
 		"com.firecontrol.service.impl",
 		"com.firecontrol.web.controller",
@@ -36,20 +42,16 @@ public class FirecontrolWebappApplication {
 	private static final Logger log = LoggerFactory.getLogger(FirecontrolWebappApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(FirecontrolWebappApplication.class, args);
-/*
+		ApplicationContext context = SpringApplication.run(FirecontrolWebappApplication.class, args);
 
-		byte[]b={0x3e, 0x69, 0x35};
-			int accum = 0;
-			accum = accum|(b[0] & 0xff) << 0;
-			accum = accum|(b[1] & 0xff) << 8;
-			accum = accum|(b[2] & 0xff) << 16;
-			//accum = accum|(b[3] & 0xff) << 24;
-			log.info("accum: " + accum);
-*/
+		log.info("======================  here start FirecontrolApplication!===================");
+
+		context.getBean(Startup.class).init("A String");
+
+		ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
+		e.execute(new TerminalServer());
 
 
-		log.info("======================0702 here start FirecontrolApplication!===================");
 	}
 
 

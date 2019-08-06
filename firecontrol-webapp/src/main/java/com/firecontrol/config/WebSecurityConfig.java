@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by mariry on 2019/6/14.
  */
-@Configuration
+
 public class WebSecurityConfig extends WebMvcConfigurerAdapter {
     public final static String SESSION_KEY="username";
 
