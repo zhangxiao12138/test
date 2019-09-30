@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.TpsonDeviceMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonDeviceEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="camera_id" jdbcType="VARCHAR" property="cameraId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="type" jdbcType="BIGINT" property="type" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+    <result column="online" jdbcType="BIT" property="online" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="pos_x" jdbcType="VARCHAR" property="posX" />
+    <result column="pos_y" jdbcType="VARCHAR" property="posY" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="port" jdbcType="INTEGER" property="port" />
+    <result column="man" jdbcType="VARCHAR" property="man" />
+    <result column="relay" jdbcType="BIT" property="relay" />
+    <result column="fault_status" jdbcType="BIGINT" property="faultStatus" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="site_id" jdbcType="BIGINT" property="siteId" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="sim" jdbcType="VARCHAR" property="sim" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="is_sync" jdbcType="BIT" property="isSync" />
+    <result column="is_alarm_linkage" jdbcType="BIT" property="isAlarmLinkage" />
+    <result column="silence_status" jdbcType="INTEGER" property="silenceStatus" />
+    <result column="geographic_id" jdbcType="BIGINT" property="geographicId" />
+    <result column="is_outdoor" jdbcType="BIT" property="isOutdoor" />
+    <result column="sensor_mode" jdbcType="INTEGER" property="sensorMode" />
+    <result column="imei" jdbcType="VARCHAR" property="imei" />
+    <result column="iccid" jdbcType="VARCHAR" property="iccid" />
+    <result column="last_log_time" jdbcType="INTEGER" property="lastLogTime" />
+    <result column="enable_sms" jdbcType="BIT" property="enableSms" />
+    <result column="enable_call" jdbcType="BIT" property="enableCall" />
+    <result column="sms_unenable_alarm_type_ids" jdbcType="VARCHAR" property="smsUnenableAlarmTypeIds" />
+    <result column="call_unenable_alarm_type_ids" jdbcType="VARCHAR" property="callUnenableAlarmTypeIds" />
+    <result column="public_security_code" jdbcType="VARCHAR" property="publicSecurityCode" />
+    <result column="style" jdbcType="INTEGER" property="style" />
+    <result column="signal_quality" jdbcType="INTEGER" property="signalQuality" />
+    <result column="running_state" jdbcType="TINYINT" property="runningState" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
+    <result column="phone" jdbcType="LONGVARCHAR" property="phone" />
+    <result column="photo_ids" jdbcType="LONGVARCHAR" property="photoIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, camera_id, name, code, version, type, company_id, floor_id, add_time, update_time, 
+    online, status, pos_x, pos_y, ip, port, man, relay, fault_status, position, site_id, 
+    department_id, sim, period, is_sync, is_alarm_linkage, silence_status, geographic_id, 
+    is_outdoor, sensor_mode, imei, iccid, last_log_time, enable_sms, enable_call, sms_unenable_alarm_type_ids, 
+    call_unenable_alarm_type_ids, public_security_code, style, signal_quality, running_state
+  </sql>
+  <sql id="Blob_Column_List">
+    phone, photo_ids
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_server_device
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_device
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
+    insert into tb_server_device ( camera_id, name,
+      code, version, type, 
+      company_id, floor_id, add_time, 
+      update_time, online, status, 
+      pos_x, pos_y, ip, port, 
+      man, relay, fault_status, 
+      position, site_id, department_id, 
+      sim, period, is_sync, is_alarm_linkage, 
+      silence_status, geographic_id, is_outdoor, 
+      sensor_mode, imei, iccid, 
+      last_log_time, enable_sms, enable_call, 
+      sms_unenable_alarm_type_ids, call_unenable_alarm_type_ids, 
+      public_security_code, style, signal_quality, 
+      running_state, phone, photo_ids
+      )
+    values ( #{cameraId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, #{type,jdbcType=BIGINT}, 
+      #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, #{addTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{online,jdbcType=BIT}, #{status,jdbcType=TINYINT}, 
+      #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, 
+      #{man,jdbcType=VARCHAR}, #{relay,jdbcType=BIT}, #{faultStatus,jdbcType=BIGINT}, 
+      #{position,jdbcType=VARCHAR}, #{siteId,jdbcType=BIGINT}, #{departmentId,jdbcType=BIGINT}, 
+      #{sim,jdbcType=VARCHAR}, #{period,jdbcType=INTEGER}, #{isSync,jdbcType=BIT}, #{isAlarmLinkage,jdbcType=BIT}, 
+      #{silenceStatus,jdbcType=INTEGER}, #{geographicId,jdbcType=BIGINT}, #{isOutdoor,jdbcType=BIT}, 
+      #{sensorMode,jdbcType=INTEGER}, #{imei,jdbcType=VARCHAR}, #{iccid,jdbcType=VARCHAR}, 
+      #{lastLogTime,jdbcType=INTEGER}, #{enableSms,jdbcType=BIT}, #{enableCall,jdbcType=BIT}, 
+      #{smsUnenableAlarmTypeIds,jdbcType=VARCHAR}, #{callUnenableAlarmTypeIds,jdbcType=VARCHAR}, 
+      #{publicSecurityCode,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER}, #{signalQuality,jdbcType=INTEGER}, 
+      #{runningState,jdbcType=TINYINT}, #{phone,jdbcType=LONGVARCHAR}, #{photoIds,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
+    insert into tb_server_device
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+
+      <if test="cameraId != null">
+        camera_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="floorId != null">
+        floor_id,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="online != null">
+        online,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="posX != null">
+        pos_x,
+      </if>
+      <if test="posY != null">
+        pos_y,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="man != null">
+        man,
+      </if>
+      <if test="relay != null">
+        relay,
+      </if>
+      <if test="faultStatus != null">
+        fault_status,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="siteId != null">
+        site_id,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="sim != null">
+        sim,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="isSync != null">
+        is_sync,
+      </if>
+      <if test="isAlarmLinkage != null">
+        is_alarm_linkage,
+      </if>
+      <if test="silenceStatus != null">
+        silence_status,
+      </if>
+      <if test="geographicId != null">
+        geographic_id,
+      </if>
+      <if test="isOutdoor != null">
+        is_outdoor,
+      </if>
+      <if test="sensorMode != null">
+        sensor_mode,
+      </if>
+      <if test="imei != null">
+        imei,
+      </if>
+      <if test="iccid != null">
+        iccid,
+      </if>
+      <if test="lastLogTime != null">
+        last_log_time,
+      </if>
+      <if test="enableSms != null">
+        enable_sms,
+      </if>
+      <if test="enableCall != null">
+        enable_call,
+      </if>
+      <if test="smsUnenableAlarmTypeIds != null">
+        sms_unenable_alarm_type_ids,
+      </if>
+      <if test="callUnenableAlarmTypeIds != null">
+        call_unenable_alarm_type_ids,
+      </if>
+      <if test="publicSecurityCode != null">
+        public_security_code,
+      </if>
+      <if test="style != null">
+        style,
+      </if>
+      <if test="signalQuality != null">
+        signal_quality,
+      </if>
+      <if test="runningState != null">
+        running_state,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="photoIds != null">
+        photo_ids,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="cameraId != null">
+        #{cameraId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="floorId != null">
+        #{floorId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=BIT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="posX != null">
+        #{posX,jdbcType=VARCHAR},
+      </if>
+      <if test="posY != null">
+        #{posY,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="man != null">
+        #{man,jdbcType=VARCHAR},
+      </if>
+      <if test="relay != null">
+        #{relay,jdbcType=BIT},
+      </if>
+      <if test="faultStatus != null">
+        #{faultStatus,jdbcType=BIGINT},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        #{siteId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="sim != null">
+        #{sim,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="isSync != null">
+        #{isSync,jdbcType=BIT},
+      </if>
+      <if test="isAlarmLinkage != null">
+        #{isAlarmLinkage,jdbcType=BIT},
+      </if>
+      <if test="silenceStatus != null">
+        #{silenceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="geographicId != null">
+        #{geographicId,jdbcType=BIGINT},
+      </if>
+      <if test="isOutdoor != null">
+        #{isOutdoor,jdbcType=BIT},
+      </if>
+      <if test="sensorMode != null">
+        #{sensorMode,jdbcType=INTEGER},
+      </if>
+      <if test="imei != null">
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="iccid != null">
+        #{iccid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLogTime != null">
+        #{lastLogTime,jdbcType=INTEGER},
+      </if>
+      <if test="enableSms != null">
+        #{enableSms,jdbcType=BIT},
+      </if>
+      <if test="enableCall != null">
+        #{enableCall,jdbcType=BIT},
+      </if>
+      <if test="smsUnenableAlarmTypeIds != null">
+        #{smsUnenableAlarmTypeIds,jdbcType=VARCHAR},
+      </if>
+      <if test="callUnenableAlarmTypeIds != null">
+        #{callUnenableAlarmTypeIds,jdbcType=VARCHAR},
+      </if>
+      <if test="publicSecurityCode != null">
+        #{publicSecurityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null">
+        #{style,jdbcType=INTEGER},
+      </if>
+      <if test="signalQuality != null">
+        #{signalQuality,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        #{runningState,jdbcType=TINYINT},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="photoIds != null">
+        #{photoIds,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
+    update tb_server_device
+    <set>
+      <if test="cameraId != null">
+        camera_id = #{cameraId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="floorId != null">
+        floor_id = #{floorId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="online != null">
+        online = #{online,jdbcType=BIT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="posX != null">
+        pos_x = #{posX,jdbcType=VARCHAR},
+      </if>
+      <if test="posY != null">
+        pos_y = #{posY,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="man != null">
+        man = #{man,jdbcType=VARCHAR},
+      </if>
+      <if test="relay != null">
+        relay = #{relay,jdbcType=BIT},
+      </if>
+      <if test="faultStatus != null">
+        fault_status = #{faultStatus,jdbcType=BIGINT},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        site_id = #{siteId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="sim != null">
+        sim = #{sim,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="isSync != null">
+        is_sync = #{isSync,jdbcType=BIT},
+      </if>
+      <if test="isAlarmLinkage != null">
+        is_alarm_linkage = #{isAlarmLinkage,jdbcType=BIT},
+      </if>
+      <if test="silenceStatus != null">
+        silence_status = #{silenceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="geographicId != null">
+        geographic_id = #{geographicId,jdbcType=BIGINT},
+      </if>
+      <if test="isOutdoor != null">
+        is_outdoor = #{isOutdoor,jdbcType=BIT},
+      </if>
+      <if test="sensorMode != null">
+        sensor_mode = #{sensorMode,jdbcType=INTEGER},
+      </if>
+      <if test="imei != null">
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="iccid != null">
+        iccid = #{iccid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLogTime != null">
+        last_log_time = #{lastLogTime,jdbcType=INTEGER},
+      </if>
+      <if test="enableSms != null">
+        enable_sms = #{enableSms,jdbcType=BIT},
+      </if>
+      <if test="enableCall != null">
+        enable_call = #{enableCall,jdbcType=BIT},
+      </if>
+      <if test="smsUnenableAlarmTypeIds != null">
+        sms_unenable_alarm_type_ids = #{smsUnenableAlarmTypeIds,jdbcType=VARCHAR},
+      </if>
+      <if test="callUnenableAlarmTypeIds != null">
+        call_unenable_alarm_type_ids = #{callUnenableAlarmTypeIds,jdbcType=VARCHAR},
+      </if>
+      <if test="publicSecurityCode != null">
+        public_security_code = #{publicSecurityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null">
+        style = #{style,jdbcType=INTEGER},
+      </if>
+      <if test="signalQuality != null">
+        signal_quality = #{signalQuality,jdbcType=INTEGER},
+      </if>
+      <if test="runningState != null">
+        running_state = #{runningState,jdbcType=TINYINT},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="photoIds != null">
+        photo_ids = #{photoIds,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

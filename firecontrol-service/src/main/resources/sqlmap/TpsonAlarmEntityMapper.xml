@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.TpsonAlarmMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonAlarmEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="type" jdbcType="BIGINT" property="type" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="sensor_id" jdbcType="BIGINT" property="sensorId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="deal_user_id" jdbcType="BIGINT" property="dealUserId" />
+    <result column="deal_detail" jdbcType="VARCHAR" property="dealDetail" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+    <result column="deal_time" jdbcType="INTEGER" property="dealTime" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="alarm_data" jdbcType="VARCHAR" property="alarmData" />
+    <result column="limit_up" jdbcType="VARCHAR" property="limitUp" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+    <result column="limit_down" jdbcType="VARCHAR" property="limitDown" />
+    <result column="pre_limit_up" jdbcType="VARCHAR" property="preLimitUp" />
+    <result column="site_name" jdbcType="VARCHAR" property="siteName" />
+    <result column="pending_user_id" jdbcType="BIGINT" property="pendingUserId" />
+    <result column="is_pending" jdbcType="BIT" property="isPending" />
+    <result column="pos_x" jdbcType="VARCHAR" property="posX" />
+    <result column="pos_y" jdbcType="VARCHAR" property="posY" />
+    <result column="camera_id" jdbcType="VARCHAR" property="cameraId" />
+    <result column="building_id" jdbcType="BIGINT" property="buildingId" />
+    <result column="building_name" jdbcType="VARCHAR" property="buildingName" />
+    <result column="building_man" jdbcType="VARCHAR" property="buildingMan" />
+    <result column="building_phone" jdbcType="VARCHAR" property="buildingPhone" />
+    <result column="device_name" jdbcType="VARCHAR" property="deviceName" />
+    <result column="sensor_name" jdbcType="VARCHAR" property="sensorName" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="floor_name" jdbcType="VARCHAR" property="floorName" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="photo_id" jdbcType="BIGINT" property="photoId" />
+    <result column="device_type" jdbcType="BIGINT" property="deviceType" />
+    <result column="site_man" jdbcType="VARCHAR" property="siteMan" />
+    <result column="site_phone" jdbcType="VARCHAR" property="sitePhone" />
+    <result column="site_id" jdbcType="BIGINT" property="siteId" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="department_man" jdbcType="VARCHAR" property="departmentMan" />
+    <result column="department_phone" jdbcType="VARCHAR" property="departmentPhone" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="device_version" jdbcType="INTEGER" property="deviceVersion" />
+    <result column="geographic_id" jdbcType="BIGINT" property="geographicId" />
+    <result column="is_outdoor" jdbcType="BIT" property="isOutdoor" />
+    <result column="out_pos_x" jdbcType="VARCHAR" property="outPosX" />
+    <result column="out_pos_y" jdbcType="VARCHAR" property="outPosY" />
+    <result column="review_time" jdbcType="INTEGER" property="reviewTime" />
+    <result column="is_review" jdbcType="BIT" property="isReview" />
+    <result column="review_id" jdbcType="BIGINT" property="reviewId" />
+    <result column="recover_time" jdbcType="INTEGER" property="recoverTime" />
+    <result column="pending_time" jdbcType="INTEGER" property="pendingTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonAlarmEntity">
+    <result column="detail" jdbcType="LONGVARCHAR" property="detail" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, level, company_id, floor_id, device_id, sensor_id, status, deal_user_id, 
+    deal_detail, add_time, update_time, deal_time, count, position, is_delete, alarm_data, 
+    limit_up, unit, limit_down, pre_limit_up, site_name, pending_user_id, is_pending, 
+    pos_x, pos_y, camera_id, building_id, building_name, building_man, building_phone, 
+    device_name, sensor_name, company_name, floor_name, device_code, photo_id, device_type, 
+    site_man, site_phone, site_id, department_id, department_name, department_man, department_phone, 
+    open_id, device_version, geographic_id, is_outdoor, out_pos_x, out_pos_y, review_time, 
+    is_review, review_id, recover_time, pending_time
+  </sql>
+  <sql id="Blob_Column_List">
+    detail
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_alarm
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_alarm
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonAlarmEntity">
+    insert into tb_server_alarm (type, level,
+      company_id, floor_id, device_id, 
+      sensor_id, status, deal_user_id, 
+      deal_detail, add_time, update_time, 
+      deal_time, count, position, 
+      is_delete, alarm_data, limit_up, 
+      unit, limit_down, pre_limit_up, 
+      site_name, pending_user_id, is_pending, 
+      pos_x, pos_y, camera_id, 
+      building_id, building_name, building_man, 
+      building_phone, device_name, sensor_name, 
+      company_name, floor_name, device_code, 
+      photo_id, device_type, site_man, 
+      site_phone, site_id, department_id, 
+      department_name, department_man, department_phone, 
+      open_id, device_version, geographic_id, 
+      is_outdoor, out_pos_x, out_pos_y, 
+      review_time, is_review, review_id, 
+      recover_time, pending_time, detail
+      )
+    values ( #{type,jdbcType=BIGINT}, #{level,jdbcType=INTEGER},
+      #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, 
+      #{sensorId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, #{dealUserId,jdbcType=BIGINT}, 
+      #{dealDetail,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
+      #{dealTime,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=BIT}, #{alarmData,jdbcType=VARCHAR}, #{limitUp,jdbcType=VARCHAR}, 
+      #{unit,jdbcType=VARCHAR}, #{limitDown,jdbcType=VARCHAR}, #{preLimitUp,jdbcType=VARCHAR}, 
+      #{siteName,jdbcType=VARCHAR}, #{pendingUserId,jdbcType=BIGINT}, #{isPending,jdbcType=BIT}, 
+      #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{cameraId,jdbcType=VARCHAR}, 
+      #{buildingId,jdbcType=BIGINT}, #{buildingName,jdbcType=VARCHAR}, #{buildingMan,jdbcType=VARCHAR}, 
+      #{buildingPhone,jdbcType=VARCHAR}, #{deviceName,jdbcType=VARCHAR}, #{sensorName,jdbcType=VARCHAR}, 
+      #{companyName,jdbcType=VARCHAR}, #{floorName,jdbcType=VARCHAR}, #{deviceCode,jdbcType=VARCHAR}, 
+      #{photoId,jdbcType=BIGINT}, #{deviceType,jdbcType=BIGINT}, #{siteMan,jdbcType=VARCHAR}, 
+      #{sitePhone,jdbcType=VARCHAR}, #{siteId,jdbcType=BIGINT}, #{departmentId,jdbcType=BIGINT}, 
+      #{departmentName,jdbcType=VARCHAR}, #{departmentMan,jdbcType=VARCHAR}, #{departmentPhone,jdbcType=VARCHAR}, 
+      #{openId,jdbcType=VARCHAR}, #{deviceVersion,jdbcType=INTEGER}, #{geographicId,jdbcType=BIGINT}, 
+      #{isOutdoor,jdbcType=BIT}, #{outPosX,jdbcType=VARCHAR}, #{outPosY,jdbcType=VARCHAR}, 
+      #{reviewTime,jdbcType=INTEGER}, #{isReview,jdbcType=BIT}, #{reviewId,jdbcType=BIGINT}, 
+      #{recoverTime,jdbcType=INTEGER}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonAlarmEntity">
+    insert into tb_server_alarm
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        type,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="floorId != null">
+        floor_id,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="sensorId != null">
+        sensor_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="dealUserId != null">
+        deal_user_id,
+      </if>
+      <if test="dealDetail != null">
+        deal_detail,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="dealTime != null">
+        deal_time,
+      </if>
+      <if test="count != null">
+        count,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="alarmData != null">
+        alarm_data,
+      </if>
+      <if test="limitUp != null">
+        limit_up,
+      </if>
+      <if test="unit != null">
+        unit,
+      </if>
+      <if test="limitDown != null">
+        limit_down,
+      </if>
+      <if test="preLimitUp != null">
+        pre_limit_up,
+      </if>
+      <if test="siteName != null">
+        site_name,
+      </if>
+      <if test="pendingUserId != null">
+        pending_user_id,
+      </if>
+      <if test="isPending != null">
+        is_pending,
+      </if>
+      <if test="posX != null">
+        pos_x,
+      </if>
+      <if test="posY != null">
+        pos_y,
+      </if>
+      <if test="cameraId != null">
+        camera_id,
+      </if>
+      <if test="buildingId != null">
+        building_id,
+      </if>
+      <if test="buildingName != null">
+        building_name,
+      </if>
+      <if test="buildingMan != null">
+        building_man,
+      </if>
+      <if test="buildingPhone != null">
+        building_phone,
+      </if>
+      <if test="deviceName != null">
+        device_name,
+      </if>
+      <if test="sensorName != null">
+        sensor_name,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="floorName != null">
+        floor_name,
+      </if>
+      <if test="deviceCode != null">
+        device_code,
+      </if>
+      <if test="photoId != null">
+        photo_id,
+      </if>
+      <if test="deviceType != null">
+        device_type,
+      </if>
+      <if test="siteMan != null">
+        site_man,
+      </if>
+      <if test="sitePhone != null">
+        site_phone,
+      </if>
+      <if test="siteId != null">
+        site_id,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+      <if test="departmentMan != null">
+        department_man,
+      </if>
+      <if test="departmentPhone != null">
+        department_phone,
+      </if>
+      <if test="openId != null">
+        open_id,
+      </if>
+      <if test="deviceVersion != null">
+        device_version,
+      </if>
+      <if test="geographicId != null">
+        geographic_id,
+      </if>
+      <if test="isOutdoor != null">
+        is_outdoor,
+      </if>
+      <if test="outPosX != null">
+        out_pos_x,
+      </if>
+      <if test="outPosY != null">
+        out_pos_y,
+      </if>
+      <if test="reviewTime != null">
+        review_time,
+      </if>
+      <if test="isReview != null">
+        is_review,
+      </if>
+      <if test="reviewId != null">
+        review_id,
+      </if>
+      <if test="recoverTime != null">
+        recover_time,
+      </if>
+      <if test="pendingTime != null">
+        pending_time,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="floorId != null">
+        #{floorId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="sensorId != null">
+        #{sensorId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="dealUserId != null">
+        #{dealUserId,jdbcType=BIGINT},
+      </if>
+      <if test="dealDetail != null">
+        #{dealDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="dealTime != null">
+        #{dealTime,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="alarmData != null">
+        #{alarmData,jdbcType=VARCHAR},
+      </if>
+      <if test="limitUp != null">
+        #{limitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="limitDown != null">
+        #{limitDown,jdbcType=VARCHAR},
+      </if>
+      <if test="preLimitUp != null">
+        #{preLimitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="siteName != null">
+        #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="pendingUserId != null">
+        #{pendingUserId,jdbcType=BIGINT},
+      </if>
+      <if test="isPending != null">
+        #{isPending,jdbcType=BIT},
+      </if>
+      <if test="posX != null">
+        #{posX,jdbcType=VARCHAR},
+      </if>
+      <if test="posY != null">
+        #{posY,jdbcType=VARCHAR},
+      </if>
+      <if test="cameraId != null">
+        #{cameraId,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=BIGINT},
+      </if>
+      <if test="buildingName != null">
+        #{buildingName,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingMan != null">
+        #{buildingMan,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingPhone != null">
+        #{buildingPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceName != null">
+        #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="sensorName != null">
+        #{sensorName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="floorName != null">
+        #{floorName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="photoId != null">
+        #{photoId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceType != null">
+        #{deviceType,jdbcType=BIGINT},
+      </if>
+      <if test="siteMan != null">
+        #{siteMan,jdbcType=VARCHAR},
+      </if>
+      <if test="sitePhone != null">
+        #{sitePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        #{siteId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentMan != null">
+        #{departmentMan,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentPhone != null">
+        #{departmentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null">
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceVersion != null">
+        #{deviceVersion,jdbcType=INTEGER},
+      </if>
+      <if test="geographicId != null">
+        #{geographicId,jdbcType=BIGINT},
+      </if>
+      <if test="isOutdoor != null">
+        #{isOutdoor,jdbcType=BIT},
+      </if>
+      <if test="outPosX != null">
+        #{outPosX,jdbcType=VARCHAR},
+      </if>
+      <if test="outPosY != null">
+        #{outPosY,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewTime != null">
+        #{reviewTime,jdbcType=INTEGER},
+      </if>
+      <if test="isReview != null">
+        #{isReview,jdbcType=BIT},
+      </if>
+      <if test="reviewId != null">
+        #{reviewId,jdbcType=BIGINT},
+      </if>
+      <if test="recoverTime != null">
+        #{recoverTime,jdbcType=INTEGER},
+      </if>
+      <if test="pendingTime != null">
+        #{pendingTime,jdbcType=INTEGER},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonAlarmEntity">
+    update tb_server_alarm
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="floorId != null">
+        floor_id = #{floorId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="sensorId != null">
+        sensor_id = #{sensorId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="dealUserId != null">
+        deal_user_id = #{dealUserId,jdbcType=BIGINT},
+      </if>
+      <if test="dealDetail != null">
+        deal_detail = #{dealDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="dealTime != null">
+        deal_time = #{dealTime,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="alarmData != null">
+        alarm_data = #{alarmData,jdbcType=VARCHAR},
+      </if>
+      <if test="limitUp != null">
+        limit_up = #{limitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null">
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="limitDown != null">
+        limit_down = #{limitDown,jdbcType=VARCHAR},
+      </if>
+      <if test="preLimitUp != null">
+        pre_limit_up = #{preLimitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="siteName != null">
+        site_name = #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="pendingUserId != null">
+        pending_user_id = #{pendingUserId,jdbcType=BIGINT},
+      </if>
+      <if test="isPending != null">
+        is_pending = #{isPending,jdbcType=BIT},
+      </if>
+      <if test="posX != null">
+        pos_x = #{posX,jdbcType=VARCHAR},
+      </if>
+      <if test="posY != null">
+        pos_y = #{posY,jdbcType=VARCHAR},
+      </if>
+      <if test="cameraId != null">
+        camera_id = #{cameraId,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=BIGINT},
+      </if>
+      <if test="buildingName != null">
+        building_name = #{buildingName,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingMan != null">
+        building_man = #{buildingMan,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingPhone != null">
+        building_phone = #{buildingPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceName != null">
+        device_name = #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="sensorName != null">
+        sensor_name = #{sensorName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="floorName != null">
+        floor_name = #{floorName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCode != null">
+        device_code = #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="photoId != null">
+        photo_id = #{photoId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceType != null">
+        device_type = #{deviceType,jdbcType=BIGINT},
+      </if>
+      <if test="siteMan != null">
+        site_man = #{siteMan,jdbcType=VARCHAR},
+      </if>
+      <if test="sitePhone != null">
+        site_phone = #{sitePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        site_id = #{siteId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentMan != null">
+        department_man = #{departmentMan,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentPhone != null">
+        department_phone = #{departmentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null">
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceVersion != null">
+        device_version = #{deviceVersion,jdbcType=INTEGER},
+      </if>
+      <if test="geographicId != null">
+        geographic_id = #{geographicId,jdbcType=BIGINT},
+      </if>
+      <if test="isOutdoor != null">
+        is_outdoor = #{isOutdoor,jdbcType=BIT},
+      </if>
+      <if test="outPosX != null">
+        out_pos_x = #{outPosX,jdbcType=VARCHAR},
+      </if>
+      <if test="outPosY != null">
+        out_pos_y = #{outPosY,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewTime != null">
+        review_time = #{reviewTime,jdbcType=INTEGER},
+      </if>
+      <if test="isReview != null">
+        is_review = #{isReview,jdbcType=BIT},
+      </if>
+      <if test="reviewId != null">
+        review_id = #{reviewId,jdbcType=BIGINT},
+      </if>
+      <if test="recoverTime != null">
+        recover_time = #{recoverTime,jdbcType=INTEGER},
+      </if>
+      <if test="pendingTime != null">
+        pending_time = #{pendingTime,jdbcType=INTEGER},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

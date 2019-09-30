@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.DemoEntity" >
         <!-- column 对应数据库字段， property对应实体bean的属性 -->
         <id column="id" property="id" jdbcType="BIGINT" />
-        <id column="itemName" property="item_name" jdbcType="VARCHAR" />
+        <result column="itemName" property="item_name" jdbcType="VARCHAR" />
         <result column="price" property="price" jdbcType="DOUBLE" />
         <result column="amount" property="amount" jdbcType="INTEGER" />
         <result column="df" property="df" jdbcType="INTEGER" />

@@ -14,6 +14,10 @@
         id, channel, tempData,msgtype, recdTime
     </sql>
 
+    <sql id="whereForFibreTemprature">
+      <if test="channelNo!=null and channelNo!=''"> and channel = #{channelNo}</if>
+    </sql>
+
     <insert id="insert" parameterType="com.firecontrol.domain.entity.OpticalFibreTempEntity" >
         insert into tb_fibre_temp (channel, tempData, msgtype, recdTime)
         values (#{channel,jdbcType=INTEGER}, #{tempData,jdbcType=LONGVARCHAR},
@@ -26,8 +30,9 @@
         select
         <include refid="Base_Column_List" />
         from tb_fibre_temp
+        where msgtype = 0
+        <include refid="whereForFibreTemprature" />
         order by recdTime DESC
-        limit 3
     </select>
 
 

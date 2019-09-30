@@ -7,10 +7,10 @@ info:
 #  spring-cloud.version: @spring-cloud.version@
   author: tbclient
 server:
-  port: 80
+  port: 8088
 #  context-path: /
 #  tomcat:
-#    basedir: file:.
+#    basedir:  file:.
 #    accesslog:
 #      enabled: true
 #      directory: /app/Logs/tb-firecontrol

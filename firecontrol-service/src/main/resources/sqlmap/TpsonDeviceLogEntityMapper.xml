@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.TpsonDeviceLogMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonDeviceLogEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="log_type" jdbcType="TINYINT" property="logType" />
+    <result column="data_type" jdbcType="TINYINT" property="dataType" />
+    <result column="operation_type" jdbcType="BIGINT" property="operationType" />
+    <result column="device_name" jdbcType="VARCHAR" property="deviceName" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonDeviceLogEntity">
+    <result column="log_data" jdbcType="LONGVARCHAR" property="logData" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, device_id, log_type, data_type, operation_type, device_name, log_time
+  </sql>
+  <sql id="Blob_Column_List">
+    log_data
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_server_device_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_device_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonDeviceLogEntity">
+    insert into tb_server_device_log ( device_id, log_type,
+      data_type, operation_type, device_name, 
+      log_time, log_data)
+    values (#{deviceId,jdbcType=BIGINT}, #{logType,jdbcType=TINYINT},
+      #{dataType,jdbcType=TINYINT}, #{operationType,jdbcType=BIGINT}, #{deviceName,jdbcType=VARCHAR}, 
+      #{logTime,jdbcType=TIMESTAMP}, #{logData,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonDeviceLogEntity">
+    insert into tb_server_device_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="logType != null">
+        log_type,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+      <if test="operationType != null">
+        operation_type,
+      </if>
+      <if test="deviceName != null">
+        device_name,
+      </if>
+      <if test="logTime != null">
+        log_time,
+      </if>
+      <if test="logData != null">
+        log_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=TINYINT},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=TINYINT},
+      </if>
+      <if test="operationType != null">
+        #{operationType,jdbcType=BIGINT},
+      </if>
+      <if test="deviceName != null">
+        #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logData != null">
+        #{logData,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonDeviceLogEntity">
+    update tb_server_device_log
+    <set>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=BIGINT},
+      </if>
+      <if test="logType != null">
+        log_type = #{logType,jdbcType=TINYINT},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=TINYINT},
+      </if>
+      <if test="operationType != null">
+        operation_type = #{operationType,jdbcType=BIGINT},
+      </if>
+      <if test="deviceName != null">
+        device_name = #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logData != null">
+        log_data = #{logData,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

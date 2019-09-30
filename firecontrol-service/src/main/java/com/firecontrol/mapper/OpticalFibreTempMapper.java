@@ -1,6 +1,7 @@
 package com.firecontrol.mapper;
 
 import com.firecontrol.domain.entity.OpticalFibreTempEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface OpticalFibreTempMapper {
 
     public void insert(OpticalFibreTempEntity opticalFibreTemp);
 
-    public List<OpticalFibreTempEntity> getData();
+    public List<OpticalFibreTempEntity> getData(@Param("channelNo")Integer channelNo);
 
 
 

@@ -19,7 +19,7 @@ public class OpticalFibreServiceImpl implements OpticalFibreService {
     @Override
     public List<OpticalFibreTempEntity> getData(Integer channel) {
 
-        List<OpticalFibreTempEntity> dataList = opticalFibreTempMapper.getData();
+        List<OpticalFibreTempEntity> dataList = opticalFibreTempMapper.getData(channel);
 
 
         return dataList;

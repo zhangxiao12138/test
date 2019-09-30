@@ -137,7 +137,7 @@ var data1 = [
 ];
 
 function clickVideoButton() {
-    alert("here in clickVideoButton");
+
     $('#testpage').load("/demo/hkws");
 }
 function click3DButton() {
@@ -198,7 +198,7 @@ $(function() {
         }]);*/
     });
     $vb.click(function () {
-        alert("video button clicked!");
+
         $.ajax({
             url:'demo/hkws',
             type:'GET',

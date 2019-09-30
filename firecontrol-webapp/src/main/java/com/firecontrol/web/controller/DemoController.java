@@ -71,7 +71,12 @@ public class DemoController {
         return "echartsDemo";
     }
 
-
+    @RequestMapping(value = "/videoUrl")
+    @ResponseBody
+    public String getVideoUrl(){
+        String rtn = demoService.getVideoUrl();
+        return rtn;
+    }
 
 
 }

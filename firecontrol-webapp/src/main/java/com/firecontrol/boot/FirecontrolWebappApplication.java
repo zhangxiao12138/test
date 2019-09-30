@@ -21,6 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -44,16 +47,26 @@ public class FirecontrolWebappApplication {
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(FirecontrolWebappApplication.class, args);
 
-		log.info("======================  here start FirecontrolApplication!===================");
+		log.info("====================== here start FirecontrolApplication!===================");
 
-		context.getBean(Startup.class).init("A String");
+		//context.getBean(Startup.class).init("A String");
 
-		ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
-		e.execute(new TerminalServer());
+		StringBuffer path = new StringBuffer();
+		//TODO:写入配置文件
+		//windows
+		path.append("D:").append(File.separator)
+				.append("serverConfig.properties");
 
+		//172.16.20.83
+//		path.append(File.separator).append("app").append(File.separator)
+//				.append("deploy").append(File.separator).append("jars")
+//				.append(File.separator).append("serverConfig.properties");
 
+		context.getBean(Startup.class).mainForStart(path.toString());
+
+/*		ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
+		e.execute(new TerminalServer());*/
 	}
-
 
 	@Bean
 	public HttpMessageConverters fastJsonHttpMessageConverters() {

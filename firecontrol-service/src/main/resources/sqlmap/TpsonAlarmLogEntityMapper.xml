@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.TpsonAlarmLogMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonAlarmLogEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="device_type_id" jdbcType="BIGINT" property="deviceTypeId" />
+    <result column="system_type" jdbcType="INTEGER" property="systemType" />
+    <result column="score_weight" jdbcType="DOUBLE" property="scoreWeight" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, device_type_id, system_type, score_weight
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_alarm_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_alarm_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonAlarmLogEntity">
+    insert into tb_server_alarm_type (name, device_type_id,
+      system_type, score_weight)
+    values (#{name,jdbcType=VARCHAR}, #{deviceTypeId,jdbcType=BIGINT},
+      #{systemType,jdbcType=INTEGER}, #{scoreWeight,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonAlarmLogEntity">
+    insert into tb_server_alarm_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="deviceTypeId != null">
+        device_type_id,
+      </if>
+      <if test="systemType != null">
+        system_type,
+      </if>
+      <if test="scoreWeight != null">
+        score_weight,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceTypeId != null">
+        #{deviceTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="systemType != null">
+        #{systemType,jdbcType=INTEGER},
+      </if>
+      <if test="scoreWeight != null">
+        #{scoreWeight,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonAlarmLogEntity">
+    update tb_server_alarm_type
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceTypeId != null">
+        device_type_id = #{deviceTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="systemType != null">
+        system_type = #{systemType,jdbcType=INTEGER},
+      </if>
+      <if test="scoreWeight != null">
+        score_weight = #{scoreWeight,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

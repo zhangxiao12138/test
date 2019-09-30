@@ -22,8 +22,8 @@ public class OpticalFibreController {
 
     @RequestMapping(value = "/demo")
     @ResponseBody
-    public List<OpticalFibreTempEntity> index() {
-        return opticalFibreService.getData(1);
+    public List<OpticalFibreTempEntity> index(Integer channelNo) {
+        return opticalFibreService.getData(channelNo);
     }
 
 }
