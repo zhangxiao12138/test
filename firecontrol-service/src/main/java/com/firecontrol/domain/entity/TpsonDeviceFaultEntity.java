@@ -1,6 +1,8 @@
 package com.firecontrol.domain.entity;
 
-public class TpsonDeviceFaultEntity {
+import com.firecontrol.common.BasePager;
+
+public class TpsonDeviceFaultEntity extends BasePager{
     private Long id;
 
     private Long type;

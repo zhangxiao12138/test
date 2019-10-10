@@ -59,6 +59,83 @@
     from tb_server_device_fault
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
+  <select id="getFaultByTime" resultMap="BaseResultMap">
+    select *
+    from tb_server_device_fault
+    where device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time > #{startTime}
+    </if>
+    <if test="endTime != null">
+      and  add_time = #{endTime}
+    </if>
+  </select>
+
+  <select id="getFaultCountBySearch" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device_fault
+    where
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time > #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="faultType != null">
+      and `type` = #{faultType}
+    </if>
+    <if test="status != null">
+      and status = #{status}
+    </if>
+    <if test="isOutdoor != null">
+      and is_outdoor = #{isOutdoor}
+    </if>
+    <if test="deviceCode != null">
+      and device_code like concat('%', #{deviceCode}, '%');
+    </if>
+  </select>
+
+  <select id="getFaultBySearch" resultMap="BaseResultMap">
+    select *
+    from tb_server_device_fault
+    where
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time > #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and  add_time < #{endTime} ]]>
+    </if>
+    <if test="faultType != null">
+      and fault_type = #{faultType}
+    </if>
+    <if test="status != null">
+      and status = #{status}
+    </if>
+    <if test="isOutdoor != null">
+      and is_outdoor = #{isOutdoor}
+    </if>
+    <if test="deviceCode != null">
+      and device_code like concat(%, #{deviceCode}, %);
+    </if>
+    <if test="currentPage != null">
+      limit #{currentPage}, #{limit}
+    </if>
+    order by id DESC
+  </select>
+
   <delete id="deleteById" parameterType="java.lang.Long">
     delete from tb_server_device_fault
     where id = #{id,jdbcType=BIGINT}

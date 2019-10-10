@@ -6,7 +6,7 @@ public class TpsonSensorEntity {
 
     private String cameraId;
 
-    private Long deviceId;
+    private String deviceCode;
 
     private Long alarmTypeId;
 
@@ -25,6 +25,8 @@ public class TpsonSensorEntity {
     private String posY;
 
     private Long sensorType;
+
+    private String sensorTypeName;
 
     private String name;
 
@@ -90,12 +92,12 @@ public class TpsonSensorEntity {
         this.cameraId = cameraId == null ? null : cameraId.trim();
     }
 
-    public Long getDeviceId() {
-        return deviceId;
+    public String getDeviceCode() {
+        return deviceCode;
     }
 
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 
     public Long getAlarmTypeId() {
@@ -360,5 +362,21 @@ public class TpsonSensorEntity {
 
     public void setAlarmName(String alarmName) {
         this.alarmName = alarmName == null ? null : alarmName.trim();
+    }
+
+    public String getSensorTypeName() {
+        return sensorTypeName;
+    }
+
+    public void setSensorTypeName(String sensorTypeName) {
+        this.sensorTypeName = sensorTypeName;
+    }
+
+    public Boolean getOutdoor() {
+        return isOutdoor;
+    }
+
+    public void setOutdoor(Boolean outdoor) {
+        isOutdoor = outdoor;
     }
 }

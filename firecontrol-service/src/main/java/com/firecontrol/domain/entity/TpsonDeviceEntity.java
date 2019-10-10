@@ -1,87 +1,142 @@
 package com.firecontrol.domain.entity;
 
-public class TpsonDeviceEntity {
+import com.firecontrol.common.BasePager;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class TpsonDeviceEntity extends BasePager implements Serializable {
+
+    @ApiModelProperty(value = "id" )
     private Long id;
 
+    @ApiModelProperty(value = "摄像头id")
     private String cameraId;
 
+    @ApiModelProperty(value = "设备名称")
     private String name;
 
+    @ApiModelProperty(value = "自动注册设备")
     private String code;
 
+    @ApiModelProperty(value = "版本")
     private Integer version;
 
+    @ApiModelProperty(value = "类型")
     private Long type;
 
+    @ApiModelProperty(value = "设备所属公司ID")
     private Long companyId;
 
-    private Long floorId;
+    @ApiModelProperty(value = "设备所属公司地理位置ID")
+    private String floorId;
 
+    private String buildingId;
+
+    @ApiModelProperty(value = "添加时间")
     private Integer addTime;
 
+    @ApiModelProperty(value = "更新时间")
     private Integer updateTime;
 
+    @ApiModelProperty(value = "0离线1在线")
     private Boolean online;
 
+    @ApiModelProperty(value = "0正常1注销2删除")
     private Byte status;
 
+    @ApiModelProperty(value = "")
     private String posX;
 
+    @ApiModelProperty(value = "")
     private String posY;
 
+    @ApiModelProperty(value = "ip")
     private String ip;
 
+    @ApiModelProperty(value = "端口号")
     private Integer port;
 
+    @ApiModelProperty(value = "负责人")
     private String man;
 
+    @ApiModelProperty(value = "中继标志位")
     private Boolean relay;
 
+    @ApiModelProperty(value = "故障状态, 0正常")
     private Long faultStatus;
 
+    @ApiModelProperty(value = "位置信息")
     private String position;
 
+    @ApiModelProperty(value = "监测点id")
     private Long siteId;
 
+    @ApiModelProperty(value = "部门id")
     private Long departmentId;
 
+    @ApiModelProperty(value = "SIM卡ID")
     private String sim;
 
+    @ApiModelProperty(value = "设备同步周期")
     private Integer period;
 
+    @ApiModelProperty(value = "是否同步到设备")
     private Boolean isSync;
 
+    @ApiModelProperty(value = "是否报警联动")
     private Boolean isAlarmLinkage;
 
+    @ApiModelProperty(value = "消音状态 0未知，1正常，2消音")
     private Integer silenceStatus;
 
+    @ApiModelProperty(value = "地理位置id")
     private Long geographicId;
 
+    @ApiModelProperty(value = "是否室外")
     private Boolean isOutdoor;
 
+    @ApiModelProperty(value = "传感器模式类型，0电压型 1电流型")
     private Integer sensorMode;
 
+    @ApiModelProperty(value = "移动设备识别码")
     private String imei;
 
+    @ApiModelProperty(value = "集成电路卡识别码")
     private String iccid;
 
+    @ApiModelProperty(value = "最新通讯时间")
     private Integer lastLogTime;
 
+    @ApiModelProperty(value = "启用短信联动")
     private Boolean enableSms;
 
+    @ApiModelProperty(value = "启用电话联动")
     private Boolean enableCall;
 
+    @ApiModelProperty(value = "禁用短信功能的报警类型ids")
     private String smsUnenableAlarmTypeIds;
 
+    @ApiModelProperty(value = "禁用电话功能的报警类型ids")
     private String callUnenableAlarmTypeIds;
 
+    @ApiModelProperty(value = "公安系统编号")
     private String publicSecurityCode;
 
+    @ApiModelProperty(value = "设备风格(类型):0其它，1治安，2交通，3社区，4公安")
     private Integer style;
 
+    @ApiModelProperty(value = "信号强度")
     private Integer signalQuality;
 
+    @ApiModelProperty(value = "0未激活，1离线，2正常，3故障，4报警，5禁用")
     private Byte runningState;
+
+    private String phone;
+
+    private List<CameraEntity> cameras;
+
 
     public Long getId() {
         return id;
@@ -139,12 +194,20 @@ public class TpsonDeviceEntity {
         this.companyId = companyId;
     }
 
-    public Long getFloorId() {
+    public String getFloorId() {
         return floorId;
     }
 
-    public void setFloorId(Long floorId) {
+    public void setFloorId(String floorId) {
         this.floorId = floorId;
+    }
+
+    public String getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(String buildingId) {
+        this.buildingId = buildingId;
     }
 
     public Integer getAddTime() {
@@ -409,5 +472,45 @@ public class TpsonDeviceEntity {
 
     public void setRunningState(Byte runningState) {
         this.runningState = runningState;
+    }
+
+    public Boolean getSync() {
+        return isSync;
+    }
+
+    public void setSync(Boolean sync) {
+        isSync = sync;
+    }
+
+    public Boolean getAlarmLinkage() {
+        return isAlarmLinkage;
+    }
+
+    public void setAlarmLinkage(Boolean alarmLinkage) {
+        isAlarmLinkage = alarmLinkage;
+    }
+
+    public Boolean getOutdoor() {
+        return isOutdoor;
+    }
+
+    public void setOutdoor(Boolean outdoor) {
+        isOutdoor = outdoor;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public List<CameraEntity> getCameras() {
+        return cameras;
+    }
+
+    public void setCameras(List<CameraEntity> cameras) {
+        this.cameras = cameras;
     }
 }

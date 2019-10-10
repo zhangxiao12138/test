@@ -135,4 +135,14 @@
     </delete>
 
 
+    <select id="getCameraListByIds" resultMap="BaseResultMap" >
+        select *
+        from vod_connection_camera
+        where id IN
+        <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
 </mapper>

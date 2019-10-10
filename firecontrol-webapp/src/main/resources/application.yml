@@ -7,7 +7,7 @@ info:
 #  spring-cloud.version: @spring-cloud.version@
   author: tbclient
 server:
-  port: 8088
+  port: 80
 #  context-path: /
 #  tomcat:
 #    basedir:  file:.

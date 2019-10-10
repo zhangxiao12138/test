@@ -34,5 +34,7 @@ public interface CameraMapper {
 
     List<CameraEntity> getCameraListByName(CameraEntity c);
 
+    List<CameraEntity> getCameraListByIds(@Param("idList") List idList);
+
 
 }

@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonSensorEntity">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="camera_id" jdbcType="VARCHAR" property="cameraId" />
-    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
     <result column="alarm_type_id" jdbcType="BIGINT" property="alarmTypeId" />
     <result column="alarm_level" jdbcType="TINYINT" property="alarmLevel" />
     <result column="add_time" jdbcType="INTEGER" property="addTime" />
@@ -40,15 +40,14 @@
     <result column="alarm_name" jdbcType="VARCHAR" property="alarmName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, camera_id, device_id, alarm_type_id, alarm_level, add_time, update_time, company_id, 
+    id, camera_id, device_code, alarm_type_id, alarm_level, add_time, update_time, company_id,
     floor_id, pos_x, pos_y, sensor_type, name, code, limit_up, limit_down, status, alarm_status, 
     pre_limit_up, pre_limit_down, channel_switch, trigger_switch, range, device_type, 
     warning_switch, online, fault_status, site_id, group, man, phone, department_id, 
     geographic_id, is_outdoor, position, alarm_name
   </sql>
   <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+    select *
     from tb_server_sensor
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -57,7 +56,7 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
-    insert into tb_server_sensor ( camera_id, device_id,
+    insert into tb_server_sensor ( camera_id, device_code,
       alarm_type_id, alarm_level, add_time, 
       update_time, company_id, floor_id, 
       pos_x, pos_y, sensor_type, 
@@ -70,7 +69,7 @@
       phone, department_id, geographic_id, 
       is_outdoor, position, alarm_name
       )
-    values (#{cameraId,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT},
+    values (#{cameraId,jdbcType=VARCHAR}, #{deviceCode,jdbcType=VARCHAR},
       #{alarmTypeId,jdbcType=BIGINT}, #{alarmLevel,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
       #{updateTime,jdbcType=INTEGER}, #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, 
       #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{sensorType,jdbcType=BIGINT}, 
@@ -87,12 +86,12 @@
   <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
     insert into tb_server_sensor
     <trim prefix="(" suffix=")" suffixOverrides=",">
-
+      add_time,
       <if test="cameraId != null">
         camera_id,
       </if>
-      <if test="deviceId != null">
-        device_id,
+      <if test="deviceCode != null">
+        device_code,
       </if>
       <if test="alarmTypeId != null">
         alarm_type_id,
@@ -195,12 +194,12 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-
+      now(),
       <if test="cameraId != null">
         #{cameraId,jdbcType=VARCHAR},
       </if>
-      <if test="deviceId != null">
-        #{deviceId,jdbcType=BIGINT},
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
       </if>
       <if test="alarmTypeId != null">
         #{alarmTypeId,jdbcType=BIGINT},
@@ -306,11 +305,12 @@
   <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
     update tb_server_sensor
     <set>
+      update_time = now(),
       <if test="cameraId != null">
         camera_id = #{cameraId,jdbcType=VARCHAR},
       </if>
-      <if test="deviceId != null">
-        device_id = #{deviceId,jdbcType=BIGINT},
+      <if test="deviceCode != null">
+        device_code = #{deviceCode,jdbcType=VARCHAR},
       </if>
       <if test="alarmTypeId != null">
         alarm_type_id = #{alarmTypeId,jdbcType=BIGINT},
@@ -318,12 +318,7 @@
       <if test="alarmLevel != null">
         alarm_level = #{alarmLevel,jdbcType=TINYINT},
       </if>
-      <if test="addTime != null">
-        add_time = #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
+
       <if test="companyId != null">
         company_id = #{companyId,jdbcType=BIGINT},
       </if>
@@ -340,7 +335,7 @@
         sensor_type = #{sensorType,jdbcType=BIGINT},
       </if>
       <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="code != null">
         code = #{code,jdbcType=VARCHAR},
@@ -351,12 +346,8 @@
       <if test="limitDown != null">
         limit_down = #{limitDown,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
-      </if>
-      <if test="alarmStatus != null">
-        alarm_status = #{alarmStatus,jdbcType=TINYINT},
-      </if>
+
+
       <if test="preLimitUp != null">
         pre_limit_up = #{preLimitUp,jdbcType=VARCHAR},
       </if>
@@ -372,18 +363,12 @@
       <if test="range != null">
         range = #{range,jdbcType=DOUBLE},
       </if>
-      <if test="deviceType != null">
-        device_type = #{deviceType,jdbcType=BIGINT},
-      </if>
+
       <if test="warningSwitch != null">
         warning_switch = #{warningSwitch,jdbcType=BIT},
       </if>
-      <if test="online != null">
-        online = #{online,jdbcType=BIT},
-      </if>
-      <if test="faultStatus != null">
-        fault_status = #{faultStatus,jdbcType=TINYINT},
-      </if>
+
+
       <if test="siteId != null">
         site_id = #{siteId,jdbcType=BIGINT},
       </if>
@@ -414,4 +399,29 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="getSensorListBySearch" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity" resultMap="BaseResultMap">
+    select *
+    from tb_server_sensor
+    where device_code = #{deviceCode}
+
+  </select>
+
+
+  <update id="updateSensorState">
+    update tb_server_sensor set `status` = #{state}
+    where id = #{id}
+  </update>
+
+
+  <delete id="deleteSensorByDevice" parameterType="java.util.List">
+    delete from tb_server_sensor
+    where device_code IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+
+  </delete>
+
 </mapper>

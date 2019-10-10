@@ -9,7 +9,8 @@
     <result column="version" jdbcType="INTEGER" property="version" />
     <result column="type" jdbcType="BIGINT" property="type" />
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
-    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
+    <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
     <result column="add_time" jdbcType="INTEGER" property="addTime" />
     <result column="update_time" jdbcType="INTEGER" property="updateTime" />
     <result column="online" jdbcType="BIT" property="online" />
@@ -49,7 +50,7 @@
     <result column="photo_ids" jdbcType="LONGVARCHAR" property="photoIds" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, camera_id, name, code, version, type, company_id, floor_id, add_time, update_time, 
+    id, camera_id, name, code, version, type, company_id, floor_id, building_id, add_time, update_time,
     online, status, pos_x, pos_y, ip, port, man, relay, fault_status, position, site_id, 
     department_id, sim, period, is_sync, is_alarm_linkage, silence_status, geographic_id, 
     is_outdoor, sensor_mode, imei, iccid, last_log_time, enable_sms, enable_call, sms_unenable_alarm_type_ids, 
@@ -66,14 +67,25 @@
     from tb_server_device
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
+  <select id="selectByDeviceCode" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_server_device
+    where code = #{code}
+  </select>
+
   <delete id="deleteById" parameterType="java.lang.Long">
     delete from tb_server_device
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntity">
     insert into tb_server_device ( camera_id, name,
       code, version, type, 
-      company_id, floor_id, add_time, 
+      company_id, floor_id, building_id, add_time,
       update_time, online, status, 
       pos_x, pos_y, ip, port, 
       man, relay, fault_status, 
@@ -84,12 +96,12 @@
       last_log_time, enable_sms, enable_call, 
       sms_unenable_alarm_type_ids, call_unenable_alarm_type_ids, 
       public_security_code, style, signal_quality, 
-      running_state, phone, photo_ids
+      running_state, phone
       )
     values ( #{cameraId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
       #{code,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, #{type,jdbcType=BIGINT}, 
-      #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, #{addTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{online,jdbcType=BIT}, #{status,jdbcType=TINYINT}, 
+      #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=VARCHAR},#{buildingId,jdbcType=VARCHAR}, now(),
+      now(), #{online,jdbcType=BIT}, #{status,jdbcType=TINYINT},
       #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, 
       #{man,jdbcType=VARCHAR}, #{relay,jdbcType=BIT}, #{faultStatus,jdbcType=BIGINT}, 
       #{position,jdbcType=VARCHAR}, #{siteId,jdbcType=BIGINT}, #{departmentId,jdbcType=BIGINT}, 
@@ -99,7 +111,7 @@
       #{lastLogTime,jdbcType=INTEGER}, #{enableSms,jdbcType=BIT}, #{enableCall,jdbcType=BIT}, 
       #{smsUnenableAlarmTypeIds,jdbcType=VARCHAR}, #{callUnenableAlarmTypeIds,jdbcType=VARCHAR}, 
       #{publicSecurityCode,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER}, #{signalQuality,jdbcType=INTEGER}, 
-      #{runningState,jdbcType=TINYINT}, #{phone,jdbcType=LONGVARCHAR}, #{photoIds,jdbcType=LONGVARCHAR}
+      #{runningState,jdbcType=TINYINT}, #{phone,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
@@ -127,12 +139,10 @@
       <if test="floorId != null">
         floor_id,
       </if>
-      <if test="addTime != null">
-        add_time,
+      <if test="buildingId != null">
+        building_id,
       </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
+
       <if test="online != null">
         online,
       </if>
@@ -254,14 +264,13 @@
         #{companyId,jdbcType=BIGINT},
       </if>
       <if test="floorId != null">
-        #{floorId,jdbcType=BIGINT},
+        #{floorId,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null">
-        #{addTime,jdbcType=INTEGER},
+
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=INTEGER},
-      </if>
+
       <if test="online != null">
         #{online,jdbcType=BIT},
       </if>
@@ -363,6 +372,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
     update tb_server_device
     <set>
@@ -385,14 +395,12 @@
         company_id = #{companyId,jdbcType=BIGINT},
       </if>
       <if test="floorId != null">
-        floor_id = #{floorId,jdbcType=BIGINT},
+        floor_id = #{floorId,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null">
-        add_time = #{addTime,jdbcType=INTEGER},
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
+
       <if test="online != null">
         online = #{online,jdbcType=BIT},
       </if>
@@ -495,4 +503,92 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="getTotal" parameterType="com.firecontrol.domain.dto.DeviceSearch" resultType="java.lang.Integer">
+    select
+    count(*)
+    from tb_server_device
+    where type = #{deviceType}
+
+    <if test="searchStr != null">
+      and `name` like concat(%, #{searchStr}, %),
+    </if>
+    <if test="searchCode != null">
+      and code like concat(%, #{searchCode}, %),
+    </if>
+
+    <if test="isOutdoor != null">
+      and is_outdoor = #{isOutdoor,jdbcType=BIT},
+    </if>
+
+    <if test="runningState != null">
+      and running_state = #{runningState,jdbcType=TINYINT},
+    </if>
+
+  </select>
+
+
+
+
+  <select id="getDeviceListBySearch" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntity" resultMap="BaseResultMap">
+    select *
+    from tb_server_device
+    where type = #{deviceType}
+    <if test="searchStr != null">
+      and `name` like concat(%, #{searchStr}, %),
+    </if>
+    <if test="searchCode != null">
+      and code like concat(%, #{searchCode}, %),
+    </if>
+
+    <if test="isOutdoor != null">
+      and is_outdoor = #{isOutdoor,jdbcType=BIT},
+    </if>
+
+    <if test="runningState != null">
+      and running_state = #{runningState,jdbcType=TINYINT},
+    </if>
+    ORDER BY id DESC
+    <if test="currentPage != null">
+      limit #{currentPage}, #{length}
+    </if>
+  </select>
+
+
+  <update id="changeDeviceStatus">
+    update tb_server_device
+    set update_time = now(), status = #{status, jdbcType = TINYINT}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteDevice" parameterType="java.util.List">
+    delete from tb_server_device
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+
+  </delete>
+
+
+  <select id="getDeviceCodeByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+    select *
+    from tb_server_device
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    group by code
+  </select>
+
+
+  <select id="countDeviceNumByDeviceType" parameterType="java.util.List" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device
+    where type IN
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
 </mapper>

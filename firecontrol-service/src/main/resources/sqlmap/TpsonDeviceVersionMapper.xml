@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.TpsonDeviceVersionMapper">
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonDeviceVersion">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="version" jdbcType="INTEGER" property="version" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="device_type" jdbcType="BIGINT" property="deviceType" />
+        <result column="period" jdbcType="INTEGER" property="period" />
+        <result column="deprecated" jdbcType="BIT" property="deprecated" />
+        <result column="is_configurable" jdbcType="BIT" property="isConfigurable" />
+        <result column="is_silencing" jdbcType="BIT" property="isSilencing" />
+        <result column="is_settable_period" jdbcType="BIT" property="isSettablePeriod" />
+        <result column="is_mode_configurable" jdbcType="BIT" property="isModeConfigurable" />
+        <result column="is_control_do" jdbcType="BIT" property="isControlDo" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, version, code, device_type, period, deprecated, is_configurable, is_silencing,
+        is_settable_period, is_mode_configurable, is_control_do
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_device_version
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByDeviceType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_device_version
+        where device_type = #{deviceType,jdbcType=BIGINT}
+    </select>
+
+</mapper>

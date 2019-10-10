@@ -54,13 +54,16 @@ public class FirecontrolWebappApplication {
 		StringBuffer path = new StringBuffer();
 		//TODO:写入配置文件
 		//windows
-		path.append("D:").append(File.separator)
-				.append("serverConfig.properties");
+//		path.append("D:").append(File.separator)
+//				.append("serverConfig.properties");
 
 		//172.16.20.83
-//		path.append(File.separator).append("app").append(File.separator)
-//				.append("deploy").append(File.separator).append("jars")
-//				.append(File.separator).append("serverConfig.properties");
+		if(File.separator.equals("\\")){
+			path.append("D:");
+		}
+		path.append(File.separator).append("app").append(File.separator)
+				.append("deploy").append(File.separator).append("jars")
+				.append(File.separator).append("serverConfig.properties");
 
 		context.getBean(Startup.class).mainForStart(path.toString());
 

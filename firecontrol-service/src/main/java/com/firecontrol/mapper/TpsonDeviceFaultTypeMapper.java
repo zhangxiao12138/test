@@ -3,6 +3,8 @@ package com.firecontrol.mapper;
 import com.firecontrol.domain.entity.TpsonDeviceFaultTypeEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by mariry on 2019/9/30.
  */
@@ -17,5 +19,7 @@ public interface TpsonDeviceFaultTypeMapper {
     public Integer insertSelective(TpsonDeviceFaultTypeEntity faultTypeEntity);
 
     public Integer updateById(TpsonDeviceFaultTypeEntity faultTypeEntity);
+
+    public List<TpsonDeviceFaultTypeEntity> getAll();
 
 }
