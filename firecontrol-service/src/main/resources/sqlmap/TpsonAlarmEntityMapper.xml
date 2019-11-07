@@ -81,6 +81,52 @@
     from tb_server_alarm
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
+
+
+  <select id="getAlarmCountByDeviceType" resultType="java.lang.Integer" >
+    select count(*)
+    from tb_server_alarm
+
+    <if test="deviceTypeList != null">
+      where device_type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    UNION ALL
+    select count(*)
+    from tb_server_alarm
+    where status != 0
+    <if test="deviceTypeList != null">
+      AND device_type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
+
+
+  <select id="getAlarmByTime"  resultMap="BaseResultMap">
+    select *
+    from tb_server_alarm
+    where add_time > #{startTime}
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="deviceTypeList != null">
+      and  device_type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+
+  </select>
+
+
+
   <delete id="deleteById" parameterType="java.lang.Long">
     delete from tb_server_alarm
     where id = #{id,jdbcType=BIGINT}
@@ -644,5 +690,204 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="getAlarmCountBySearch" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_alarm
+    where
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time > #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="alarmType != null">
+      and `type` = #{alarmType}
+    </if>
+    <if test="status != null">
+      and status = #{status}
+    </if>
+    <if test="isOutdoor != null">
+      and is_outdoor = #{isOutdoor}
+    </if>
+    <if test="deviceCode != null">
+      and device_code like concat('%', #{deviceCode}, '%')
+    </if>
+  </select>
+
+
+  <select id="getAlarmBySearch" resultMap="BaseResultMap">
+    select *
+    from tb_server_alarm
+    where
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="alarmType != null">
+      and `type` = #{alarmType}
+    </if>
+    <if test="status != null">
+      and status = #{status}
+    </if>
+    <if test="isOutdoor != null">
+      and is_outdoor = #{isOutdoor}
+    </if>
+    <if test="deviceCode != null">
+      and device_code like concat('%', #{deviceCode}, '%')
+    </if>
+    order by id DESC
+    <if test="currentPage != null">
+      limit #{currentPage}, #{length}
+    </if>
+  </select>
+
+  <select id="getUnhandledAlarmByIds" resultType="java.lang.Integer">
+    select id
+    from tb_server_alarm
+    where
+    id in
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and status = 0
+  </select>
+
+  <delete id="deleteHandledAlarmByIds" parameterType="java.util.List">
+    delete from tb_server_alarm
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+
+  <update id="updateBatchDeal" >
+    update tb_server_alarm
+    <set>
+      <if test="dealDetail != null">
+        deal_detail = #{dealDetail},
+      </if>
+      <if test="status != null">
+        status = #{status},
+      </if>
+      deal_time = unix_timestamp(now()),
+      update_time = unix_timestamp(now())
+    </set>
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+
+  <update id="updateAlarmDeal" >
+    update tb_server_alarm
+    <set>
+      <if test="dealDetail != null">
+        deal_detail = #{dealDetail},
+      </if>
+      <if test="status != null">
+        status = #{status},
+      </if>
+      deal_time = unix_timestamp(now()),
+      update_time = unix_timestamp(now())
+    </set>
+    where id = #{id}
+  </update>
+
+  <update id="updateAlarmCountById" >
+    update tb_server_alarm
+    <set>
+      `count` = `count`+1,
+      update_time = unix_timestamp(now())
+    </set>
+    where id = #{id}
+  </update>
+
+  <select id="dealTypeCount" resultType="com.firecontrol.domain.dto.AlarmDealCountDto" >
+    SELECT count(*) as amount, status from tb_server_alarm
+    where is_delete = 0 AND
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+    group by status
+
+  </select>
+
+
+  <select id="alarmTypeCount" resultType="com.firecontrol.domain.dto.AlarmTypeCountDto" >
+    SELECT count(*) as amount, `type` as alarmType from tb_server_alarm
+    where is_delete = 0 AND
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+    group by `type`
+
+  </select>
+
+  <select id="getAlarmHandleRank" resultType="com.firecontrol.domain.dto.AlarmHandleCountDto" >
+    SELECT deal_user_id as dealUserId, count(*) as amount from tb_server_alarm
+    where is_delete = 0
+    and
+    device_type in
+    <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    <if test="startTime != null">
+      and deal_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and deal_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+    GROUP BY deal_user_id order by amount desc
+
+  </select>
+
+
+  <select id="getUnhandleAlarmByDeviceInfo" resultMap="BaseResultMap" >
+    SELECT * from tb_server_alarm
+    where is_delete = 0
+    and device_code = #{deviceCode}
+    and type = #{alarmType}
+    and status = 0
+    limit 1
+
+  </select>
+
+
 
 </mapper>

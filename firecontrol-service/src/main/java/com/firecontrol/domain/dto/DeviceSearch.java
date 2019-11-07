@@ -38,6 +38,7 @@ public class DeviceSearch extends BasePager{
     }
 
 
+
     public String getSearchCode() {
         return searchCode;
     }

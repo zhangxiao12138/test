@@ -3,13 +3,12 @@ package com.firecontrol.service.impl;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
+import com.firecontrol.common.RunningStateCount;
+import com.firecontrol.common.TBConstants;
 import com.firecontrol.domain.dto.DeviceSearch;
 import com.firecontrol.domain.dto.FaultCountDto;
 import com.firecontrol.domain.entity.*;
-import com.firecontrol.mapper.CameraMapper;
-import com.firecontrol.mapper.TpsonDeviceMapper;
-import com.firecontrol.mapper.TpsonDeviceVersionMapper;
-import com.firecontrol.mapper.TpsonSensorMapper;
+import com.firecontrol.mapper.*;
 import com.firecontrol.service.CameraService;
 import com.firecontrol.service.TpsonDeviceService;
 import com.firecontrol.service.TpsonSensorService;
@@ -39,6 +38,8 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     private TpsonDeviceVersionMapper tpsonDeviceVersionMapper;
     @Autowired
     private CameraMapper cameraMapper;
+    @Autowired
+    private TpsonDeviceTypeMapper deviceTypeMapper;
 
 
     @Transactional
@@ -46,6 +47,12 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     public OpResult insertDevice(TpsonDeviceEntity device) {
         OpResult opResult = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         try{
+            if(device.getType() == null){
+                opResult.setStatus(OpResult.OP_FAILED);
+                opResult.setMessage("新增设备类型不可为空type!");
+                return opResult;
+            }
+
             //初始化不可为空属性值
             device.setOnline(false);
             device.setStatus(new Byte((byte)(0)));
@@ -56,13 +63,44 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
             device.setFaultStatus(new Long(0));
             device.setIsOutdoor(false);
 
-            //TODO:类型落库查询
             //烟感deviceType=7
-            device.setType(new Long(7));
-            tpsonDeviceMapper.insert(device);
-            insertTempSensor(device);
-            insertFlogSensor(device);
-            insertUnpackSensor(device);
+//            device.setType(new Long(7));
+//            tpsonDeviceMapper.insert(device);
+//            insertTempSensor(device);
+//            insertFlogSensor(device);
+//            insertUnpackSensor(device);
+
+            String opError = null;
+            switch (device.getType().intValue()) {
+                case TBConstants.DEVICE_TYPE.YG:
+                    //烟感
+                    //opError = "参数中包含校验特殊字符";
+                    createYG(device);
+                    break;
+                case TBConstants.DEVICE_TYPE.YD:
+                    //用电
+                    //opError = "参数中包含校验特殊字符";
+                    createElectrical(device);
+                    break;
+                case TBConstants.DEVICE_TYPE.XFS:
+                    //消防栓主机
+                    break;
+                case TBConstants.DEVICE_TYPE.YS:
+                    //消防用水主机
+                    break;
+                case TBConstants.DEVICE_TYPE.ZNSBX:
+                    //智能设备箱监测主机
+                case TBConstants.DEVICE_TYPE.YC:
+                    //用传
+                    break;
+                case TBConstants.DEVICE_TYPE.SXDQ:
+                    //三相电气监测主机
+                    break;
+                case TBConstants.DEVICE_TYPE.WXSD:
+                    //无线手动报警主机
+                    break;
+                default: opError = "参数不合法";
+            }
             return opResult;
 
         }catch (Exception e){
@@ -72,6 +110,36 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         }
         return opResult;
     }
+
+    //新增烟感及传感器
+    private String createYG(TpsonDeviceEntity device){
+        device.setType(new Long(7));
+        tpsonDeviceMapper.insert(device);
+        insertTempSensor(device);
+        insertFlogSensor(device);
+        insertUnpackSensor(device);
+
+        //TODO:
+        return "success";
+    }
+
+    //新增用电及传感器
+    private String createElectrical(TpsonDeviceEntity device){
+        device.setType((long)TBConstants.DEVICE_TYPE.YD);
+        tpsonDeviceMapper.insert(device);
+        //添加4个温度传感器
+        insertETempSensor(device);
+        //添加剩余电流传感器
+        insertASensor(device);
+        //添加故障电弧传感器
+        insertGZDHSensor(device);
+
+        //TODO:
+        return "success";
+    }
+
+
+
 
     @Override
     public OpResult updateDeviceInfo(TpsonDeviceEntity device) {
@@ -162,10 +230,15 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     }
 
     @Override
-    public OpResult changeDeviceStatus(Long id, Integer status) {
+    public OpResult changeDeviceStatus(String ids, Integer status) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         try{
-            tpsonDeviceMapper.changeDeviceStatus(id, status);
+            if(StringUtils.isEmpty(ids) || status == null){
+                op.setMessage("ids或者status不可为空!");
+                op.setStatus(OpResult.OP_FAILED);
+                return op;
+            }
+            tpsonDeviceMapper.changeDeviceStatus(Arrays.asList(ids.split(",")), status);
         }catch (Exception e) {
             log.info("TpsonDeviceServiceImpl.changeDeviceStatus error! e={}",e);
             op.setStatus(OpResult.OP_FAILED);
@@ -256,7 +329,7 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         try{
             TpsonDeviceEntity device = tpsonDeviceMapper.selectByDeviceCode(deviceCode);
-            op.setDataValue(deviceCode);
+            op.setDataValue(device);
 
         }catch (Exception e){
             log.error("getDeviceByCode ERROR! e={}", e);
@@ -264,12 +337,201 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
             op.setMessage(OpResult.OpMsg.OP_FAIL);
             return op;
         }
-
-
         return op;
 
     }
 
+    @Override
+    public OpResult getDeviceStatusStatic(Integer systemType) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        List<RunningStateCount> rtnList = new ArrayList<>();
+        List<RunningStateCount> finalList = null;
+        try{
+            finalList = initFinalList();
+            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+                rtnList = tpsonDeviceMapper.getRunningStateDistByDeviceType(deviceTypeList);
+            }
+
+            //补充缺少的状态
+            for(RunningStateCount f : finalList){
+                for(RunningStateCount r : rtnList){
+                    if(f.getRunningState() == r.getRunningState()) {
+                        f.setStateCount(r.getStateCount());
+                        continue;
+                    }
+                }
+            }
+            op.setDataValue(finalList);
+
+        }catch (Exception e){
+            log.error("getDeviceByCode ERROR! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
+    }
+
+
+
+    @Override
+    public OpResult offLineStat(Integer systemType, Long companyId) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+        Integer offLineCount = 0;
+        Integer total = 0;
+        try{
+            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+                offLineCount = tpsonDeviceMapper.getOfflineDeviceCountByDeviceType(deviceTypeList);
+                total = tpsonDeviceMapper.getTotalBySystemType(deviceTypeList);
+            }
+            rtnMap.put("offLine", offLineCount);
+            rtnMap.put("total", total);
+            rtnMap.put("systemType", systemType);
+            op.setDataValue(rtnMap);
+
+        }catch (Exception e){
+            log.error("getDeviceByCode ERROR! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
+    }
+
+    @Override
+    public OpResult deviceLog(String deviceCode, String logData, Integer startTime, Integer endTime, Integer currentPage, Integer length) {
+        //临时写死，后续根据业务逻辑修改
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        Map rtnMap = new HashMap();
+        rtnMap.put("total", 1);
+
+        List<Map> rtnList = new ArrayList<>();
+        Map tmp = new HashMap();
+        tmp.put("deviceCode", deviceCode);
+        tmp.put("deviceName","临时");
+        tmp.put("id", 111);
+        tmp.put("logData","一些日志内容");
+        tmp.put("logTime", (int) (System.currentTimeMillis() / 1000));
+//        device_code: "869029034554278"
+//        device_id: 67
+//        device_name: "测试1"
+//        device_type: 7
+//        device_type_name: "无线烟感监测主机"
+//        id: 788
+//        log_data: "报警记录删除"
+//        log_time: 1570846625
+//        log_type: 2
+//        name: "凤凰城25号楼二单元八楼楼道东侧"
+        rtnList.add(tmp);
+        rtnMap.put("list", rtnList);
+        op.setDataValue(rtnMap);
+
+        return op;
+    }
+
+    //添加故障电弧传感器
+    private boolean insertGZDHSensor(TpsonDeviceEntity device){
+        boolean b = true;
+
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("6");
+        sensor.setSensorType(new Long(15));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+        sensor.setLimitUp("14");
+        sensor.setPreLimitUp("100");
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
+
+        return b;
+    }
+
+    //添加剩余电流传感器
+    private boolean insertASensor(TpsonDeviceEntity device){
+        boolean b = true;
+
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("5");
+        sensor.setSensorType(new Long(8));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+        sensor.setLimitUp("500");
+        sensor.setPreLimitUp("80");
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
+
+        return b;
+    }
+
+    //新增用电设备温度传感器
+    private void insertETempSensor(TpsonDeviceEntity device) {
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("1");
+        sensor.setSensorType(new Long(7));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+        sensor.setLimitUp("100");
+        sensor.setPreLimitUp("80");
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
+
+        sensor.setCode("2");
+        tpsonSensorService.insertSensor(sensor);
+        sensor.setCode("3");
+        tpsonSensorService.insertSensor(sensor);
+        sensor.setCode("4");
+        tpsonSensorService.insertSensor(sensor);
+    }
 
     private void insertTempSensor(TpsonDeviceEntity device) {
         TpsonSensorEntity sensor = new TpsonSensorEntity();
@@ -330,8 +592,26 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
             rtn = "NB温度传感器";
         }else if(type == 32) {
             rtn = "防拆传感器";
+        }else if(type == 7) {
+            rtn = "温度传感器";
+        }else if(type == 8) {
+            rtn = "剩余电流传感器";
+        }else if(type == 15) {
+            rtn = "故障电弧传感器";
         }
         return rtn;
+    }
+
+    private List<RunningStateCount> initFinalList() {
+        List<RunningStateCount> list = new ArrayList<>();
+        list.add(new RunningStateCount(0, 0));
+        list.add(new RunningStateCount(1, 0));
+        list.add(new RunningStateCount(2, 0));
+        list.add(new RunningStateCount(3, 0));
+        list.add(new RunningStateCount(4, 0));
+        list.add(new RunningStateCount(5, 0));
+
+        return list;
     }
 
 

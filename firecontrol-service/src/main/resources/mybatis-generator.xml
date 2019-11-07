@@ -50,8 +50,9 @@
 
         <!--<table tableName="stockTheme" domainObjectName="StockTheme" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
 
-        <table tableName="tb_server_device_type" domainObjectName="TpsonDeviceType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="tb_server_sensor_type" domainObjectName="TpsonSensorType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
+
 
 
 

@@ -22,4 +22,5 @@ public class BasePager {
     public void setLength(Integer length) {
         this.length = length;
     }
+
 }

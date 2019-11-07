@@ -1,10 +1,13 @@
 package com.firecontrol.service.impl;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.SensorSearch;
 import com.firecontrol.domain.entity.TpsonSensorEntity;
+import com.firecontrol.domain.entity.TpsonSensorType;
 import com.firecontrol.mapper.TpsonSensorMapper;
+import com.firecontrol.mapper.TpsonSensorTypeMapper;
 import com.firecontrol.service.TpsonSensorService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
@@ -12,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by mariry on 2019/10/8.
@@ -26,6 +26,9 @@ public class TpsonSensorServiceImpl implements TpsonSensorService {
 
     @Autowired
     private TpsonSensorMapper tpsonSensorMapper;
+
+    @Autowired
+    private TpsonSensorTypeMapper tpsonSensorTypeMapper;
 
     @Override
     public OpResult getSensorListBySearch(SensorSearch search) {
@@ -93,15 +96,17 @@ public class TpsonSensorServiceImpl implements TpsonSensorService {
     }
 
     @Override
-    public OpResult changeState(Long id, Integer state) {
+    public OpResult changeState(String id, Integer state) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
-        if(id == null || state == null){
+        if(StringUtils.isEmpty(id) || state == null){
             op.setStatus(OpResult.OP_FAILED);
             op.setMessage("传感器id或目标状态不可为空");
             return op;
         }
         try{
-            tpsonSensorMapper.updateSensorState(id, state);
+            //id,逗号分隔的id字符串
+
+            tpsonSensorMapper.updateSensorState(Arrays.asList(id.split(",")), state);
 
         }catch (Exception e){
             log.error("TpsonSensorServiceImpl.changeState error! id = "
@@ -143,6 +148,16 @@ public class TpsonSensorServiceImpl implements TpsonSensorService {
             return b;
         }
         return b;
+    }
+
+    @Override
+    public OpResult getSensorTypeList() {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        List<TpsonSensorType> list = tpsonSensorTypeMapper.getAll();
+
+        op.setDataValue(list);
+        return op;
     }
 
     private String formatSensorTypeName(Long type) {

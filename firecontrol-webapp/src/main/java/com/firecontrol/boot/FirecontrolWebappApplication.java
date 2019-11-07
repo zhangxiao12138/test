@@ -61,9 +61,12 @@ public class FirecontrolWebappApplication {
 		if(File.separator.equals("\\")){
 			path.append("D:");
 		}
-		path.append(File.separator).append("app").append(File.separator)
-				.append("deploy").append(File.separator).append("jars")
-				.append(File.separator).append("serverConfig.properties");
+//		path.append(File.separator).append("app").append(File.separator)
+//				.append("deploy").append(File.separator).append("jars")
+//				.append(File.separator).append("serverConfig.properties");
+
+		path.append(File.separator).append("etc").append(File.separator)
+				.append("serverConfig.properties");
 
 		context.getBean(Startup.class).mainForStart(path.toString());
 

@@ -24,7 +24,7 @@ public interface TpsonSensorMapper {
 
     public List<TpsonSensorEntity> getSensorListBySearch(SensorSearch sensorSearch);
 
-    public Integer updateSensorState(@Param("id") Long id, @Param("state") Integer state);
+    public Integer updateSensorState(@Param("idList") List<String> idList, @Param("state") Integer state);
 
     public Integer deleteSensorByDevice(@Param("idList")List<String> idList);
 

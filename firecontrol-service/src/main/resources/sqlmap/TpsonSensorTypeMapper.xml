@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.TpsonSensorTypeMapper">
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonSensorType">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="alarm_type_id" jdbcType="BIGINT" property="alarmTypeId" />
+        <result column="device_type" jdbcType="BIGINT" property="deviceType" />
+        <result column="system_type" jdbcType="INTEGER" property="systemType" />
+        <result column="unit" jdbcType="VARCHAR" property="unit" />
+        <result column="is_stat" jdbcType="BIT" property="isStat" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, alarm_type_id, device_type, system_type, unit, is_stat
+    </sql>
+
+    <select id="getAll"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_sensor_type
+        order by id
+    </select>
+
+
+    <select id="getTypeByDeviceType"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_sensor_type
+        where device_type = #{deviceType}
+    </select>
+
+
+
+</mapper>

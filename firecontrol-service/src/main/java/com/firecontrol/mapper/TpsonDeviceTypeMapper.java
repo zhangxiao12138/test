@@ -1,6 +1,7 @@
 package com.firecontrol.mapper;
 
 import com.firecontrol.domain.entity.TpsonDeviceType;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,7 +20,6 @@ public interface TpsonDeviceTypeMapper {
     public Integer updateByIdSelective(TpsonDeviceType deviceType);
 
     public List<Long> getDeviceTypeBySystemType(@Param("systemType") Integer systemType);
-
 
 
 

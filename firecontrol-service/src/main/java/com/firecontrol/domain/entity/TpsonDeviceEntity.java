@@ -133,6 +133,8 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
     @ApiModelProperty(value = "0未激活，1离线，2正常，3故障，4报警，5禁用")
     private Byte runningState;
 
+    private Integer runStateKeep;
+
     private String phone;
 
     private List<CameraEntity> cameras;
@@ -512,5 +514,13 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
 
     public void setCameras(List<CameraEntity> cameras) {
         this.cameras = cameras;
+    }
+
+    public Integer getRunStateKeep() {
+        return runStateKeep;
+    }
+
+    public void setRunStateKeep(Integer runStateKeep) {
+        this.runStateKeep = runStateKeep;
     }
 }

@@ -22,6 +22,7 @@
         where system_type = #{systemType}
     </select>
 
+
     <delete id="deleteById" parameterType="java.lang.Long">
         delete from tb_server_device_type
         where id = #{id,jdbcType=BIGINT}

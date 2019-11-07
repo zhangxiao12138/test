@@ -18,10 +18,12 @@ public interface TpsonSensorService {
 
     public OpResult updateSensorInfo(TpsonSensorEntity sensor);
 
-    public OpResult changeState(Long id, Integer state);
+    public OpResult changeState(String id, Integer state);
 
     public Boolean insertSensor(TpsonSensorEntity sensor);
 
     public Boolean deleteSensorByDevice(List<String> deviceCodeList);
+
+    public OpResult getSensorTypeList();
 
 }

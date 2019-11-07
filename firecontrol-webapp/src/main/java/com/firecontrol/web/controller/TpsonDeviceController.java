@@ -107,11 +107,11 @@ public class TpsonDeviceController {
     @ApiOperation(value = "更改设备状态(0 启用 1停用)" ,  notes="更改设备状态(0 启用 1停用)")
     @RequestMapping(value = "/changeDeviceStatus", method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "设备is", paramType = "query", required = true),
+            @ApiImplicitParam(name = "id", value = "设备ids,多个逗号分隔", paramType = "query", required = true),
             @ApiImplicitParam(name = "status", value = "状态类型0启用1禁用", paramType = "query", required = true),
     })
     @ResponseBody
-    public OpResult changeDeviceStatus(Long id, Integer status){
+    public OpResult changeDeviceStatus(String id, Integer status){
         return tpsonDeviceService.changeDeviceStatus(id, status);
     }
 
@@ -153,5 +153,43 @@ public class TpsonDeviceController {
     public OpResult getDeviceVersionList(Long deviceType){
         return tpsonDeviceService.getDeviceVersionList(deviceType);
     }
+
+    @ApiOperation(value = "设备状态runningState统计" ,  notes="设备状态runningState统计")
+    @RequestMapping(value = "/deviceStatusStatic", method = {RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="systemType",value="系统类型1消控联网2消防用水3用电安全5动态监测8燃气监测",paramType = "query", required=true),
+    })
+    @ResponseBody
+    public OpResult deviceStatusStatic(Integer systemType){
+        return tpsonDeviceService.getDeviceStatusStatic(systemType);
+    }
+
+
+    @ApiOperation(value = "设备(离线/总数)信息" ,  notes="设备(离线/总数)信息")
+    @RequestMapping(value = "/offLineStat", method = {RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="systemType",value="系统类型1消控联网2消防用水3用电安全5动态监测8燃气监测",paramType = "query", required=true),
+            @ApiImplicitParam(name="companyId",value="公司id",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult offLineStat(Integer systemType, Long companyId){
+        return tpsonDeviceService.offLineStat(systemType, companyId);
+    }
+
+    @ApiOperation(value = "获取设备传感器日志list" ,  notes="获取设备传感器日志list")
+    @RequestMapping(value = "/deviceLog", method = {RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="deviceCode",value="设备编码",paramType = "query",required=true),
+            @ApiImplicitParam(name="logData",value="搜索关键字",paramType = "query"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", paramType = "query"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", paramType = "query"),
+            @ApiImplicitParam(name="currentPage",paramType = "query",value="当前页 从1开始"),
+            @ApiImplicitParam(name="length",paramType = "query",value="分页大小"),
+    })
+    @ResponseBody
+    public OpResult deviceLog(String deviceCode, String logData, Integer startTime, Integer endTime, Integer currentPage, Integer length){
+        return tpsonDeviceService.deviceLog(deviceCode, logData, startTime, endTime, currentPage, length);
+    }
+
 
 }

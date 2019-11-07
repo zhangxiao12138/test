@@ -75,6 +75,8 @@ public class TpsonDeviceFaultEntity extends BasePager{
 
     private String detail;
 
+    private Integer df;
+
     public Long getId() {
         return id;
     }
@@ -361,5 +363,13 @@ public class TpsonDeviceFaultEntity extends BasePager{
 
     public void setDetail(String detail) {
         this.detail = detail == null ? null : detail.trim();
+    }
+
+    public Integer getDf() {
+        return df;
+    }
+
+    public void setDf(Integer df) {
+        this.df = df;
     }
 }

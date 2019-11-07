@@ -19,6 +19,8 @@ public class TpsonAlarmEntity {
 
     private Long dealUserId;
 
+    private String dealUserName;
+
     private String dealDetail;
 
     private Integer addTime;
@@ -569,5 +571,13 @@ public class TpsonAlarmEntity {
 
     public void setDetail(String detail) {
         this.detail = detail == null ? null : detail.trim();
+    }
+
+    public String getDealUserName() {
+        return dealUserName;
+    }
+
+    public void setDealUserName(String dealUserName) {
+        this.dealUserName = dealUserName;
     }
 }

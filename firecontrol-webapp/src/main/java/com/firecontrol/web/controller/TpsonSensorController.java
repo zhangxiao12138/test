@@ -51,11 +51,11 @@ public class TpsonSensorController {
     @ApiOperation(value = "启用(0)禁用(1)传感器" ,  notes="启用(0)禁用(1)传感器")
     @RequestMapping(value = "/changeState", method = {RequestMethod.POST})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "设备id", paramType = "query", required = true),
+            @ApiImplicitParam(name = "id", value = "设备id,逗号分隔字符串", paramType = "query", required = true),
             @ApiImplicitParam(name = "status", value = "传感器状态", paramType = "query", required = true)
     })
     @ResponseBody
-    public OpResult changeState(Long id, Integer status){
+    public OpResult changeState(String id, Integer status){
 
         return tpsonSensorService.changeState(id, status);
     }
@@ -68,6 +68,13 @@ public class TpsonSensorController {
     }
 
 
+
+    @ApiOperation(value = "获取传感器类型list" ,  notes="获取传感器类型list")
+    @RequestMapping(value = "/getSensorTypeList", method = {RequestMethod.POST})
+    @ResponseBody
+    public OpResult getSensorTypeList(){
+        return tpsonSensorService.getSensorTypeList();
+    }
 
 
 

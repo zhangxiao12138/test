@@ -121,6 +121,7 @@
 			<version>2.5.0</version>
 		</dependency>
 
+
 	</dependencies>
 
 
@@ -133,7 +134,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 
+
 <!--
+
 			<plugin>
 				<groupId>org.mybatis.generator</groupId>
 				<artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -160,16 +163,17 @@
 					</execution>
 				</executions>
 				<configuration>
-					允许移动生成的文件
+					&lt;!&ndash;允许移动生成的文件&ndash;&gt;
 					<verbose>true</verbose>
-					是否覆盖
+					&lt;!&ndash;是否覆盖&ndash;&gt;
 					<overwrite>true</overwrite>
-					自动生成的配置
+					&lt;!&ndash;自动生成的配置&ndash;&gt;
 					<configurationFile>
 						src/main/resources/mybatis-generator.xml</configurationFile>
 				</configuration>
 			</plugin>
-	-->
+
+-->
 
 		</plugins>
 	</build>

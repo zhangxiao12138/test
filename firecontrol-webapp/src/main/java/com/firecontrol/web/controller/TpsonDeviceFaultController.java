@@ -30,10 +30,11 @@ public class TpsonDeviceFaultController {
     @RequestMapping(value = "/faultStatistics", method = {RequestMethod.POST,RequestMethod.GET})
     @ApiImplicitParams({
             @ApiImplicitParam(name = "systemType", value = "系统类型1消控联网2消防用水3用电安全5动态监测8燃气监测", paramType = "query", required = true),
+            @ApiImplicitParam(name = "companyId", value = "", paramType = "query"),
     })
     @ResponseBody
-    public OpResult getFaultStatistics(Integer systemType){
-        return tpsonDeviceFaultService.getFaultStatistics(systemType);
+    public OpResult getFaultStatistics(Integer systemType, Long companyId){
+        return tpsonDeviceFaultService.getFaultStatistics(systemType, companyId);
     }
 
     @ApiOperation(value = "获取故障类型list" ,  notes="获取故障类型list")
@@ -88,5 +89,45 @@ public class TpsonDeviceFaultController {
     public OpResult getFaultStatistics(Long id){
         return tpsonDeviceFaultService.getFaultDetailById(id);
     }
+
+    @ApiOperation(value = "消防故障-更新处理结果" ,  notes="消防故障-更新处理结果")
+    @RequestMapping(value = "/updatefaultDetail", method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "故障信息id", paramType = "query", required = true),
+            @ApiImplicitParam(name = "dealDetail", value = "故障处理意见", paramType = "query", required = true),
+    })
+    @ResponseBody
+    public OpResult getFaultStatistics(Long id, String dealDetail){
+        return tpsonDeviceFaultService.updateFaultDetailById(id, dealDetail);
+    }
+
+
+    @ApiOperation(value = "消防故障-批量删除By Ids" ,  notes="消防故障-批量删除By Ids")
+    @RequestMapping(value = "/delete", method = {RequestMethod.DELETE})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "故障信息ids,多个id逗号分隔", paramType = "query", required = true),
+    })
+    @ResponseBody
+    public OpResult delete(String ids){
+        return tpsonDeviceFaultService.deleteHandledFaultByIds(ids);
+    }
+
+
+    @ApiOperation(value = "消防故障-批量处理" ,  notes="消防故障-批量处理 Ids")
+    @RequestMapping(value = "/batchDeal", method = {RequestMethod.POST, RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "故障信息ids,多个id逗号分隔", paramType = "query", required = true),
+            @ApiImplicitParam(name = "dealDetail", value = "处理意见", paramType = "query", required = true),
+    })
+    @ResponseBody
+    public OpResult batchDeal(String ids, String dealDetail){
+        return tpsonDeviceFaultService.batchDeal(ids, dealDetail);
+    }
+
+
+
+
+
+
 
 }

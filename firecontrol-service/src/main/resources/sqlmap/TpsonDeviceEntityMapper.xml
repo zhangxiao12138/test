@@ -44,6 +44,7 @@
     <result column="style" jdbcType="INTEGER" property="style" />
     <result column="signal_quality" jdbcType="INTEGER" property="signalQuality" />
     <result column="running_state" jdbcType="TINYINT" property="runningState" />
+    <result column="run_state_keep" jdbcType="INTEGER" property="runStateKeep" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
     <result column="phone" jdbcType="LONGVARCHAR" property="phone" />
@@ -59,7 +60,7 @@
   <sql id="Blob_Column_List">
     phone, photo_ids
   </sql>
-  <select id="selectById" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     ,
@@ -69,11 +70,8 @@
   </select>
 
 
-  <select id="selectByDeviceCode" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+  <select id="selectByDeviceCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
     from tb_server_device
     where code = #{code}
   </select>
@@ -373,7 +371,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
+  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntity">
     update tb_server_device
     <set>
       <if test="cameraId != null">
@@ -497,9 +495,6 @@
       <if test="phone != null">
         phone = #{phone,jdbcType=LONGVARCHAR},
       </if>
-      <if test="photoIds != null">
-        photo_ids = #{photoIds,jdbcType=LONGVARCHAR},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -511,18 +506,18 @@
     where type = #{deviceType}
 
     <if test="searchStr != null">
-      and `name` like concat(%, #{searchStr}, %),
+      and `name` like concat('%', #{searchStr}, '%')
     </if>
     <if test="searchCode != null">
-      and code like concat(%, #{searchCode}, %),
+      and code like concat('%', #{searchCode}, '%')
     </if>
 
     <if test="isOutdoor != null">
-      and is_outdoor = #{isOutdoor,jdbcType=BIT},
+      and is_outdoor = #{isOutdoor,jdbcType=BIT}
     </if>
 
     <if test="runningState != null">
-      and running_state = #{runningState,jdbcType=TINYINT},
+      and running_state = #{runningState,jdbcType=TINYINT}
     </if>
 
   </select>
@@ -535,18 +530,18 @@
     from tb_server_device
     where type = #{deviceType}
     <if test="searchStr != null">
-      and `name` like concat(%, #{searchStr}, %),
+      and `name` like concat('%', #{searchStr}, '%')
     </if>
     <if test="searchCode != null">
-      and code like concat(%, #{searchCode}, %),
+      and code like concat('%', #{searchCode}, '%')
     </if>
 
     <if test="isOutdoor != null">
-      and is_outdoor = #{isOutdoor,jdbcType=BIT},
+      and is_outdoor = #{isOutdoor,jdbcType=BIT}
     </if>
 
     <if test="runningState != null">
-      and running_state = #{runningState,jdbcType=TINYINT},
+      and running_state = #{runningState,jdbcType=TINYINT}
     </if>
     ORDER BY id DESC
     <if test="currentPage != null">
@@ -557,9 +552,23 @@
 
   <update id="changeDeviceStatus">
     update tb_server_device
-    set update_time = now(), status = #{status, jdbcType = TINYINT}
-    where id = #{id}
+
+    <set>
+      update_time = now(),status = #{status, jdbcType = TINYINT},
+    <if test="status == 1">
+      run_state_keep = running_state, running_state = 5,
+    </if>
+    <if test="status == 0">
+      running_state = run_state_keep
+    </if>
+    </set>
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
   </update>
+
+
 
   <delete id="deleteDevice" parameterType="java.util.List">
     delete from tb_server_device
@@ -590,5 +599,45 @@
       #{item}
     </foreach>
   </select>
+
+
+  <select id="getRunningStateDistByDeviceType"  resultType="com.firecontrol.common.RunningStateCount">
+    select count(*) as stateCount, running_state as runningState
+    from tb_server_device
+    <if test="deviceTypeList != null">
+      where type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    group by running_state
+  </select>
+
+
+  <select id="getOfflineDeviceCountByDeviceType"  resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device
+    where running_state = 1
+    <if test="deviceTypeList != null">
+      and type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
+
+  <select id="getTotalBySystemType"  resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device
+    where running_state != 1
+    <if test="deviceTypeList != null">
+      and type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
 
 </mapper>

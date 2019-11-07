@@ -410,8 +410,14 @@
 
 
   <update id="updateSensorState">
-    update tb_server_sensor set `status` = #{state}
-    where id = #{id}
+    update tb_server_sensor
+    <set>
+    update_time = now(), status = #{state, jdbcType = TINYINT},
+  </set>
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
   </update>
 
 

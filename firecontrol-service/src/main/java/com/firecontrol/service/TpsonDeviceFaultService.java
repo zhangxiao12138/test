@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public interface TpsonDeviceFaultService {
 
-    public OpResult getFaultStatistics(Integer systemType);
+    public OpResult getFaultStatistics(Integer systemType, Long companyId);
 
     public OpResult getFaultType();
 
@@ -18,5 +18,11 @@ public interface TpsonDeviceFaultService {
     public OpResult getFaultList(Integer systemType, Integer faultType, Integer status, Integer isOutdoor, String deviceCode, Long startTime, Long endTime, Integer currentPage, Integer length);
 
     public OpResult getFaultDetailById(Long id);
+
+    public OpResult updateFaultDetailById(Long id, String dealDetail);
+
+    public OpResult deleteHandledFaultByIds(String ids);
+
+    public OpResult batchDeal(String ids, String dealDetail);
 
 }

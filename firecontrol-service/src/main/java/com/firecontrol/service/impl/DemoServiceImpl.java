@@ -66,34 +66,40 @@ public class DemoServiceImpl implements DemoService {
     public OpResult getVideoAddr(VideoUrlQueryDto query) {
         log.info("DemoServiceImpl.getVideoAddr: query param: {}", query);
         OpResult opResult = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        query.setCameraId(14);
+        query.setTerminalId("TB1945T001");
+        query.setDestinationId(4);
+        query.setPlayTimeLimit(60);
         String url = "";
         if(query == null){
-            query = new VideoUrlQueryDto("wangliji", "tb221932T001", 1, 1, 60);
+            query = new VideoUrlQueryDto("wangliji", "TB1945T001", 14, 4, 60);
         }else{
             if(query.getCameraId() == null){
                 opResult.setStatus(OpResult.OP_FAILED);
                 opResult.setMessage("摄像头id不可为空!");
                 return opResult;
             }
-            CameraEntity camera = cameraService.getCameraById(new Long(query.getCameraId()));
-            if(camera == null){
-                opResult.setStatus(OpResult.OP_FAILED);
-                opResult.setMessage("摄像头不存在！");
-                return opResult;
-            }
-            if(StringUtils.isEmpty(camera.getTerminalId())) {
-                opResult.setStatus(OpResult.OP_FAILED);
-                opResult.setMessage("摄像头尚未关联通用终端！");
-                return opResult;
-            }
+//            CameraEntity camera = cameraService.getCameraById(new Long(query.getCameraId()));
+//            if(camera == null){
+//                opResult.setStatus(OpResult.OP_FAILED);
+//                opResult.setMessage("摄像头不存在！");
+//                return opResult;
+//            }
+//            if(StringUtils.isEmpty(camera.getTerminalId())) {
+//                opResult.setStatus(OpResult.OP_FAILED);
+//                opResult.setMessage("摄像头尚未关联通用终端！");
+//                return opResult;
+//            }
             if(query.getPlayTimeLimit() == null) {
                 query.setPlayTimeLimit(60);
             }
-            url = vodMsgService.sendVod(query.getUserId(), camera.getTerminalId(), query.getCameraId(), 1, query.getPlayTimeLimit());
+            url = vodMsgService.sendVod(query.getUserId(), query.getTerminalId(), query.getCameraId(), query.getDestinationId(), query.getPlayTimeLimit());
+
             //TODO: 测试用，待删除
-            log.info("real url: " + url);
-            url = urlArr[videoUrlCount%3];
-            videoUrlCount ++;
+//            log.info("real url: " + url);
+//            url = urlArr[videoUrlCount%3];
+//            videoUrlCount ++;
 
             opResult.setDataValue(url);
         }
@@ -102,6 +108,11 @@ public class DemoServiceImpl implements DemoService {
 
     @Override
     public String getVideoUrl() {
+
+        //
+
+
+
         String url;
         url = vodMsgService.sendVod("wangliji", "tb221932T001", 1, 1, 60);
         return url;

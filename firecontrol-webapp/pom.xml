@@ -56,7 +56,7 @@
             <artifactId>firecontrol-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-		<!-- 基哥视频jar包依赖 -->
+		<!-- 基哥王立基视频jar包依赖 -->
 		<dependency>
 			<groupId>video</groupId>
 			<artifactId>video</artifactId>

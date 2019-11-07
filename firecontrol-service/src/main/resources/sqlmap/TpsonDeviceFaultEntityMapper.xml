@@ -37,6 +37,7 @@
     <result column="pending_user_id" jdbcType="BIGINT" property="pendingUserId" />
     <result column="is_pending" jdbcType="BIT" property="isPending" />
     <result column="pending_time" jdbcType="INTEGER" property="pendingTime" />
+    <result column="df" jdbcType="INTEGER" property="df" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonDeviceFaultEntity">
     <result column="detail" jdbcType="LONGVARCHAR" property="detail" />
@@ -46,7 +47,7 @@
     add_time, update_time, deal_time, count, position, department_id, device_name, device_code, 
     device_man, device_phone, building_name, floor_name, department_name, geographic_id, 
     is_outdoor, company_name, pos_x, pos_y, photo_id, device_type, device_version, sensor_id, 
-    sensor_name, pending_user_id, is_pending, pending_time
+    sensor_name, pending_user_id, is_pending, pending_time, df
   </sql>
   <sql id="Blob_Column_List">
     detail
@@ -57,14 +58,37 @@
     ,
     <include refid="Blob_Column_List" />
     from tb_server_device_fault
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT} and df = 0
   </select>
+
+
+
+  <select id="getUnhandledFaultByIds"  resultType="java.lang.Long">
+    select id
+    from tb_server_device_fault
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and status = 0 and df = 0
+  </select>
+
+
+  <update id="deleteHandledFaultByIds" parameterType="java.util.List">
+    update tb_server_device_fault
+    set df = 1
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
 
 
   <select id="getFaultByTime" resultMap="BaseResultMap">
     select *
     from tb_server_device_fault
-    where device_type in
+    where df = 0 and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
@@ -72,7 +96,7 @@
       and add_time > #{startTime}
     </if>
     <if test="endTime != null">
-      and  add_time = #{endTime}
+      <![CDATA[ and add_time < #{endTime} ]]>
     </if>
   </select>
 
@@ -80,7 +104,8 @@
     select count(*)
     from tb_server_device_fault
     where
-    device_type in
+    df = 0
+    and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
@@ -107,8 +132,8 @@
   <select id="getFaultBySearch" resultMap="BaseResultMap">
     select *
     from tb_server_device_fault
-    where
-    device_type in
+    where df = 0
+    and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
@@ -128,18 +153,52 @@
       and is_outdoor = #{isOutdoor}
     </if>
     <if test="deviceCode != null">
-      and device_code like concat(%, #{deviceCode}, %);
-    </if>
-    <if test="currentPage != null">
-      limit #{currentPage}, #{limit}
+      and device_code like concat('%', #{deviceCode}, '%')
     </if>
     order by id DESC
+    <if test="currentPage != null">
+      limit #{currentPage}, #{length}
+    </if>
+
   </select>
 
-  <delete id="deleteById" parameterType="java.lang.Long">
-    delete from tb_server_device_fault
+
+  <select id="countUnhandledFault" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device_fault
+    where df = 0 and status = 0
+    <if test="companyId != null">
+      and company_id = #{startTime}
+    </if>
+  </select>
+
+  <select id="countMonthlyHandledFault" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device_fault
+    where df = 0 and status = 1
+    <if test="startTime != null">
+      and deal_time > #{startTime}
+    </if>
+  </select>
+
+
+  <select id="countDayleHandledFault" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device_fault
+    where df = 0 and status = 1
+    <if test="startTime != null">
+      and deal_time > #{startTime}
+    </if>
+  </select>
+
+
+
+  <update id="deleteById" parameterType="java.lang.Long">
+    update tb_server_device_fault set df = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
+
+
   <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonDeviceFaultEntity">
     insert into tb_server_device_fault (type, company_id,
       building_id, floor_id, device_id, 
@@ -152,7 +211,7 @@
       company_name, pos_x, pos_y, 
       photo_id, device_type, device_version, 
       sensor_id, sensor_name, pending_user_id, 
-      is_pending, pending_time, detail
+      is_pending, pending_time, detail, df
       )
     values (#{type,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT},
       #{buildingId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, 
@@ -165,7 +224,7 @@
       #{companyName,jdbcType=VARCHAR}, #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, 
       #{photoId,jdbcType=BIGINT}, #{deviceType,jdbcType=BIGINT}, #{deviceVersion,jdbcType=INTEGER}, 
       #{sensorId,jdbcType=BIGINT}, #{sensorName,jdbcType=VARCHAR}, #{pendingUserId,jdbcType=BIGINT}, 
-      #{isPending,jdbcType=BIT}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR}
+      #{isPending,jdbcType=BIT}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR}, 0
       )
   </insert>
   <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonDeviceFaultEntity">
@@ -277,6 +336,7 @@
       <if test="detail != null">
         detail,
       </if>
+      df
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
 
@@ -385,6 +445,7 @@
       <if test="detail != null">
         #{detail,jdbcType=LONGVARCHAR},
       </if>
+      0
     </trim>
   </insert>
   <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonDeviceFaultEntity">
@@ -498,4 +559,24 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <update id="updateBatchDeal" >
+    update tb_server_device_fault
+    <set>
+      <if test="dealDetail != null">
+        deal_detail = #{dealDetail},
+      </if>
+      status = 1,
+      deal_time = unix_timestamp(now()),
+      update_time = unix_timestamp(now())
+    </set>
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+
+  </update>
+
+
 </mapper>
