@@ -15,16 +15,17 @@ public class ConfigProperties {
 
     private static final Logger log = LoggerFactory.getLogger(ConfigProperties.class);
 
-    @Value("${spring.datasource.druid.url}")
+    //@Value("${spring.datasource.druid.url}")
+    @Value("${spring.datasource.iotaccess.url}")
     private String jmuMpUrl;
 
-    @Value("${spring.datasource.druid.driver-class-name}")
+    @Value("${spring.datasource.iotaccess.driver-class-name}")
     private String jmuMpDriverClassName;
 
-    @Value("${spring.datasource.druid.username}")
+    @Value("${spring.datasource.iotaccess.username}")
     private String jmuMpUsername;
 
-    @Value("${spring.datasource.druid.password}")
+    @Value("${spring.datasource.iotaccess.password}")
     private String jmuMpPassword;
 
 

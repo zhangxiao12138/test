@@ -4,11 +4,13 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.firecontrol.common.StartConfigProperty;
 import com.mycorp.vodplatform.server.Startup;
 import com.mycorp.vodplatform.server.TerminalServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -32,8 +35,8 @@ import java.util.concurrent.Executors;
 @RestController
 @SpringBootApplication
 //TODO:添加config Bean, 把druid的依赖加进来。暂时直接加载yml配置，注释掉druid
-@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
-//@EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
+//@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+@EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
 @ComponentScan(basePackages = {
 		"com.firecontrol.config",
 		"com.firecontrol.common",
@@ -44,35 +47,45 @@ import java.util.concurrent.Executors;
 public class FirecontrolWebappApplication {
 	private static final Logger log = LoggerFactory.getLogger(FirecontrolWebappApplication.class);
 
+
 	public static void main(String[] args) {
-		ApplicationContext context = SpringApplication.run(FirecontrolWebappApplication.class, args);
+		//ApplicationContext context = SpringApplication.run(FirecontrolWebappApplication.class, args);
+		SpringApplication.run(FirecontrolWebappApplication.class, args);
 
 		log.info("====================== here start FirecontrolApplication!===================");
+	}
 
 		//context.getBean(Startup.class).init("A String");
 
-		StringBuffer path = new StringBuffer();
-		//TODO:写入配置文件
+//		StringBuffer path = new StringBuffer();
+//
+//		context.getBean(Startup.class).mainForStart(path.toString());
+
+		//context.getBean(Startup.class).mainForStart(startConfigProperty.getStartupPath());
+
+
+		//TODO:写入配置文件--done
 		//windows
 //		path.append("D:").append(File.separator)
 //				.append("serverConfig.properties");
 
 		//172.16.20.83
-		if(File.separator.equals("\\")){
-			path.append("D:");
-		}
+//		if(File.separator.equals("\\")){
+//			path.append("D:");
+//		}
 //		path.append(File.separator).append("app").append(File.separator)
 //				.append("deploy").append(File.separator).append("jars")
 //				.append(File.separator).append("serverConfig.properties");
 
-		path.append(File.separator).append("etc").append(File.separator)
-				.append("serverConfig.properties");
 
-		context.getBean(Startup.class).mainForStart(path.toString());
+//		path.append(File.separator).append("etc").append(File.separator)
+//				.append("serverConfig.properties");
+
+
 
 /*		ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
 		e.execute(new TerminalServer());*/
-	}
+//	}
 
 	@Bean
 	public HttpMessageConverters fastJsonHttpMessageConverters() {
@@ -102,10 +115,5 @@ public class FirecontrolWebappApplication {
 		HttpMessageConverter<?> converter = fastConverter;
 		return new HttpMessageConverters(converter);
 	}
-
-
-
-
-
 
 }

@@ -46,11 +46,19 @@
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
+		<!-- 在yml中可通过@propery-name@ 获取pom配置值的依赖-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<dependency>
 			<groupId>com.tianbo</groupId>
 			<artifactId>firecontrol-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
         <dependency>
             <groupId>com.firecontrol</groupId>
             <artifactId>firecontrol-service</artifactId>
@@ -68,6 +76,29 @@
 	<profiles>
 
 		<profile>
+			<id>firecontrol-local</id>
+			<properties>
+				<profileActive>local</profileActive>
+			</properties>
+			<!-- 是否主动启用profile中定义的properties参数 -->
+			<!--			<activation>
+                            <activeByDefault>true</activeByDefault>
+                        </activation>-->
+		</profile>
+
+		<profile>
+			<id>firecontrol-ali</id>
+			<properties>
+				<profileActive>ali</profileActive>
+			</properties>
+			<!-- 是否主动启用profile中定义的properties参数 -->
+			<!--			<activation>
+                            <activeByDefault>true</activeByDefault>
+                        </activation>-->
+		</profile>
+
+		<!-- 172.16.20.83 配置 -->
+		<profile>
 			<id>firecontrol-st</id>
 			<properties>
 				<profileActive>st</profileActive>
@@ -77,32 +108,6 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>-->
 		</profile>
-
-		<profile>
-			<id>firecontrol-pro</id>
-			<properties>
-				<profileActive>pro</profileActive>
-			</properties>
-			<!-- 是否主动启用profile中定义的properties参数 -->
-<!--			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>-->
-		</profile>
-
-
-
-		<profile>
-			<id>firecontrol-pt</id>
-			<properties>
-				<profileActive>pt</profileActive>
-			</properties>
-			<!-- 是否主动启用profile中定义的properties参数 -->
-<!--			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>-->
-		</profile>
-
-
 	</profiles>
 
 
@@ -110,8 +115,10 @@
 		<finalName>firecontrol-webapp-${project.version}</finalName>
 		<resources>
 			<resource>
-				<filtering>true</filtering>
+				<!-- 使用maven渲染yml -->
 				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+
 				<includes>
 					<include>application.yml</include>
 					<include>application-${profileActive}.yml</include>

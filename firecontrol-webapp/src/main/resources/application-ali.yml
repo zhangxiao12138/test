@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    #设备接入数据库连接
+      iotaccess:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://139.129.100.51:3306/fire_cloud_server?characterEncoding=UTF-8
+        username: tb-aliyun
+        password: Ss!@#123
+
+    #云大管理系统数据库连接
+      smartcity:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://139.129.100.51:3306/xboot?characterEncoding=UTF-8
+        username: tb-aliyun
+        password: Ss!@#123
+
+#通用终端配置文件
+tyterminal:
+  path: /etc/serverConfig.properties

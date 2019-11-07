@@ -8,20 +8,6 @@ info:
   author: tbclient
 server:
   port: 11001
-#  context-path: /
-#  tomcat:
-#    basedir:  file:.
-#    accesslog:
-#      enabled: true
-#      directory: /app/Logs/tb-firecontrol
-#      pattern: "%{X-Forwarded-For}i %a %{X-B3-TraceId}i %t %m %U %s %b %D"
-#      rename-on-rotate: true
-#      suffix: .log
-#      prefix: access
-#      rotate: true
-#      buffered: false
-#      file-date-format: yyyy-MM-dd
-#    uri-encoding: UTF-8
 
 spring:
   application:
@@ -33,8 +19,9 @@ spring:
       force: true
       enabled: true
   profiles:
-    active: st
-     #active: @profileActive@
+    #active: st
+    #动态指定pom里的profileActive值
+    active: @profileActive@
   aop:
     proxyTargetClass: true
     auto: true
@@ -73,9 +60,9 @@ spring:
 
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      url: jdbc:mysql://139.129.100.51:3306/fire_cloud_server?characterEncoding=UTF-8
-      username: tb-aliyun
-      password: Ss!@#123
+      #url: jdbc:mysql://139.129.100.51:3306/fire_cloud_server?characterEncoding=UTF-8
+      #username: tb-aliyun
+      #password: Ss!@#123
       #url: jdbc:mysql://47.105.53.60:3306/test?characterEncoding=UTF-8
       #username: root
       #password: S!@#s123
@@ -111,6 +98,9 @@ spring:
           data-source-logger-name: DRUID
           statement-executable-sql-log-enable: true
           statement-logger-name: DRUID
+  #指定加载的profile
+  profiles:
+    active: @profileActive@
 
 mybatis:
   mapper-locations: classpath*:sqlmap/*Mapper.xml
