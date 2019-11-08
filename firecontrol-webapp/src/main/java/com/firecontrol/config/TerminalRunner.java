@@ -50,8 +50,7 @@ public class TerminalRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        System.out.println("######################### will start vodplatform startup! #############################");
+
         startup.mainForStart(startConfigProperty.getStartupPath());
-        System.out.println("######################### vodplatform startup started! ##############################");
     }
 }

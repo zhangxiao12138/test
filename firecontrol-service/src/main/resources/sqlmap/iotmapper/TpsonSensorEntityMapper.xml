@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.TpsonSensorMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonSensorEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="camera_id" jdbcType="VARCHAR" property="cameraId" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="alarm_type_id" jdbcType="BIGINT" property="alarmTypeId" />
+    <result column="alarm_level" jdbcType="TINYINT" property="alarmLevel" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="pos_x" jdbcType="VARCHAR" property="posX" />
+    <result column="pos_y" jdbcType="VARCHAR" property="posY" />
+    <result column="sensor_type" jdbcType="BIGINT" property="sensorType" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="limit_up" jdbcType="VARCHAR" property="limitUp" />
+    <result column="limit_down" jdbcType="VARCHAR" property="limitDown" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="alarm_status" jdbcType="TINYINT" property="alarmStatus" />
+    <result column="pre_limit_up" jdbcType="VARCHAR" property="preLimitUp" />
+    <result column="pre_limit_down" jdbcType="VARCHAR" property="preLimitDown" />
+    <result column="channel_switch" jdbcType="BIT" property="channelSwitch" />
+    <result column="trigger_switch" jdbcType="BIT" property="triggerSwitch" />
+    <result column="range" jdbcType="DOUBLE" property="range" />
+    <result column="device_type" jdbcType="BIGINT" property="deviceType" />
+    <result column="warning_switch" jdbcType="BIT" property="warningSwitch" />
+    <result column="online" jdbcType="BIT" property="online" />
+    <result column="fault_status" jdbcType="TINYINT" property="faultStatus" />
+    <result column="site_id" jdbcType="BIGINT" property="siteId" />
+    <result column="group" jdbcType="INTEGER" property="group" />
+    <result column="man" jdbcType="VARCHAR" property="man" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="geographic_id" jdbcType="BIGINT" property="geographicId" />
+    <result column="is_outdoor" jdbcType="BIT" property="isOutdoor" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="alarm_name" jdbcType="VARCHAR" property="alarmName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, camera_id, device_code, alarm_type_id, alarm_level, add_time, update_time, company_id,
+    floor_id, pos_x, pos_y, sensor_type, name, code, limit_up, limit_down, status, alarm_status, 
+    pre_limit_up, pre_limit_down, channel_switch, trigger_switch, range, device_type, 
+    warning_switch, online, fault_status, site_id, group, man, phone, department_id, 
+    geographic_id, is_outdoor, position, alarm_name
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select *
+    from tb_server_sensor
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_sensor
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
+    insert into tb_server_sensor ( camera_id, device_code,
+      alarm_type_id, alarm_level, add_time, 
+      update_time, company_id, floor_id, 
+      pos_x, pos_y, sensor_type, 
+      name, code, limit_up, 
+      limit_down, status, alarm_status, 
+      pre_limit_up, pre_limit_down, channel_switch, 
+      trigger_switch, range, device_type, 
+      warning_switch, online, fault_status, 
+      site_id, group, man, 
+      phone, department_id, geographic_id, 
+      is_outdoor, position, alarm_name
+      )
+    values (#{cameraId,jdbcType=VARCHAR}, #{deviceCode,jdbcType=VARCHAR},
+      #{alarmTypeId,jdbcType=BIGINT}, #{alarmLevel,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, 
+      #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{sensorType,jdbcType=BIGINT}, 
+      #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{limitUp,jdbcType=VARCHAR}, 
+      #{limitDown,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{alarmStatus,jdbcType=TINYINT}, 
+      #{preLimitUp,jdbcType=VARCHAR}, #{preLimitDown,jdbcType=VARCHAR}, #{channelSwitch,jdbcType=BIT}, 
+      #{triggerSwitch,jdbcType=BIT}, #{range,jdbcType=DOUBLE}, #{deviceType,jdbcType=BIGINT}, 
+      #{warningSwitch,jdbcType=BIT}, #{online,jdbcType=BIT}, #{faultStatus,jdbcType=TINYINT}, 
+      #{siteId,jdbcType=BIGINT}, #{group,jdbcType=INTEGER}, #{man,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{departmentId,jdbcType=BIGINT}, #{geographicId,jdbcType=BIGINT}, 
+      #{isOutdoor,jdbcType=BIT}, #{position,jdbcType=VARCHAR}, #{alarmName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
+    insert into tb_server_sensor
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      add_time,
+      <if test="cameraId != null">
+        camera_id,
+      </if>
+      <if test="deviceCode != null">
+        device_code,
+      </if>
+      <if test="alarmTypeId != null">
+        alarm_type_id,
+      </if>
+      <if test="alarmLevel != null">
+        alarm_level,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="floorId != null">
+        floor_id,
+      </if>
+      <if test="posX != null">
+        pos_x,
+      </if>
+      <if test="posY != null">
+        pos_y,
+      </if>
+      <if test="sensorType != null">
+        sensor_type,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="limitUp != null">
+        limit_up,
+      </if>
+      <if test="limitDown != null">
+        limit_down,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="alarmStatus != null">
+        alarm_status,
+      </if>
+      <if test="preLimitUp != null">
+        pre_limit_up,
+      </if>
+      <if test="preLimitDown != null">
+        pre_limit_down,
+      </if>
+      <if test="channelSwitch != null">
+        channel_switch,
+      </if>
+      <if test="triggerSwitch != null">
+        trigger_switch,
+      </if>
+      <if test="range != null">
+        range,
+      </if>
+      <if test="deviceType != null">
+        device_type,
+      </if>
+      <if test="warningSwitch != null">
+        warning_switch,
+      </if>
+      <if test="online != null">
+        online,
+      </if>
+      <if test="faultStatus != null">
+        fault_status,
+      </if>
+      <if test="siteId != null">
+        site_id,
+      </if>
+      <if test="group != null">
+        group,
+      </if>
+      <if test="man != null">
+        man,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="geographicId != null">
+        geographic_id,
+      </if>
+      <if test="isOutdoor != null">
+        is_outdoor,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="alarmName != null">
+        alarm_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      now(),
+      <if test="cameraId != null">
+        #{cameraId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmTypeId != null">
+        #{alarmTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="alarmLevel != null">
+        #{alarmLevel,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="floorId != null">
+        #{floorId,jdbcType=BIGINT},
+      </if>
+      <if test="posX != null">
+        #{posX,jdbcType=VARCHAR},
+      </if>
+      <if test="posY != null">
+        #{posY,jdbcType=VARCHAR},
+      </if>
+      <if test="sensorType != null">
+        #{sensorType,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="limitUp != null">
+        #{limitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="limitDown != null">
+        #{limitDown,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="alarmStatus != null">
+        #{alarmStatus,jdbcType=TINYINT},
+      </if>
+      <if test="preLimitUp != null">
+        #{preLimitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="preLimitDown != null">
+        #{preLimitDown,jdbcType=VARCHAR},
+      </if>
+      <if test="channelSwitch != null">
+        #{channelSwitch,jdbcType=BIT},
+      </if>
+      <if test="triggerSwitch != null">
+        #{triggerSwitch,jdbcType=BIT},
+      </if>
+      <if test="range != null">
+        #{range,jdbcType=DOUBLE},
+      </if>
+      <if test="deviceType != null">
+        #{deviceType,jdbcType=BIGINT},
+      </if>
+      <if test="warningSwitch != null">
+        #{warningSwitch,jdbcType=BIT},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=BIT},
+      </if>
+      <if test="faultStatus != null">
+        #{faultStatus,jdbcType=TINYINT},
+      </if>
+      <if test="siteId != null">
+        #{siteId,jdbcType=BIGINT},
+      </if>
+      <if test="group != null">
+        #{group,jdbcType=INTEGER},
+      </if>
+      <if test="man != null">
+        #{man,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="geographicId != null">
+        #{geographicId,jdbcType=BIGINT},
+      </if>
+      <if test="isOutdoor != null">
+        #{isOutdoor,jdbcType=BIT},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmName != null">
+        #{alarmName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
+    update tb_server_sensor
+    <set>
+      update_time = now(),
+      <if test="cameraId != null">
+        camera_id = #{cameraId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceCode != null">
+        device_code = #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmTypeId != null">
+        alarm_type_id = #{alarmTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="alarmLevel != null">
+        alarm_level = #{alarmLevel,jdbcType=TINYINT},
+      </if>
+
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="floorId != null">
+        floor_id = #{floorId,jdbcType=BIGINT},
+      </if>
+      <if test="posX != null">
+        pos_x = #{posX,jdbcType=VARCHAR},
+      </if>
+      <if test="posY != null">
+        pos_y = #{posY,jdbcType=VARCHAR},
+      </if>
+      <if test="sensorType != null">
+        sensor_type = #{sensorType,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="limitUp != null">
+        limit_up = #{limitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="limitDown != null">
+        limit_down = #{limitDown,jdbcType=VARCHAR},
+      </if>
+
+
+      <if test="preLimitUp != null">
+        pre_limit_up = #{preLimitUp,jdbcType=VARCHAR},
+      </if>
+      <if test="preLimitDown != null">
+        pre_limit_down = #{preLimitDown,jdbcType=VARCHAR},
+      </if>
+      <if test="channelSwitch != null">
+        channel_switch = #{channelSwitch,jdbcType=BIT},
+      </if>
+      <if test="triggerSwitch != null">
+        trigger_switch = #{triggerSwitch,jdbcType=BIT},
+      </if>
+      <if test="range != null">
+        range = #{range,jdbcType=DOUBLE},
+      </if>
+
+      <if test="warningSwitch != null">
+        warning_switch = #{warningSwitch,jdbcType=BIT},
+      </if>
+
+
+      <if test="siteId != null">
+        site_id = #{siteId,jdbcType=BIGINT},
+      </if>
+      <if test="group != null">
+        group = #{group,jdbcType=INTEGER},
+      </if>
+      <if test="man != null">
+        man = #{man,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="geographicId != null">
+        geographic_id = #{geographicId,jdbcType=BIGINT},
+      </if>
+      <if test="isOutdoor != null">
+        is_outdoor = #{isOutdoor,jdbcType=BIT},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmName != null">
+        alarm_name = #{alarmName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <select id="getSensorListBySearch" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity" resultMap="BaseResultMap">
+    select *
+    from tb_server_sensor
+    where device_code = #{deviceCode}
+
+  </select>
+
+
+  <update id="updateSensorState">
+    update tb_server_sensor
+    <set>
+    update_time = now(), status = #{state, jdbcType = TINYINT},
+  </set>
+    where id IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+
+  <delete id="deleteSensorByDevice" parameterType="java.util.List">
+    delete from tb_server_sensor
+    where device_code IN
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+
+  </delete>
+
+</mapper>

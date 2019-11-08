@@ -43,7 +43,7 @@ import java.util.concurrent.Executors;
 		"com.firecontrol.service.impl",
 		"com.firecontrol.web.controller",
 })
-@MapperScan(basePackages = "com.firecontrol.mapper")
+//@MapperScan(basePackages = "com.firecontrol.mapper")
 public class FirecontrolWebappApplication {
 	private static final Logger log = LoggerFactory.getLogger(FirecontrolWebappApplication.class);
 

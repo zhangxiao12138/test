@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.ydmapper.FloorMapper">
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.Floor">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="all_name" jdbcType="VARCHAR" property="allName" />
+        <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+        <result column="department_id" jdbcType="VARCHAR" property="departmentId" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+        <result column="photo_id" jdbcType="VARCHAR" property="photoId" />
+        <result column="posx" jdbcType="VARCHAR" property="posx" />
+        <result column="posy" jdbcType="VARCHAR" property="posy" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+        <result column="parent_title" jdbcType="VARCHAR" property="parentTitle" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+        <result column="img" jdbcType="VARCHAR" property="img" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, create_by, create_time, del_flag, update_by, update_time, all_name, company_id,
+        department_id, level, name, parent_id, photo_id, posx, posy, sort, parent_title,
+        title, description, qr_code, img
+    </sql>
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_floor
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

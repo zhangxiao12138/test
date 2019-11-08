@@ -5,7 +5,10 @@ import com.firecontrol.domain.dto.VideoUrlQueryDto;
 import com.firecontrol.domain.entity.CameraEntity;
 import com.firecontrol.service.CameraService;
 import com.firecontrol.service.DemoService;
+import com.firecontrol.service.FloorService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +29,11 @@ public class CameraController {
     private DemoService demoService;
     @Autowired
     private CameraService cameraService;
+    @Autowired
+    private FloorService floorService;
+
+
+
 
     @ApiOperation(value = "获取摄像头播放url" ,  notes="获取摄像头播放url")
     @RequestMapping(value = "/videoUrl",method = {RequestMethod.POST,RequestMethod.GET})

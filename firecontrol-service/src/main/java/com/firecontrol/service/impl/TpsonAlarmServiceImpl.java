@@ -4,17 +4,14 @@ import com.alibaba.druid.util.StringUtils;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.*;
 import com.firecontrol.domain.entity.*;
-import com.firecontrol.mapper.*;
-import com.firecontrol.service.CameraService;
+import com.firecontrol.mapper.iotmapper.*;
 import com.firecontrol.service.TpsonAlarmService;
-import com.firecontrol.service.TpsonAlarmTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import sun.rmi.server.InactiveGroupException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

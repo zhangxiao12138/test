@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.firecontrol.mapper.iotmapper.OpticalFibreTempMapper" >
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.OpticalFibreTempEntity" >
+        <!-- column 对应数据库字段， property对应实体bean的属性 -->
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <id column="channel" property="channel" jdbcType="VARCHAR" />
+        <result column="tempData" property="tempData" jdbcType="LONGVARCHAR" />
+        <result column="msgtype" property="msgtype" jdbcType="INTEGER" />
+        <result column="recdTime" property="recdTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, channel, tempData,msgtype, recdTime
+    </sql>
+
+    <sql id="whereForFibreTemprature">
+      <if test="channelNo!=null and channelNo!=''"> and channel = #{channelNo}</if>
+    </sql>
+
+    <insert id="insert" parameterType="com.firecontrol.domain.entity.OpticalFibreTempEntity" >
+        insert into tb_fibre_temp (channel, tempData, msgtype, recdTime)
+        values (#{channel,jdbcType=INTEGER}, #{tempData,jdbcType=LONGVARCHAR},
+        #{msgtype,jdbcType=INTEGER}, #{recdTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+
+    <select id="getData" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_fibre_temp
+        where msgtype = 0
+        <include refid="whereForFibreTemprature" />
+        order by recdTime DESC
+    </select>
+
+
+</mapper>

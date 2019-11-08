@@ -4,9 +4,8 @@ import com.firecontrol.common.FireSocket;
 import com.firecontrol.common.FireSocketService;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.VideoUrlQueryDto;
-import com.firecontrol.domain.entity.CameraEntity;
 import com.firecontrol.domain.entity.DemoEntity;
-import com.firecontrol.mapper.DemoMapper;
+import com.firecontrol.mapper.iotmapper.DemoMapper;
 import com.firecontrol.service.CameraService;
 import com.firecontrol.service.DemoService;
 //import com.mycorp.message.Vod;
@@ -15,11 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mariry on 2019/6/21.

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.TpsonAlarmTypeMapper">
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TpsonAlarmType">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="device_type_id" jdbcType="BIGINT" property="deviceTypeId" />
+        <result column="system_type" jdbcType="INTEGER" property="systemType" />
+        <result column="score_weight" jdbcType="DOUBLE" property="scoreWeight" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, device_type_id, system_type, score_weight
+    </sql>
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_alarm_type
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="getBySystemDeviceType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_alarm_type
+        where system_type = #{systemType}
+        <if test="deviceType != null">
+            and device_type_id = #{deviceType}
+        </if>
+    </select>
+
+
+    <select id="getByDeviceType" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_alarm_type
+        where device_type_id = #{deviceType}
+    </select>
+
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from tb_server_alarm_type
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.firecontrol.domain.entity.TpsonAlarmType">
+        insert into tb_server_alarm_type (name, device_type_id,
+        system_type, score_weight)
+        values ( #{name,jdbcType=VARCHAR}, #{deviceTypeId,jdbcType=BIGINT},
+        #{systemType,jdbcType=INTEGER}, #{scoreWeight,jdbcType=DOUBLE})
+    </insert>
+
+
+</mapper>

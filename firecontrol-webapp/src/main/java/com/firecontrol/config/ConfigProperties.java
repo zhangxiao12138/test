@@ -62,8 +62,53 @@ public class ConfigProperties {
     }
 
 
+    //平台管理( 云大 )的数据库连接
 
-/*    @Value("${spring.datasource.jmuv3.jdbc-url}")
+    @Value("${spring.datasource.smartcity.url}")
+    private String ydUrl;
+
+    @Value("${spring.datasource.smartcity.driver-class-name}")
+    private String ydDriverClassName;
+
+    @Value("${spring.datasource.smartcity.username}")
+    private String ydUsername;
+
+    @Value("${spring.datasource.smartcity.password}")
+    private String ydPassword;
+
+    public String getYdUrl() {
+        return ydUrl;
+    }
+
+    public void setYdUrl(String ydUrl) {
+        this.ydUrl = ydUrl;
+    }
+
+    public String getYdDriverClassName() {
+        return ydDriverClassName;
+    }
+
+    public void setYdDriverClassName(String ydDriverClassName) {
+        this.ydDriverClassName = ydDriverClassName;
+    }
+
+    public String getYdUsername() {
+        return ydUsername;
+    }
+
+    public void setYdUsername(String ydUsername) {
+        this.ydUsername = ydUsername;
+    }
+
+    public String getYdPassword() {
+        return ydPassword;
+    }
+
+    public void setYdPassword(String ydPassword) {
+        this.ydPassword = ydPassword;
+    }
+
+    /*    @Value("${spring.datasource.jmuv3.jdbc-url}")
     private String jmuv3Url;
 
     @Value("${spring.datasource.jmuv3.driver-class-name}")

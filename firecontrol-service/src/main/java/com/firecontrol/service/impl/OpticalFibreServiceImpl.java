@@ -1,7 +1,7 @@
 package com.firecontrol.service.impl;
 
 import com.firecontrol.domain.entity.OpticalFibreTempEntity;
-import com.firecontrol.mapper.OpticalFibreTempMapper;
+import com.firecontrol.mapper.iotmapper.OpticalFibreTempMapper;
 import com.firecontrol.service.OpticalFibreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

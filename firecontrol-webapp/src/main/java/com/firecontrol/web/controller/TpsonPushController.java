@@ -2,11 +2,7 @@ package com.firecontrol.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
-import com.firecontrol.domain.dto.SCU200DataDto;
 import com.firecontrol.domain.dto.SCU200Dto;
-import com.firecontrol.domain.entity.TpsonDeviceEntity;
-import com.firecontrol.mapper.TpsonDeviceMapper;
-import com.firecontrol.service.CameraService;
 import com.firecontrol.service.impl.TpsonSCU200ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

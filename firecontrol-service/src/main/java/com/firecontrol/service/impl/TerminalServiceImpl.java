@@ -2,9 +2,8 @@ package com.firecontrol.service.impl;
 
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.entity.TerminalEntity;
-import com.firecontrol.mapper.TerminalMapper;
+import com.firecontrol.mapper.iotmapper.TerminalMapper;
 import com.firecontrol.service.TerminalService;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

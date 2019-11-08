@@ -1,15 +1,12 @@
 package com.firecontrol.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
-import com.firecontrol.common.TBConstants;
 import com.firecontrol.domain.dto.DeviceFaultDetail;
 import com.firecontrol.domain.dto.FaultStatisticsDto;
 import com.firecontrol.domain.entity.*;
-import com.firecontrol.mapper.*;
+import com.firecontrol.mapper.iotmapper.*;
 import com.firecontrol.service.TpsonDeviceFaultService;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
