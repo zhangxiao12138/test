@@ -3,7 +3,10 @@ package com.firecontrol.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.SCU200Dto;
+import com.firecontrol.domain.dto.SMR3002Dto;
+import com.firecontrol.service.TpsonSMR3002Service;
 import com.firecontrol.service.impl.TpsonSCU200ServiceImpl;
+import com.firecontrol.service.impl.TpsonSMR300ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ public class TpsonPushController {
 
     @Autowired
     private TpsonSCU200ServiceImpl tpsonSCU200Service;
+
+    @Autowired
+    private TpsonSMR300ServiceImpl tpsonSMR3002Service;
 
     /**
      * SCU200 烟温一体机报警数据接收
@@ -45,7 +51,7 @@ public class TpsonPushController {
      * 中继数据： dataType = DEVICE_DATA
      * 报警数据： dataType = SENSOR_DATA
      */
-    @RequestMapping(value = "/tpson/open/device/log/smr1410")
+    @RequestMapping(value = "/open/device/log/smr1410")
     @ResponseBody
     public OpResult receiveSMR1410Info() {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
@@ -53,6 +59,19 @@ public class TpsonPushController {
         return op;
     }
 
+
+    /**
+     * SMR 3002 电气识别系统
+     */
+    @RequestMapping(value = "/open/device/log/smr3002")
+    @ResponseBody
+    public OpResult receiveSMR3002Info(@RequestBody SMR3002Dto dto) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        op = tpsonSMR3002Service.saveSMR3002Data(null);
+
+
+        return op;
+    }
 
 
 

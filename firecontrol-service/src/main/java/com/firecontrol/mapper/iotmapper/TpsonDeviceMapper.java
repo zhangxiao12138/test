@@ -2,6 +2,7 @@ package com.firecontrol.mapper.iotmapper;
 
 import com.firecontrol.common.RunningStateCount;
 import com.firecontrol.domain.dto.DeviceSearch;
+import com.firecontrol.domain.dto.DeviceStatMap;
 import com.firecontrol.domain.entity.TpsonDeviceEntity;
 import com.firecontrol.domain.entity.TpsonDeviceLogEntity;
 import io.swagger.models.auth.In;
@@ -45,5 +46,8 @@ public interface TpsonDeviceMapper {
 
     public Integer getTotalBySystemType(@Param("deviceTypeList") List<Long> deviceTypeList);
 
+    public Integer getDeviceStatInfo(@Param("type") Integer type,@Param("runningState")Integer runningState, @Param("companyId") Long companyId);
+
+    public Integer updateDeviceRunningState(@Param("id") Long id, @Param("runningState") Integer runningState);
 
 }

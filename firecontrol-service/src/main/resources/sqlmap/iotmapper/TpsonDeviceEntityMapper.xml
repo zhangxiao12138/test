@@ -550,6 +550,17 @@
   </select>
 
 
+
+  <update id="updateDeviceRunningState">
+    update tb_server_device
+    <set>
+      update_time = now(),running_state = #{runningState}
+    </set>
+    where id = #{id}
+  </update>
+
+
+
   <update id="changeDeviceStatus">
     update tb_server_device
 
@@ -594,10 +605,13 @@
   <select id="countDeviceNumByDeviceType" parameterType="java.util.List" resultType="java.lang.Integer">
     select count(*)
     from tb_server_device
-    where type IN
+    where 1=1
+    <if test="deviceTypeList != null">
+    and type IN
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
   </select>
 
 
@@ -638,6 +652,22 @@
       </foreach>
     </if>
   </select>
+
+
+  <select id="getDeviceStatInfo"  resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_device
+    where type = #{type}
+    <if test="runningState != null">
+      and running_state = #{runningState}
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+
+
+  </select>
+
 
 
 </mapper>

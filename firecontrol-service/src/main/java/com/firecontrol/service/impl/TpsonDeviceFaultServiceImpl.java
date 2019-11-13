@@ -2,6 +2,7 @@ package com.firecontrol.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.dto.AlarmFaultCount;
 import com.firecontrol.domain.dto.DeviceFaultDetail;
 import com.firecontrol.domain.dto.FaultStatisticsDto;
 import com.firecontrol.domain.entity.*;
@@ -49,7 +50,11 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
         try{
             //TODO: 先写死数据，后续改为查库
             //查询systemType下的设备总数
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
+
             if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 deviceNum = deviceMapper.countDeviceNumByDeviceType(deviceTypeList);
             }
@@ -115,8 +120,12 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
             }
 
             //获取起止时间之内的所有报警记录
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+            List<Long> deviceTypeList = null;
+            if(systemType != 0){
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
+
+//            if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 List<TpsonDeviceFaultEntity> faultList = tpsonDeviceFaultMapper.getFaultByTime(deviceTypeList, start, end);
                 if(!CollectionUtils.isEmpty(faultList)){
                     for(TpsonDeviceFaultEntity fault : faultList){
@@ -139,7 +148,7 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
                     }
                 }
                 op.setDataValue(finalList);
-            }
+//            }
         }catch (Exception e) {
             log.error("getFaultTrendDiagram ERROR! exception: {}", e);
             op.setStatus(OpResult.OP_FAILED);
@@ -160,15 +169,18 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
         Map rtnMap = new HashMap();
 
         try{
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
+//            if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 total = tpsonDeviceFaultMapper.getFaultCountBySearch(deviceTypeList,
                         faultType, status, isOutdoor, deviceCode, startTime, endTime);
                 if(total > 0) {
                     faultList = tpsonDeviceFaultMapper.getFaultBySearch(deviceTypeList,
                             faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage, length);
                 }
-            }
+//            }
             rtnMap.put("total", total);
             rtnMap.put("faultList", faultList);
             op.setDataValue(rtnMap);
@@ -293,6 +305,32 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
         }
 
         return op;
+    }
+
+    @Override
+    public AlarmFaultCount homePageFaultCount(AlarmFaultCount rtn) {
+        try{
+            Calendar cal = Calendar.getInstance();
+
+            cal.set(Calendar.HOUR_OF_DAY,0);
+            cal.set(Calendar.MINUTE,0);
+            cal.set(Calendar.SECOND,0);
+            Long startTime = cal.getTimeInMillis()/1000;
+            rtn.setTodayFault(tpsonDeviceFaultMapper.getFaultCountBySearch(null,null,null,null,null,startTime, null));
+
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            startTime = cal.getTimeInMillis()/1000;
+            rtn.setThisMonthFault(tpsonDeviceFaultMapper.getFaultCountBySearch(null,null,null,null,null,startTime, null));
+
+            cal.set(Calendar.MONTH, 1);
+            startTime = cal.getTimeInMillis()/1000;
+            rtn.setThisYearFault(tpsonDeviceFaultMapper.getFaultCountBySearch(null,null,null,null,null,startTime, null));
+
+        }catch (Exception e){
+            log.error("homePageFaultCount ERROR! e={}", e);
+            return rtn;
+        }
+        return rtn;
     }
 
 

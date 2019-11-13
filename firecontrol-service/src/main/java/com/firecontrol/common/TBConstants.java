@@ -65,6 +65,21 @@ public class TBConstants {
 
     }
 
+    public class DeviceStatus {
+        public final static int unActive = 0;      //未激活
+        public final static int offline = 1;      //离线
+        public final static int online = 2;      //正常
+        public final static int fault = 3;      //故障
+        public final static int alarm = 4;      //报警
+        public final static int forbidden = 5;      //禁用
+    }
+
+    public class DeviceOnOffLine{
+        public final static boolean online = true;
+        public final static boolean offline = false;
+    }
+
+
 
     public class TypeConstants {
         public final static int itemSku = 1;      //商品档案导入

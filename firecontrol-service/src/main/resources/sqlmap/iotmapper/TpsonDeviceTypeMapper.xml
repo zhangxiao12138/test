@@ -19,7 +19,17 @@
     <select id="getDeviceTypeBySystemType" resultType="java.lang.Long">
         select id
         from tb_server_device_type
-        where system_type = #{systemType}
+        where 1=1
+        <if test="systemType != 0">
+        and system_type = #{systemType}
+        </if>
+    </select>
+
+
+    <select id="getDeviceTypeNameByType" resultType="java.lang.String">
+        select `name`
+        from tb_server_device_type
+        where id = #{type}
     </select>
 
 

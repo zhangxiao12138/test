@@ -1,6 +1,7 @@
 package com.firecontrol.service;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.dto.AlarmFaultCount;
 
 import java.util.Date;
 
@@ -24,5 +25,7 @@ public interface TpsonDeviceFaultService {
     public OpResult deleteHandledFaultByIds(String ids);
 
     public OpResult batchDeal(String ids, String dealDetail);
+
+    public AlarmFaultCount homePageFaultCount(AlarmFaultCount rtn);
 
 }

@@ -5,6 +5,7 @@ import com.firecontrol.domain.entity.CameraEntity;
 import com.firecontrol.domain.entity.TerminalEntity;
 import com.firecontrol.service.TerminalService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +21,14 @@ public class TerminalController {
     @Autowired
     private TerminalService terminalService;
 
+    @ApiOperation(value = "新增终端" ,  notes="新增终端")
     @RequestMapping(value = "/newTerminal")
     @ResponseBody
     public OpResult insert(TerminalEntity terminal){
         return terminalService.insertTerminal(terminal);
     }
+
+
 
     @RequestMapping(value = "/terminalList")
     @ResponseBody

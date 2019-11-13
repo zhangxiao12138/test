@@ -1,14 +1,12 @@
 package com.firecontrol.mapper.iotmapper;
 
-import com.firecontrol.domain.dto.AlarmDealCountDto;
-import com.firecontrol.domain.dto.AlarmDetailDto;
-import com.firecontrol.domain.dto.AlarmHandleCountDto;
-import com.firecontrol.domain.dto.AlarmTypeCountDto;
+import com.firecontrol.domain.dto.*;
 import com.firecontrol.domain.entity.TpsonAlarmEntity;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mariry on 2019/9/30.
@@ -77,4 +75,14 @@ public interface TpsonAlarmMapper {
                                                          @Param("alarmType") Long alarmType);
 
     public Integer updateAlarmCountById(@Param("id") Long id);
+
+    public List<AlarmTypeCountDto> getAlarmTypeRank(@Param("startTime") Integer startTime,
+                                                 @Param("endTime")Integer endTime,
+                                                 @Param("companyId")Long companyId);
+
+    public String getAlarmTypeNameByType(@Param("id") Integer id);
+
+    public List<SumRateStatDto> homePageSumRateStat(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("companyId") Long companyId);
+
+
 }

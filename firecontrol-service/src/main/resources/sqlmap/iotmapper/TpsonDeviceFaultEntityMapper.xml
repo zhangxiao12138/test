@@ -88,10 +88,13 @@
   <select id="getFaultByTime" resultMap="BaseResultMap">
     select *
     from tb_server_device_fault
-    where df = 0 and device_type in
+    where df = 0
+    <if test="deviceTypeList != null">
+    and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time > #{startTime}
     </if>
@@ -105,10 +108,12 @@
     from tb_server_device_fault
     where
     df = 0
+    <if test="deviceTypeList != null">
     and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time > #{startTime}
     </if>
@@ -133,10 +138,12 @@
     select *
     from tb_server_device_fault
     where df = 0
+    <if test="deviceTypeList != null">
     and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time > #{startTime}
     </if>

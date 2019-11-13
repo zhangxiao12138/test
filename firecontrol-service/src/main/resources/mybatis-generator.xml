@@ -9,7 +9,11 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--数据库链接地址账号密码-->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://172.16.20.83:3306/fire_cloud_server?characterEncoding=UTF-8" userId="root" password="S!@#s123">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://139.129.100.51:3306/xboot?characterEncoding=UTF-8" userId="tb-aliyun" password="Ss!@#123">
+                <!--
+                <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://139.129.100.51:3306/fire_cloud_server?characterEncoding=UTF-8" userId="root" password="S!@#s123">
+                -->
+
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -50,7 +54,7 @@
 
         <!--<table tableName="stockTheme" domainObjectName="StockTheme" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
 
-        <table tableName="tb_server_sensor_type" domainObjectName="TpsonSensorType" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="t_floor" domainObjectName="Floor" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
 
 

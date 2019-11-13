@@ -6,6 +6,7 @@ import com.firecontrol.common.OpResult;
 import com.firecontrol.common.RunningStateCount;
 import com.firecontrol.common.TBConstants;
 import com.firecontrol.domain.dto.DeviceSearch;
+import com.firecontrol.domain.dto.DeviceStatMap;
 import com.firecontrol.domain.dto.FaultCountDto;
 import com.firecontrol.domain.entity.*;
 import com.firecontrol.mapper.iotmapper.CameraMapper;
@@ -43,6 +44,8 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     private TpsonDeviceTypeMapper deviceTypeMapper;
 
 
+
+
     @Transactional
     @Override
     public OpResult insertDevice(TpsonDeviceEntity device) {
@@ -75,12 +78,10 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
             switch (device.getType().intValue()) {
                 case TBConstants.DEVICE_TYPE.YG:
                     //烟感
-                    //opError = "参数中包含校验特殊字符";
                     createYG(device);
                     break;
                 case TBConstants.DEVICE_TYPE.YD:
                     //用电
-                    //opError = "参数中包含校验特殊字符";
                     createElectrical(device);
                     break;
                 case TBConstants.DEVICE_TYPE.XFS:
@@ -120,7 +121,7 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         insertFlogSensor(device);
         insertUnpackSensor(device);
 
-        //TODO:
+        //TODO: transaction
         return "success";
     }
 
@@ -135,7 +136,7 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         //添加故障电弧传感器
         insertGZDHSensor(device);
 
-        //TODO:
+        //TODO: transaction
         return "success";
     }
 
@@ -349,10 +350,13 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         List<RunningStateCount> finalList = null;
         try{
             finalList = initFinalList();
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
-                rtnList = tpsonDeviceMapper.getRunningStateDistByDeviceType(deviceTypeList);
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
             }
+//            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+                rtnList = tpsonDeviceMapper.getRunningStateDistByDeviceType(deviceTypeList);
+//            }
 
             //补充缺少的状态
             for(RunningStateCount f : finalList){
@@ -384,11 +388,15 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         Integer offLineCount = 0;
         Integer total = 0;
         try{
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
+
+//            if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 offLineCount = tpsonDeviceMapper.getOfflineDeviceCountByDeviceType(deviceTypeList);
                 total = tpsonDeviceMapper.getTotalBySystemType(deviceTypeList);
-            }
+//            }
             rtnMap.put("offLine", offLineCount);
             rtnMap.put("total", total);
             rtnMap.put("systemType", systemType);
@@ -434,6 +442,46 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
 
         return op;
     }
+
+    /**
+     * 首页获取设备状态统计数据
+     * @param companyId
+     * @return
+     */
+    @Override
+    public OpResult deviceStat(Long companyId) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+        List<DeviceStatMap> rtnList = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
+        //running_state: 0未激活，1离线，2正常，3故障，4报警，5禁用',
+        //14中类型的主机，循环查询
+        Integer type = 0;
+        try{
+            for(type = 1; type< 14; type++) {
+                DeviceStatMap dmap = new DeviceStatMap();
+                dmap.setOnline(tpsonDeviceMapper.getDeviceStatInfo(type, 2, companyId));
+                dmap.setOffline(tpsonDeviceMapper.getDeviceStatInfo(type, 1, companyId));
+                dmap.setFault(tpsonDeviceMapper.getDeviceStatInfo(type, 3,  companyId));
+                dmap.setAlarm(tpsonDeviceMapper.getDeviceStatInfo(type,4,  companyId));
+                dmap.setUnActive(tpsonDeviceMapper.getDeviceStatInfo(type,0,  companyId));
+                dmap.setName(deviceTypeMapper.getDeviceTypeNameByType(type));
+                rtnList.add(dmap);
+                nameList.add(dmap.getName());
+            }
+            rtnMap.put("systemName", nameList);
+            rtnMap.put("dataList", rtnList);
+            op.setDataValue(rtnMap);
+        }catch (Exception e){
+            log.error("deviceStat ERROR! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
+    }
+
+
 
     //添加故障电弧传感器
     private boolean insertGZDHSensor(TpsonDeviceEntity device){

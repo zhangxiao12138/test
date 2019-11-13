@@ -30,7 +30,7 @@ public class TerminalServiceImpl implements TerminalService {
 
         try{
             String terminalId = generageTerminalId();
-            terminal.setId(terminalId);
+            terminal.setHardwareId(terminalId);
             terminal.setStatus(0);//新建，状态均为未激活
             boolean result = terminalMapper.insert(terminal);
             if(!result){

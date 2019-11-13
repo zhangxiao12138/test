@@ -43,7 +43,10 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
         Map rtnMap = new HashMap<>();
 
         try{
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
             List<Integer> totalAndUnhandled = null;
             totalAndUnhandled = tpsonAlarmMapper.getAlarmCountByDeviceType(deviceTypeList);
 
@@ -121,8 +124,12 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 return op;
             }
             //获取起止时间之内的所有报警记录
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+            List<Long> deviceTypeList = null;
+            if(systemType != 0){
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
+
+            //if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 List<TpsonAlarmEntity> alarmList = tpsonAlarmMapper.getAlarmByTime(deviceTypeList, start, end);
                 if(!CollectionUtils.isEmpty(alarmList)){
                     //往list里塞数据
@@ -137,7 +144,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                     }
                 }
                 op.setDataValue(rtnList);
-            }
+           // }
         }catch (Exception e) {
             log.error("getFaultTrendDiagram ERROR! exception: {}", e);
             op.setStatus(OpResult.OP_FAILED);
@@ -159,8 +166,12 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
         Map rtnMap = new HashMap();
 
         try{
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+            List<Long> deviceTypeList = null;
+            if(systemType != 0){
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
+
+//            if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 total = tpsonAlarmMapper.getAlarmCountBySearch(deviceTypeList,
                         faultType, status, isOutdoor, deviceCode, startTime, endTime);
                 if(total > 0) {
@@ -173,7 +184,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                         }
                     }
                 }
-            }
+//            }
             rtnMap.put("total", total);
             rtnMap.put("alarmList", alarmList);
             op.setDataValue(rtnMap);
@@ -336,10 +347,14 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             }
             List<AlarmDealCountDto> rtnList = initAlarmDealCountList();
 
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)){
-                list = tpsonAlarmMapper.dealTypeCount(deviceTypeList, startTime, endTime, companyId);
+            List<Long> deviceTypeList = null;
+            if(systemType != 0){
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
             }
+
+//            if(!CollectionUtils.isEmpty(deviceTypeList)){
+                list = tpsonAlarmMapper.dealTypeCount(deviceTypeList, startTime, endTime, companyId);
+//            }
 
             if(!CollectionUtils.isEmpty(list)){
                 for(AlarmDealCountDto d : list){
@@ -410,10 +425,14 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             }
             List<AlarmTypeCountDto> rtnList = initAlarmCountByType(systemType);
 
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)){
-                list = tpsonAlarmMapper.alarmTypeCount(deviceTypeList, startTime, endTime, companyId);
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
             }
+
+//            if(!CollectionUtils.isEmpty(deviceTypeList)){
+                list = tpsonAlarmMapper.alarmTypeCount(deviceTypeList, startTime, endTime, companyId);
+//            }
 
             if(!CollectionUtils.isEmpty(list)){
                 for(AlarmTypeCountDto d : list){
@@ -447,10 +466,14 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 op.setMessage("系统类型/开始时间不可为空!");
                 return op;
             }
-            List<Long> deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            if(!CollectionUtils.isEmpty(deviceTypeList)){
-                list = tpsonAlarmMapper.getAlarmHandleRank(deviceTypeList, startTime, endTime, companyId);
+            List<Long> deviceTypeList = null;
+            if(systemType != 0) {
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
             }
+
+//            if(!CollectionUtils.isEmpty(deviceTypeList)){
+                list = tpsonAlarmMapper.getAlarmHandleRank(deviceTypeList, startTime, endTime, companyId);
+//            }
 
             op.setDataValue(list);
         }catch (Exception e){
@@ -463,6 +486,104 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
     }
 
 
+    @Override
+    public OpResult alarmTop5(Integer startTime, Integer endTime, Long companyId) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        List<AlarmTypeCountDto> list = null;
+        try{
+            if(startTime == null) {
+                op.setStatus(OpResult.OP_FAILED);
+                op.setMessage("开始时间不可为空!");
+                return op;
+            }
+
+            list = tpsonAlarmMapper.getAlarmTypeRank(startTime, endTime, companyId);
+            if(!CollectionUtils.isEmpty(list)) {
+                list.stream().forEach(a -> {
+                    a.setAlarmTypeName(tpsonAlarmMapper.getAlarmTypeNameByType(a.getAlarmType()));
+                });
+            }
+
+            op.setDataValue(list);
+        }catch (Exception e){
+            log.error("dealTypeCount ERROR! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
+
+    }
+
+    @Override
+    public AlarmFaultCount homePageAlarmCount(AlarmFaultCount rtn) {
+        try{
+            Calendar cal = Calendar.getInstance();
+
+            cal.set(Calendar.HOUR_OF_DAY,0);
+            cal.set(Calendar.MINUTE,0);
+            cal.set(Calendar.SECOND,0);
+            Long startTime = cal.getTimeInMillis()/1000;
+            rtn.setTodayAlarm(tpsonAlarmMapper.getAlarmCountBySearch(null,null,null,null,null,startTime, null));
+
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            startTime = cal.getTimeInMillis()/1000;
+            rtn.setThisMonthAlarm(tpsonAlarmMapper.getAlarmCountBySearch(null,null,null,null,null,startTime, null));
+
+            cal.set(Calendar.MONTH, 1);
+            startTime = cal.getTimeInMillis()/1000;
+            rtn.setThisYearAlarm(tpsonAlarmMapper.getAlarmCountBySearch(null,null,null,null,null,startTime, null));
+
+        }catch (Exception e){
+            log.error("AlarmFaultCount ERROR! e={}", e);
+            return rtn;
+        }
+        return rtn;
+    }
+
+    /**
+     * 为首页下方图表提供接口数据
+     * 查询30天之前到当天的数据及比例
+     * @param rtn
+     * @param startTime
+     * @param endTime
+     * @param companyId
+     * @return
+     */
+    @Override
+    public Map homePageSumRateStat(Map rtn, Long startTime, Long endTime, Long companyId) {
+
+        try{
+            List<SumRateStatDto> dbresult = tpsonAlarmMapper.homePageSumRateStat(startTime, endTime, companyId);
+            Integer total = tpsonAlarmMapper.getAlarmCountBySearch(null, null,null, null, null,startTime,endTime);
+            if(!CollectionUtils.isEmpty(dbresult)) {
+                for(SumRateStatDto s : dbresult){
+                    //0:unhandle 1:handled 2:misAlarm
+                    if(s.getStatus() == 0){
+                        rtn.put("unhandleCount", s.getAmount());
+                        rtn.put("unhandleRate", s.getAmount().doubleValue()/total);
+                    }
+                    if(s.getStatus() == 1){
+                        rtn.put("handledCount", s.getAmount());
+                        rtn.put("handleRate", s.getAmount().doubleValue()/total);
+                    }
+                    if(s.getStatus() == 2){
+                        rtn.put("misAlarmCount", s.getAmount());
+                        rtn.put("misAlarmRate", s.getAmount().doubleValue()/total);
+                    }
+                }
+            }
+        }catch (Exception e){
+            log.error("homePageSumRateStat ERROR! e= {}", e);
+            return rtn;
+        }
+
+        return rtn;
+    }
+
+
     private List<Map> initFaultResultList(Date startTime, Date endTime) {
         List<Map> rtnList = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -470,6 +591,10 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             Calendar cstart = Calendar.getInstance();
             Calendar cend = Calendar.getInstance();
             cstart.setTime(startTime);
+            //防止前端传的时间不是0点0分，这里重置一遍
+            cstart.set(Calendar.HOUR, 0);
+            cstart.set(Calendar.MINUTE, 0);
+            cstart.set(Calendar.SECOND, 0);
             cend.setTime(endTime);
 
             while(cstart.getTimeInMillis() < cend.getTimeInMillis()){

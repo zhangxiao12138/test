@@ -21,7 +21,7 @@ public interface TpsonDeviceTypeMapper {
 
     public List<Long> getDeviceTypeBySystemType(@Param("systemType") Integer systemType);
 
-
+    public String getDeviceTypeNameByType(@Param("type") Integer type);
 
 }
 

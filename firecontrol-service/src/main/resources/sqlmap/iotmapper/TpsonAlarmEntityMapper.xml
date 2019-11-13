@@ -694,11 +694,13 @@
   <select id="getAlarmCountBySearch" resultType="java.lang.Integer">
     select count(*)
     from tb_server_alarm
-    where
-    device_type in
+    where 1=1
+    <if test="deviceTypeList != null">
+     and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time > #{startTime}
     </if>
@@ -817,11 +819,13 @@
 
   <select id="dealTypeCount" resultType="com.firecontrol.domain.dto.AlarmDealCountDto" >
     SELECT count(*) as amount, status from tb_server_alarm
-    where is_delete = 0 AND
-    device_type in
+    where is_delete = 0
+    <if test="deviceTypeList != null">
+      AND device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time >= #{startTime}
     </if>
@@ -836,13 +840,51 @@
   </select>
 
 
+  <select id="getAlarmTypeRank" resultType="com.firecontrol.domain.dto.AlarmTypeCountDto" >
+    SELECT count(*) as amount, `type` as alarmType from tb_server_alarm
+    where is_delete = 0
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+    group by `type`
+    order by amount DESC
+    limit 5
+  </select>
+
+  <select id="getAlarmTypeNameByType" resultType="java.lang.String" >
+    SELECT `name` from tb_server_alarm_type
+    where id = #{id}
+  </select>
+
+  <select id="homePageSumRateStat" resultType="com.firecontrol.domain.dto.SumRateStatDto" >
+    SELECT count(*) as amount, status from tb_server_alarm
+    where add_time >= #{startTime}
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+        and company_id = #{companyId}
+    </if>
+    GROUP BY status
+  </select>
+
+
   <select id="alarmTypeCount" resultType="com.firecontrol.domain.dto.AlarmTypeCountDto" >
     SELECT count(*) as amount, `type` as alarmType from tb_server_alarm
-    where is_delete = 0 AND
+    where is_delete = 0
+    <if test="deviceTypeList != null">
+    AND
     device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time >= #{startTime}
     </if>
@@ -859,11 +901,13 @@
   <select id="getAlarmHandleRank" resultType="com.firecontrol.domain.dto.AlarmHandleCountDto" >
     SELECT deal_user_id as dealUserId, count(*) as amount from tb_server_alarm
     where is_delete = 0
+    <if test="deviceTypeList != null">
     and
     device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and deal_time >= #{startTime}
     </if>

@@ -37,5 +37,5 @@ public interface TpsonDeviceService {
 
     OpResult deviceLog(String deviceCode, String logData, Integer startTime, Integer endTime, Integer currentPage, Integer length);
 
-
+    OpResult deviceStat(Long companyId);
 }

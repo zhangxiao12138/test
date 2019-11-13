@@ -1,6 +1,9 @@
 package com.firecontrol.service;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.dto.AlarmFaultCount;
+
+import java.util.Map;
 
 /**
  * Created by mariry on 2019/10/11.
@@ -34,6 +37,12 @@ public interface TpsonAlarmService {
     OpResult alarmCountByType(Integer systemType, Integer startTime, Integer endTime, String companyId);
 
     OpResult getAlarmHandleRank(Integer systemType, Integer startTime, Integer endTime, String companyId);
+
+    OpResult alarmTop5(Integer startTime, Integer endTime, Long companyId);
+
+    AlarmFaultCount homePageAlarmCount(AlarmFaultCount rtn);
+
+    Map homePageSumRateStat(Map rtn, Long startTime, Long endTime, Long companyId);
 
 
 

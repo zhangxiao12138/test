@@ -10,6 +10,10 @@ public class AlarmHandleCountDto {
 
     private String dealUserName;
 
+    private Long type;
+
+    private String typeName;
+
     public Long getDealUserId() {
         return dealUserId;
     }
@@ -32,5 +36,21 @@ public class AlarmHandleCountDto {
 
     public void setDealUserName(String dealUserName) {
         this.dealUserName = dealUserName;
+    }
+
+    public Long getType() {
+        return type;
+    }
+
+    public void setType(Long type) {
+        this.type = type;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }
