@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 
 @Service
 public class FireSocketService {
+
         private int port= 1936;
         private String host= "172.16.20.83";
 

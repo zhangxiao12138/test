@@ -4,8 +4,10 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.common.TBConstants;
+import com.firecontrol.common.WebSocketService;
 import com.firecontrol.domain.dto.SCU200DataDto;
 import com.firecontrol.domain.dto.SCU200Dto;
+import com.firecontrol.domain.dto.WebSocketMsg;
 import com.firecontrol.domain.entity.TpsonAlarmEntity;
 import com.firecontrol.domain.entity.TpsonDeviceEntity;
 import com.firecontrol.domain.entity.TpsonDeviceFaultEntity;
@@ -37,6 +39,8 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
     private TpsonDeviceHeartLogMapper heartLogMapper;
     @Autowired
     private TpsonDeviceFaultMapper tpsonFaultMapper;
+    @Autowired
+    private WebSocketService webSocketService;
 
     @Override
     public OpResult saveSCU200Data(SCU200Dto dto) {
@@ -59,6 +63,9 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
                     //TODO:添加事务层，写入小事务
                     insertOrUpdateAlarm(dto, device);
                     updateDeviceStatue(device.getId(), TBConstants.DeviceStatus.alarm);
+
+
+
 
 
                 }else if(checkFaultExist(data)) {
@@ -124,6 +131,11 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
             TpsonAlarmEntity alarm = tpsonAlarmMapper.getUnhandleAlarmByDeviceInfo(dto.getDeviceCode(), (long)19);
             if(alarm != null){
                 tpsonAlarmMapper.updateAlarmCountById(alarm.getId());
+
+
+                //websocket 推送页面
+                webSocketService.sendInfo(JSON.toJSONString(alarm), null);
+
             }else{
                 //新增记录
                 //NB烟雾报警
@@ -156,6 +168,11 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
                 //TODO:全部building_id由long改为string
                 // alarm.setBuildingId(device.getBuildingId());
                 tpsonAlarmMapper.insert(alarm);
+
+
+                //websocket 推送页面
+                webSocketService.sendInfo(JSON.toJSONString(alarm), null);
+
             }
             //添加设备心跳日志 device heart log
             insertDeviceHeartLog(device.getId());
