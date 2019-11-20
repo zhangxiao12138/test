@@ -2,46 +2,47 @@ package com.firecontrol.domain.dto;
 
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.domain.entity.TpsonAlarmEntity;
+import io.swagger.models.auth.In;
 
 /**
  * Created by mariry on 2019/11/14.
  */
 public class WebSocketMsg {
-    private String fromUser;
-    private String toUser;
-    private TpsonAlarmEntity message;
+    private Integer msgType;
 
-    public String getFromUser() {
-        return fromUser;
+    private Integer showWindow;
+
+    private Object data;
+
+    public Integer getMsgType() {
+        return msgType;
     }
 
-    public void setFromUser(String fromUser) {
-        this.fromUser = fromUser;
+    public WebSocketMsg(){}
+
+    public WebSocketMsg(Integer msgType, Integer showWindow, Object data){
+        this.msgType = msgType;
+        this.showWindow = showWindow;
+        this.data = data;
     }
 
-    public String getToUser() {
-        return toUser;
+    public void setMsgType(Integer msgType) {
+        this.msgType = msgType;
     }
 
-    public void setToUser(String toUser) {
-        this.toUser = toUser;
+    public Integer getShowWindow() {
+        return showWindow;
     }
 
-    public TpsonAlarmEntity getMessage() {
-        return message;
+    public void setShowWindow(Integer showWindow) {
+        this.showWindow = showWindow;
     }
 
-    public void setMessage(TpsonAlarmEntity message) {
-        this.message = message;
+    public Object getData() {
+        return data;
     }
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "fromUser='" + fromUser + '\'' +
-                ", toUser='" + toUser + '\'' +
-                ", message='" + JSON.toJSONString(message) + '\'' +
-                '}';
+    public void setData(Object data) {
+        this.data = data;
     }
-
 }

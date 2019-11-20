@@ -67,7 +67,7 @@ public class TpsonPushController {
     @ResponseBody
     public OpResult receiveSMR3002Info(@RequestBody SMR3002Dto dto) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
-        op = tpsonSMR3002Service.saveSMR3002Data(null);
+        op = tpsonSMR3002Service.saveSMR3002Data(dto);
 
 
         return op;

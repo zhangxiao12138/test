@@ -14,13 +14,15 @@ public interface TerminalMapper {
 
     public int update(TerminalEntity terminalEntity);
 
-    public List<TerminalEntity> getAllTerminalList();
+    public List<TerminalEntity> getTerminalListByPage(TerminalEntity terminalEntity);
 
-    public List<String> getAllTerminalIds();
+    public List<String> getAllTerminalIds(@Param("status") Integer status);
 
     public int getWeekTerminalCount(@Param("prefix") String prefix);
 
     public int updateHardwareId(@Param("terminalId") String terminalId, @Param("hardwareId") String hardwareId);
+
+    public Integer getTerminalCount(TerminalEntity terminal);
 
 
 }

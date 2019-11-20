@@ -8,6 +8,7 @@ import com.firecontrol.common.WebSocketService;
 import com.firecontrol.domain.dto.SCU200DataDto;
 import com.firecontrol.domain.dto.SCU200Dto;
 import com.firecontrol.domain.dto.WebSocketMsg;
+import com.firecontrol.domain.dto.WsAlarmPush;
 import com.firecontrol.domain.entity.TpsonAlarmEntity;
 import com.firecontrol.domain.entity.TpsonDeviceEntity;
 import com.firecontrol.domain.entity.TpsonDeviceFaultEntity;
@@ -19,6 +20,7 @@ import com.firecontrol.mapper.iotmapper.TpsonDeviceMapper;
 import com.firecontrol.service.TpsonSCU200Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,7 +136,14 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
 
 
                 //websocket 推送页面
-                webSocketService.sendInfo(JSON.toJSONString(alarm), null);
+                WsAlarmPush wAlarm = new WsAlarmPush();
+                BeanUtils.copyProperties(alarm, wAlarm);
+                wAlarm.setMsgType(1);
+                WebSocketMsg wsmsg = new WebSocketMsg();
+                wsmsg.setMsgType(1);
+                wsmsg.setShowWindow(1);
+                wsmsg.setData(wAlarm);
+                webSocketService.sendInfo(JSON.toJSONString(wsmsg), null);
 
             }else{
                 //新增记录
@@ -171,7 +180,15 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
 
 
                 //websocket 推送页面
-                webSocketService.sendInfo(JSON.toJSONString(alarm), null);
+                WsAlarmPush wAlarm = new WsAlarmPush();
+                BeanUtils.copyProperties(alarm, wAlarm);
+                wAlarm.setMsgType(1);
+                WebSocketMsg wsmsg = new WebSocketMsg();
+                wsmsg.setMsgType(1);
+                wsmsg.setShowWindow(1);
+                wsmsg.setData(wAlarm);
+
+                webSocketService.sendInfo(JSON.toJSONString(wsmsg), null);
 
             }
             //添加设备心跳日志 device heart log

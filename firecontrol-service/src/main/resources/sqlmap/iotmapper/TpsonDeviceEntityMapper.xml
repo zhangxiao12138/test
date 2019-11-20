@@ -641,6 +641,18 @@
   </select>
 
 
+  <update id="updateDeviceRunningStateByCodeList">
+    update tb_server_device
+    <set>
+      update_time = now(),running_state = #{runningState, jdbcType = TINYINT}
+    </set>
+    where code IN
+    <foreach collection="deviceCodeList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+
   <select id="getTotalBySystemType"  resultType="java.lang.Integer">
     select count(*)
     from tb_server_device

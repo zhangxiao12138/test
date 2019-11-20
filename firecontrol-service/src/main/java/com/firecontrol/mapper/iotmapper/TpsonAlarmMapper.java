@@ -52,6 +52,8 @@ public interface TpsonAlarmMapper {
 
     public Integer updateBatchDeal(@Param("idList") List<String> idList, @Param("status")Integer status, @Param("dealDetail") String dealDetail);
 
+    public List<String>getDeviceCodeByAlarmId(@Param("idList") List<String> idList);
+
     public Integer updateAlarmDeal(@Param("id") Long id, @Param("status") Integer status, @Param("dealDetail") String dealDetail);
 
     public List<AlarmDealCountDto> dealTypeCount(@Param("deviceTypeList") List<Long>deviceTypeList,

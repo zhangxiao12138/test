@@ -50,4 +50,6 @@ public interface TpsonDeviceMapper {
 
     public Integer updateDeviceRunningState(@Param("id") Long id, @Param("runningState") Integer runningState);
 
+    public Integer updateDeviceRunningStateByCodeList(@Param("deviceCodeList")List<String>deviceCodeList, @Param("runningState") Integer runningState);
+
 }

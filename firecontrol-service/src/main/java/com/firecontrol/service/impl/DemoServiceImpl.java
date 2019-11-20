@@ -3,7 +3,9 @@ package com.firecontrol.service.impl;
 import com.firecontrol.common.FireSocket;
 import com.firecontrol.common.FireSocketService;
 import com.firecontrol.common.OpResult;
+import com.firecontrol.common.VideoOpResult;
 import com.firecontrol.domain.dto.VideoUrlQueryDto;
+import com.firecontrol.domain.entity.CameraEntity;
 import com.firecontrol.domain.entity.DemoEntity;
 import com.firecontrol.mapper.iotmapper.DemoMapper;
 import com.firecontrol.service.CameraService;
@@ -13,9 +15,14 @@ import com.mycorp.vodplatform.server.service.impl.VodMsgServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mariry on 2019/6/21.
@@ -39,6 +46,13 @@ public class DemoServiceImpl implements DemoService {
     private VodMsgServiceImpl vodMsgService;
     @Autowired
     private CameraService cameraService;
+    @Value("${tyterminal.pic}")
+    private String pitPath;
+    @Value("${tyterminal.header}")
+    private String serverIp;
+    @Value("${server.port}")
+    private String port;
+
 
     @Override
     public List<DemoEntity> getAllDemoEntity() {
@@ -59,14 +73,15 @@ public class DemoServiceImpl implements DemoService {
     }
 
     @Override
-    public OpResult getVideoAddr(VideoUrlQueryDto query) {
+    public VideoOpResult getVideoAddr(VideoUrlQueryDto query) {
         log.info("DemoServiceImpl.getVideoAddr: query param: {}", query);
-        OpResult opResult = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        VideoOpResult opResult = new VideoOpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
 
         query.setCameraId(14);
-        query.setTerminalId("TB1945T001");
-        query.setDestinationId(4);
-        query.setPlayTimeLimit(60);
+        query.setUserId("wangliji");
+//        query.setTerminalId("TB1945T001");
+//        query.setDestinationId(4);
+//        query.setPlayTimeLimit(60);
         String url = "";
         if(query == null){
             query = new VideoUrlQueryDto("wangliji", "TB1945T001", 14, 4, 60);
@@ -76,39 +91,36 @@ public class DemoServiceImpl implements DemoService {
                 opResult.setMessage("摄像头id不可为空!");
                 return opResult;
             }
-//            CameraEntity camera = cameraService.getCameraById(new Long(query.getCameraId()));
-//            if(camera == null){
-//                opResult.setStatus(OpResult.OP_FAILED);
-//                opResult.setMessage("摄像头不存在！");
-//                return opResult;
-//            }
-//            if(StringUtils.isEmpty(camera.getTerminalId())) {
-//                opResult.setStatus(OpResult.OP_FAILED);
-//                opResult.setMessage("摄像头尚未关联通用终端！");
-//                return opResult;
-//            }
-            if(query.getPlayTimeLimit() == null) {
-                query.setPlayTimeLimit(60);
+            CameraEntity camera = cameraService.getCameraById(new Long(query.getCameraId()));
+            if(camera == null){
+                opResult.setStatus(OpResult.OP_FAILED);
+                opResult.setMessage("摄像头不存在!");
+                return opResult;
             }
-            url = vodMsgService.sendVod(query.getUserId(), query.getTerminalId(), query.getCameraId(), query.getDestinationId(), query.getPlayTimeLimit());
+            if(StringUtils.isEmpty(camera.getTerminalId())) {
+                opResult.setStatus(OpResult.OP_FAILED);
+                opResult.setMessage("摄像头尚未关联通用终端!");
+                return opResult;
+            }
+            //destinationId  按照协议要求(rtmp.hls)要求，随便取一个vod_stream_destination 的id即可，及随机选一个终端服务器
+            //TODO: 读数据库取id，添加负载均衡
+            url = vodMsgService.sendVod(query.getUserId(), camera.getTerminalId(), query.getCameraId(), 4, query.getPlayTimeLimit());
 
-            //TODO: 测试用，待删除
-//            log.info("real url: " + url);
-//            url = urlArr[videoUrlCount%3];
-//            videoUrlCount ++;
+            StringBuffer sb = new StringBuffer().append(serverIp).append(":").append(port).append(pitPath).append(camera.getTerminalId()).append(File.separator)
+                    .append(camera.getId()).append(".jpg");
 
             opResult.setDataValue(url);
+            opResult.setImgSrc(sb.toString());
         }
         return opResult;
     }
 
+
+    //恶劣环境测试方法
     @Override
     public String getVideoUrl() {
 
         //
-
-
-
         String url;
         url = vodMsgService.sendVod("wangliji", "tb221932T001", 1, 1, 60);
         return url;

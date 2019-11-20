@@ -1,12 +1,14 @@
 package com.firecontrol.domain.entity;
 
+import com.firecontrol.common.BasePager;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by mariry on 2019/8/14.
  */
-public class TerminalEntity implements Serializable{
+public class TerminalEntity  extends BasePager implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -19,6 +21,8 @@ public class TerminalEntity implements Serializable{
     private Date firstAssignTime;
 
     private Integer status;
+
+
 
     public String getId() {
         return id;

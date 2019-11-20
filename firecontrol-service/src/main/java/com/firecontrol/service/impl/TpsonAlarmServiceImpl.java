@@ -1,7 +1,10 @@
 package com.firecontrol.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
+import com.firecontrol.common.TBConstants;
+import com.firecontrol.common.WebSocketService;
 import com.firecontrol.domain.dto.*;
 import com.firecontrol.domain.entity.*;
 import com.firecontrol.mapper.iotmapper.*;
@@ -34,6 +37,8 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
     private TpsonDeviceMapper tpsonDeviceMapper;
     @Autowired
     private TpsonDeviceVersionMapper versionMapper;
+    @Autowired
+    private WebSocketService webSocketService;
 
 
 
@@ -239,9 +244,26 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             }
 
             //只能处理“未处理”的-----前端应过滤
-
-
             tpsonAlarmMapper.updateBatchDeal(Arrays.asList(ids.split(",")), status, dealDetail);
+
+
+            List<String> deviceCodeList = tpsonAlarmMapper.getDeviceCodeByAlarmId(Arrays.asList(ids.split(",")));
+            if(!CollectionUtils.isEmpty(deviceCodeList)) {
+                // 1. 更改主机配置中的设备状态，报警--> 正常
+                tpsonDeviceMapper.updateDeviceRunningStateByCodeList(deviceCodeList, TBConstants.DeviceStatus.online);
+
+                // 2. 推送消警信息给前端
+                //websocket推送消息类型：系统消息0，报警1，消警2，其他3 (待拓展)
+                Map map = new HashMap();
+                map.put("deviceCode", deviceCodeList);
+                map.put("msgType", 2);
+
+                WebSocketMsg push = new WebSocketMsg(2, 0, JSON.toJSONString(map));
+                webSocketService.sendInfo(JSON.toJSONString(push), null);
+
+            }
+
+
         }catch (Exception e){
             log.error("batchHandle ERROR! e={}", e);
             op.setStatus(OpResult.OP_FAILED);
@@ -325,6 +347,22 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             }
             tpsonAlarmMapper.updateAlarmDeal(id, status, dealDetail);
 
+            List<String> ids = new ArrayList<>();
+            ids.add(id.toString());
+            List<String> deviceCodeList = tpsonAlarmMapper.getDeviceCodeByAlarmId(ids);
+            if(!CollectionUtils.isEmpty(deviceCodeList)) {
+                // 1. 更改主机配置中的设备状态，报警--> 正常
+                tpsonDeviceMapper.updateDeviceRunningStateByCodeList(deviceCodeList, TBConstants.DeviceStatus.online);
+
+                // 2. 推送消警信息给前端
+                //websocket推送消息类型：系统消息0，报警1，消警2，其他3 (待拓展)
+                Map map = new HashMap();
+                map.put("deviceCode", deviceCodeList);
+                map.put("msgType", 2);
+
+                WebSocketMsg push = new WebSocketMsg(2, 0, JSON.toJSONString(map));
+                webSocketService.sendInfo(JSON.toJSONString(push), null);
+            }
         }catch (Exception e){
             log.error("updateAlarmDetailById ERROR! e={}", e);
             op.setStatus(OpResult.OP_FAILED);
@@ -332,7 +370,6 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             return op;
         }
         return op;
-
     }
 
     @Override

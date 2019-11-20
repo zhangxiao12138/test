@@ -4,19 +4,19 @@ if(typeof(WebSocket) == "undefined") {
 }else{
     console.log("您的浏览器支持WebSocket");
     //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
-    //等同于
-    socket = new WebSocket("ws://localhost:11001/websocket/radomStr");
-    //socket = new WebSocket("${basePath}websocket/${cid}".replace("http","ws"));
-    //打开事件
+
+    //socket = new WebSocket("ws://localhost:11001/websocket/radomStr");
+    socket = new WebSocket("ws://139.129.100.51:11001/websocket/radomStr");
+
     socket.onopen = function() {
         console.log("Socket 已打开");
         socket.send("这是来自客户端的消息" + new Date());
     };
-    //获得消息事件
+
     socket.onmessage = function(msg) {
         console.info("接收到从服务器发来的请求");
         console.log(msg);
-        //发现消息进入    开始处理前端触发逻辑
+
     };
     //关闭事件
     socket.onclose = function() {

@@ -19,3 +19,9 @@ spring:
 #通用终端配置文件
 tyterminal:
   path: /etc/serverConfig.properties
+  pic: /opt/screenshot/
+  header: http://139.129.100.51
+
+
+
+

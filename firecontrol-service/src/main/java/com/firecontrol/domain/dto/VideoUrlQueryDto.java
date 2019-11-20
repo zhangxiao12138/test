@@ -27,7 +27,7 @@ public class VideoUrlQueryDto {
     private Integer playTimeLimit;
 
     public VideoUrlQueryDto() {
-        this.playTimeLimit = 30;
+        this.playTimeLimit = 60;
     }
 
     public VideoUrlQueryDto(String userId, String terminalId, Integer cameraId, Integer destinationId){

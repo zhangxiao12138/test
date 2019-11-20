@@ -1,6 +1,7 @@
 package com.firecontrol.common;
 
 import com.alibaba.fastjson.JSON;
+import com.firecontrol.domain.dto.WebSocketMsg;
 import com.firecontrol.service.CameraService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -19,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class WebSocketService {
 
 
-    private static final Logger log = LoggerFactory.getLogger(CameraService.class);
+    private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
 
 
     //记录当前在线人数
@@ -43,7 +46,14 @@ public class WebSocketService {
         log.info("有新窗口开始监听:"+sid+",当前在线人数为" + getOnlineCount());
         this.sid=sid;
         try {
-            sendMessage("连接成功");
+            WebSocketMsg msg = new WebSocketMsg();
+            Map map = new HashMap();
+            map.put("msgType", 0);
+            map.put("text", "连接成功");
+            msg.setData(map);
+            msg.setShowWindow(0);
+            msg.setMsgType(0);
+            sendMessage(JSON.toJSONString(msg));
         } catch (Exception e) {
             log.error("websocket IO异常");
         }
@@ -68,13 +78,19 @@ public class WebSocketService {
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口"+sid+"的信息:"+message);
         //群发消息
-        for (WebSocketService item : webSocketSet) {
-            try {
-                item.sendMessage(message);
-            } catch (Exception e) {
-                log.error("websocket service Error! e = {}", e);
-            }
-        }
+//        for (WebSocketService item : webSocketSet) {
+//            try {
+//                item.sendMessage(JSON.toJSONString(message));
+//                if(item.sid.equals(sid)){
+//                    Map map = new HashMap();
+//                    map.put("msgType", 0);
+//                    map.put("text", message);
+//
+//                }
+//            } catch (Exception e) {
+//                log.error("websocket service Error! e = {}", e);
+//            }
+//        }
     }
 
     /**
@@ -117,6 +133,7 @@ public class WebSocketService {
      */
     public void sendMessage(String message) throws Exception {
         this.session.getBasicRemote().sendText(message);
+
     }
 
     public static synchronized int getOnlineCount() {

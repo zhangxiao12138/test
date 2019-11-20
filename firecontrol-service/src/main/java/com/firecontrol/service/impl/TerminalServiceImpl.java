@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by mariry on 2019/8/15.
@@ -26,11 +24,11 @@ public class TerminalServiceImpl implements TerminalService {
 
     @Override
     public OpResult insertTerminal(TerminalEntity terminal) {
-        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_FAIL);
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
 
         try{
             String terminalId = generageTerminalId();
-            terminal.setHardwareId(terminalId);
+            terminal.setId(terminalId);
             terminal.setStatus(0);//新建，状态均为未激活
             boolean result = terminalMapper.insert(terminal);
             if(!result){
@@ -54,12 +52,25 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public OpResult getTerminalList(TerminalEntity terminal, Integer currentPage, Integer length) {
+    public OpResult getTerminalList(TerminalEntity terminal) {
         OpResult opResult = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         List<TerminalEntity> rtn = null;
         try{
-            rtn = terminalMapper.getAllTerminalList();
-            opResult.setDataValue(rtn);
+            if(terminal.getCurrentPage() == null){
+                terminal.setCurrentPage(1);
+            }
+            if(terminal.getLength() == null) {
+                terminal.setLength(15);
+            }
+
+            Integer total = terminalMapper.getTerminalCount(terminal);
+            if(total > 0) {
+                rtn = terminalMapper.getTerminalListByPage(terminal);
+            }
+            Map rtnMap = new HashMap<>();
+            rtnMap.put("total", total);
+            rtnMap.put("list", rtn);
+            opResult.setDataValue(rtnMap);
         }catch (Exception e){
             log.error("TerminalServiceImpl.getTerminalList Exception! e:{}", e);
             opResult.setStatus(OpResult.OP_FAILED);
@@ -71,10 +82,10 @@ public class TerminalServiceImpl implements TerminalService {
     }
 
     @Override
-    public OpResult getTerminalIds(TerminalEntity terminal) {
+    public OpResult getTerminalIds(Integer status) {
         OpResult opResult = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         try{
-            List<String> terminalIdList = terminalMapper.getAllTerminalIds();
+            List<String> terminalIdList = terminalMapper.getAllTerminalIds(status);
             opResult.setDataValue(terminalIdList);
         }catch (Exception e) {
             log.error("TerminalServiceImpl.insertTerminal Exception! e:{}", e);
@@ -154,6 +165,7 @@ public class TerminalServiceImpl implements TerminalService {
             op.setMessage("本周terminal已经达到上限，count:"+weekTerminalCount);
             log.error("本周terminal已经达到上限，count:"+weekTerminalCount);
         }
+        op.setDataValue(rtn);
         return op;
     }
 }

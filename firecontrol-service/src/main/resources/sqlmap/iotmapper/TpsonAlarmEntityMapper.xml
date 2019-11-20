@@ -793,6 +793,17 @@
   </update>
 
 
+  <select id="getDeviceCodeByAlarmId" resultType="java.lang.String">
+    select DISTINCT device_code
+    from tb_server_alarm
+    where
+    id in
+    <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
+
   <update id="updateAlarmDeal" >
     update tb_server_alarm
     <set>

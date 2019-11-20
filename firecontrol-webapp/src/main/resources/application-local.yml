@@ -16,6 +16,10 @@ spring:
         username: tb-aliyun
         password: Ss!@#123
 
+
 #通用终端配置文件
 tyterminal:
   path: D:\serverConfig.properties
+  pic: /opt/screenshot/
+  header: http://139.129.100.51
+

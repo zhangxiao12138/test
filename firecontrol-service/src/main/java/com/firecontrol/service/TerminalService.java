@@ -13,9 +13,9 @@ public interface TerminalService {
 
     public OpResult updateTerminal(TerminalEntity terminal);
 
-    public OpResult getTerminalList(TerminalEntity terminal, Integer currentPage, Integer length);
+    public OpResult getTerminalList(TerminalEntity terminal);
 
-    public OpResult getTerminalIds(TerminalEntity terminal);
+    public OpResult getTerminalIds(Integer status);
 
     public OpResult updateTerminalHardward(String terminalId, String hardwardId);
 

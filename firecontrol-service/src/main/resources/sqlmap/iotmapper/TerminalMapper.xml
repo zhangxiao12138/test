@@ -47,18 +47,50 @@
     </update>
 
 
-    <select id="getAllTerminalList" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
+    <select id="getTerminalCount" parameterType="com.firecontrol.domain.entity.TerminalEntity" resultType="java.lang.Integer">
+        select count(*)
         from vod_connection_terminal_assign
+        where 1=1
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="id != null">
+            and id = #{id}
+        </if>
     </select>
+
+    <select id="getTerminalListByPage" parameterType="com.firecontrol.domain.entity.TerminalEntity" resultMap="BaseResultMap">
+        select *
+        from vod_connection_terminal_assign
+        where 1=1
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        ORDER BY id
+        <if test="currentPage != null">
+            limit #{currentPage}, #{length}
+        </if>
+
+    </select>
+
+    <!--<select id="getTerminalListByPage" resultMap="BaseResultMap">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List" />-->
+        <!--from vod_connection_terminal_assign-->
+    <!--</select>-->
 
     <select id="getAllTerminalIds" resultType="java.lang.String">
         select id from vod_connection_terminal_assign
+        <if test="status != null">
+            where status = #{status}
+        </if>
     </select>
 
     <select id="getWeekTerminalCount" resultType="java.lang.Integer">
-        select count(*) from vod_connection_terminal_assign where terminal_id like concat(#{prefix},'%')
+        select count(*) from vod_connection_terminal_assign where id like concat(#{prefix},'%')
     </select>
 
 

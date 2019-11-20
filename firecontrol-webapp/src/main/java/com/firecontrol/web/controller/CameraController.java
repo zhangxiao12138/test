@@ -1,6 +1,7 @@
 package com.firecontrol.web.controller;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.common.VideoOpResult;
 import com.firecontrol.domain.dto.VideoUrlQueryDto;
 import com.firecontrol.domain.entity.CameraEntity;
 import com.firecontrol.service.CameraService;
@@ -38,7 +39,7 @@ public class CameraController {
     @ApiOperation(value = "获取摄像头播放url" ,  notes="获取摄像头播放url")
     @RequestMapping(value = "/videoUrl",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public OpResult getVideoUrl(VideoUrlQueryDto videoQuery){
+    public VideoOpResult getVideoUrl(VideoUrlQueryDto videoQuery){
 
         return demoService.getVideoAddr(videoQuery);
     }
