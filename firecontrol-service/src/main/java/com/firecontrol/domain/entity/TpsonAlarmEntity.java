@@ -9,7 +9,7 @@ public class TpsonAlarmEntity {
 
     private Long companyId;
 
-    private Long floorId;
+    private String floorId;
 
     private Long deviceId;
 
@@ -57,7 +57,7 @@ public class TpsonAlarmEntity {
 
     private String cameraId;
 
-    private Long buildingId;
+    private String buildingId;
 
     private String buildingName;
 
@@ -149,13 +149,6 @@ public class TpsonAlarmEntity {
         this.companyId = companyId;
     }
 
-    public Long getFloorId() {
-        return floorId;
-    }
-
-    public void setFloorId(Long floorId) {
-        this.floorId = floorId;
-    }
 
     public Long getDeviceId() {
         return deviceId;
@@ -333,11 +326,19 @@ public class TpsonAlarmEntity {
         this.cameraId = cameraId == null ? null : cameraId.trim();
     }
 
-    public Long getBuildingId() {
+    public String getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(String floorId) {
+        this.floorId = floorId;
+    }
+
+    public String getBuildingId() {
         return buildingId;
     }
 
-    public void setBuildingId(Long buildingId) {
+    public void setBuildingId(String buildingId) {
         this.buildingId = buildingId;
     }
 

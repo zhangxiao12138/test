@@ -31,6 +31,7 @@ public interface TpsonDeviceService {
 
     OpResult getDeviceByCode(String deviceCode);
 
+
     OpResult getDeviceStatusStatic(Integer systemType);
 
     OpResult offLineStat(Integer systemType, Long companyId);

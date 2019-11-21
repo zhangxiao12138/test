@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.SensorLogMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.SensorLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sensor_id" jdbcType="BIGINT" property="sensorId" />
+    <result column="sensor_type" jdbcType="INTEGER" property="sensorType" />
+    <result column="log_time" jdbcType="INTEGER" property="logTime" />
+    <result column="log_type" jdbcType="TINYINT" property="logType" />
+    <result column="data_type" jdbcType="TINYINT" property="dataType" />
+    <result column="log_data" jdbcType="LONGVARCHAR" property="logData" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, sensor_id, sensor_type, log_time, log_type, data_type
+  </sql>
+  <sql id="Blob_Column_List">
+    log_data
+  </sql>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select *
+    from tb_server_sensor_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_sensor_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.SensorLog">
+    insert into tb_server_sensor_log (id, sensor_id, sensor_type, 
+      log_time, log_type, data_type, 
+      log_data)
+    values (#{id,jdbcType=BIGINT}, #{sensorId,jdbcType=BIGINT}, #{sensorType,jdbcType=INTEGER}, 
+      #{logTime,jdbcType=INTEGER}, #{logType,jdbcType=TINYINT}, #{dataType,jdbcType=TINYINT}, 
+      #{logData,jdbcType=LONGVARCHAR})
+  </insert>
+
+
+
+</mapper>

@@ -10,6 +10,8 @@ public interface TpsonSMR3002Service {
 
     public OpResult saveSMR3002Data(SMR3002Dto dto);
 
+    public String getTpsonToken();
+
 
 
 

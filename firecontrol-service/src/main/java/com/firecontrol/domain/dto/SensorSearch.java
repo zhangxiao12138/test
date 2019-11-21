@@ -14,6 +14,12 @@ public class SensorSearch extends BasePager{
 
     private Integer faultStatus;
 
+    public SensorSearch(){}
+
+    public SensorSearch(String deviceCode) {
+        this.deviceCode = deviceCode;
+    }
+
     public String getDeviceCode() {
         return deviceCode;
     }

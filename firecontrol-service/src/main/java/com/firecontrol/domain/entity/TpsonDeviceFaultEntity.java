@@ -9,9 +9,9 @@ public class TpsonDeviceFaultEntity extends BasePager{
 
     private Long companyId;
 
-    private Long buildingId;
+    private String buildingId;
 
-    private Long floorId;
+    private String floorId;
 
     private Long deviceId;
 
@@ -101,19 +101,19 @@ public class TpsonDeviceFaultEntity extends BasePager{
         this.companyId = companyId;
     }
 
-    public Long getBuildingId() {
+    public String getBuildingId() {
         return buildingId;
     }
 
-    public void setBuildingId(Long buildingId) {
+    public void setBuildingId(String buildingId) {
         this.buildingId = buildingId;
     }
 
-    public Long getFloorId() {
+    public String getFloorId() {
         return floorId;
     }
 
-    public void setFloorId(Long floorId) {
+    public void setFloorId(String floorId) {
         this.floorId = floorId;
     }
 

@@ -5,8 +5,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="type" jdbcType="BIGINT" property="type" />
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
-    <result column="building_id" jdbcType="BIGINT" property="buildingId" />
-    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
+    <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
     <result column="device_id" jdbcType="BIGINT" property="deviceId" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="deal_user_id" jdbcType="BIGINT" property="dealUserId" />
@@ -221,7 +221,7 @@
       is_pending, pending_time, detail, df
       )
     values (#{type,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT},
-      #{buildingId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, 
+      #{buildingId,jdbcType=VARCHAR}, #{floorId,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT},
       #{status,jdbcType=TINYINT}, #{dealUserId,jdbcType=BIGINT}, #{dealDetail,jdbcType=VARCHAR}, 
       #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{dealTime,jdbcType=INTEGER}, 
       #{count,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR}, #{departmentId,jdbcType=BIGINT}, 
@@ -354,10 +354,10 @@
         #{companyId,jdbcType=BIGINT},
       </if>
       <if test="buildingId != null">
-        #{buildingId,jdbcType=BIGINT},
+        #{buildingId,jdbcType=VARCHAR},
       </if>
       <if test="floorId != null">
-        #{floorId,jdbcType=BIGINT},
+        #{floorId,jdbcType=VARCHAR},
       </if>
       <if test="deviceId != null">
         #{deviceId,jdbcType=BIGINT},
@@ -465,10 +465,10 @@
         company_id = #{companyId,jdbcType=BIGINT},
       </if>
       <if test="buildingId != null">
-        building_id = #{buildingId,jdbcType=BIGINT},
+        building_id = #{buildingId,jdbcType=VARCHAR},
       </if>
       <if test="floorId != null">
-        floor_id = #{floorId,jdbcType=BIGINT},
+        floor_id = #{floorId,jdbcType=VARCHAR},
       </if>
       <if test="deviceId != null">
         device_id = #{deviceId,jdbcType=BIGINT},

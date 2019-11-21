@@ -6,7 +6,7 @@
     <result column="type" jdbcType="BIGINT" property="type" />
     <result column="level" jdbcType="INTEGER" property="level" />
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
-    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
     <result column="device_id" jdbcType="BIGINT" property="deviceId" />
     <result column="sensor_id" jdbcType="BIGINT" property="sensorId" />
     <result column="status" jdbcType="TINYINT" property="status" />
@@ -29,7 +29,7 @@
     <result column="pos_x" jdbcType="VARCHAR" property="posX" />
     <result column="pos_y" jdbcType="VARCHAR" property="posY" />
     <result column="camera_id" jdbcType="VARCHAR" property="cameraId" />
-    <result column="building_id" jdbcType="BIGINT" property="buildingId" />
+    <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
     <result column="building_name" jdbcType="VARCHAR" property="buildingName" />
     <result column="building_man" jdbcType="VARCHAR" property="buildingMan" />
     <result column="building_phone" jdbcType="VARCHAR" property="buildingPhone" />
@@ -153,7 +153,7 @@
       recover_time, pending_time, detail
       )
     values ( #{type,jdbcType=BIGINT}, #{level,jdbcType=INTEGER},
-      #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, 
+      #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT},
       #{sensorId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, #{dealUserId,jdbcType=BIGINT}, 
       #{dealDetail,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
       #{dealTime,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR}, 
@@ -161,7 +161,7 @@
       #{unit,jdbcType=VARCHAR}, #{limitDown,jdbcType=VARCHAR}, #{preLimitUp,jdbcType=VARCHAR}, 
       #{siteName,jdbcType=VARCHAR}, #{pendingUserId,jdbcType=BIGINT}, #{isPending,jdbcType=BIT}, 
       #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{cameraId,jdbcType=VARCHAR}, 
-      #{buildingId,jdbcType=BIGINT}, #{buildingName,jdbcType=VARCHAR}, #{buildingMan,jdbcType=VARCHAR}, 
+      #{buildingId,jdbcType=VARCHAR}, #{buildingName,jdbcType=VARCHAR}, #{buildingMan,jdbcType=VARCHAR},
       #{buildingPhone,jdbcType=VARCHAR}, #{deviceName,jdbcType=VARCHAR}, #{sensorName,jdbcType=VARCHAR}, 
       #{companyName,jdbcType=VARCHAR}, #{floorName,jdbcType=VARCHAR}, #{deviceCode,jdbcType=VARCHAR}, 
       #{photoId,jdbcType=BIGINT}, #{deviceType,jdbcType=BIGINT}, #{siteMan,jdbcType=VARCHAR}, 
@@ -356,7 +356,7 @@
         #{companyId,jdbcType=BIGINT},
       </if>
       <if test="floorId != null">
-        #{floorId,jdbcType=BIGINT},
+        #{floorId,jdbcType=VARCHAR},
       </if>
       <if test="deviceId != null">
         #{deviceId,jdbcType=BIGINT},
@@ -425,7 +425,7 @@
         #{cameraId,jdbcType=VARCHAR},
       </if>
       <if test="buildingId != null">
-        #{buildingId,jdbcType=BIGINT},
+        #{buildingId,jdbcType=VARCHAR},
       </if>
       <if test="buildingName != null">
         #{buildingName,jdbcType=VARCHAR},
@@ -529,7 +529,7 @@
         company_id = #{companyId,jdbcType=BIGINT},
       </if>
       <if test="floorId != null">
-        floor_id = #{floorId,jdbcType=BIGINT},
+        floor_id = #{floorId,jdbcType=VARCHAR},
       </if>
       <if test="deviceId != null">
         device_id = #{deviceId,jdbcType=BIGINT},
@@ -598,7 +598,7 @@
         camera_id = #{cameraId,jdbcType=VARCHAR},
       </if>
       <if test="buildingId != null">
-        building_id = #{buildingId,jdbcType=BIGINT},
+        building_id = #{buildingId,jdbcType=VARCHAR},
       </if>
       <if test="buildingName != null">
         building_name = #{buildingName,jdbcType=VARCHAR},
