@@ -50,12 +50,20 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
 
         try{
             //TODO:塞队列
-            //TODO:  接收信息后，修改设备列表相应的设备的状态（由未激活 变为 正常、报警、离线 等等）
+
             TpsonDeviceEntity device = tpsonDeviceMapper.selectByDeviceCode(dto.getDeviceCode());
             if(device == null) {
                 log.error("saveSCU200Data ERROR! 设备不存在! param= {}", JSON.toJSONString(dto));
                 return op;
             }
+
+            //TODO:若runningState 是禁用状态，则不保存数据，直接返回
+            if(device.getRunningState() == TBConstants.RunningState.forbidden){
+                //对forbidden的设备不做处理
+                op.setMessage("设备已被禁用，不处理推送消息");
+                return op;
+            }
+
 
             SCU200DataDto data = dto.getData();
             if(data != null){

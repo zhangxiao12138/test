@@ -13,6 +13,17 @@ public class TBConstants {
 
     public static final Map<String, Map<String, String>> allConstAlias = new LinkedHashMap<String, Map<String, String>>();
 
+    //设备运行状态： 0未激活，1离线，2正常，3故障，4报警，5禁用
+    public static final class RunningState{
+        public static final int unactive = 0;
+        public static final int offline = 1;
+        public static final int online = 2;
+        public static final int fault = 3;
+        public static final int alarm = 4;
+        public static final int forbidden = 5;
+    }
+
+
     // 烟感状态常量
     public static final class SmokeSensorStatus{
         public static final String OK = "正常";
