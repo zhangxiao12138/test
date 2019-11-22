@@ -70,8 +70,8 @@
       is_outdoor, position, alarm_name
       )
     values (#{cameraId,jdbcType=VARCHAR}, #{deviceCode,jdbcType=VARCHAR},
-      #{alarmTypeId,jdbcType=BIGINT}, #{alarmLevel,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT}, 
+      #{alarmTypeId,jdbcType=BIGINT}, #{alarmLevel,jdbcType=TINYINT}, unix_timestamp(now()),
+      unix_timestamp(now()), #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=BIGINT},
       #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{sensorType,jdbcType=BIGINT}, 
       #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{limitUp,jdbcType=VARCHAR}, 
       #{limitDown,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{alarmStatus,jdbcType=TINYINT}, 
@@ -86,7 +86,7 @@
   <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonSensorEntity">
     insert into tb_server_sensor
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      add_time,
+      add_time, update_time,
       <if test="cameraId != null">
         camera_id,
       </if>
@@ -98,12 +98,6 @@
       </if>
       <if test="alarmLevel != null">
         alarm_level,
-      </if>
-      <if test="addTime != null">
-        add_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
       </if>
       <if test="companyId != null">
         company_id,
@@ -194,7 +188,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      now(),
+      unix_timestamp(now()),unix_timestamp(now()),
       <if test="cameraId != null">
         #{cameraId,jdbcType=VARCHAR},
       </if>
@@ -207,12 +201,7 @@
       <if test="alarmLevel != null">
         #{alarmLevel,jdbcType=TINYINT},
       </if>
-      <if test="addTime != null">
-        #{addTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=INTEGER},
-      </if>
+
       <if test="companyId != null">
         #{companyId,jdbcType=BIGINT},
       </if>

@@ -151,7 +151,7 @@
       <![CDATA[ and  add_time < #{endTime} ]]>
     </if>
     <if test="faultType != null">
-      and fault_type = #{faultType}
+      and type = #{faultType}
     </if>
     <if test="status != null">
       and status = #{status}

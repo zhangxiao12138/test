@@ -66,7 +66,7 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
         //data_type 固定为“REAL_DATA"/WARNING_DATA/ALARM_DATA/FAULT_DATA/IDENTIFY_DATA（电器识别推送）
         if(TBConstants.DATATYPE.realData.equals(dto.getDataType())){
             // 录入实时传感器数据到sensor_log表
-            if(handleRealTimeData(dto,device.getId(), device.getCode(), sensorList, dto.getTime())) {
+            if(!handleRealTimeData(dto,device.getId(), device.getCode(), sensorList, dto.getTime())) {
                 log.error("saveSMR3002Data handleRealTimeData error! param = {}", dto);
                 op.setStatus(OpResult.OP_FAILED);
                 op.setMessage(OpResult.OpMsg.SAVE_FAIL);
@@ -122,19 +122,19 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getRealElectricity().toString());
                     sensorLogMapper.insert(log);
-                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && sensor.getCode() == "1") {
+                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && "1".equals(sensor.getCode())) {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getTemperature1().toString());
                     sensorLogMapper.insert(log);
-                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && sensor.getCode() == "2") {
+                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && "2".equals(sensor.getCode())) {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getTemperature2().toString());
                     sensorLogMapper.insert(log);
-                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && sensor.getCode() == "3") {
+                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && "3".equals(sensor.getCode())) {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getTemperature3().toString());
                     sensorLogMapper.insert(log);
-                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && sensor.getCode() == "4") {
+                } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && "4".equals(sensor.getCode())) {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getTemperature4().toString());
                     sensorLogMapper.insert(log);

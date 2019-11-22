@@ -67,12 +67,6 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
             device.setFaultStatus(new Long(0));
             device.setIsOutdoor(false);
 
-            //烟感deviceType=7
-//            device.setType(new Long(7));
-//            tpsonDeviceMapper.insert(device);
-//            insertTempSensor(device);
-//            insertFlogSensor(device);
-//            insertUnpackSensor(device);
 
             String opError = null;
             switch (device.getType().intValue()) {
@@ -583,6 +577,7 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     }
 
     private void insertTempSensor(TpsonDeviceEntity device) {
+        log.info("insertTempSensor, device={}", device);
         TpsonSensorEntity sensor = new TpsonSensorEntity();
         sensor.setCode("000001");
         sensor.setSensorType(new Long(25));
