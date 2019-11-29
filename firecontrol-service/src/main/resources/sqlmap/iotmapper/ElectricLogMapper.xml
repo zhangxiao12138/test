@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.ElectricLogMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.ElectricLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="power" jdbcType="DOUBLE" property="power" />
+    <result column="power_type" jdbcType="TINYINT" property="powerType" />
+    <result column="uuid" jdbcType="CHAR" property="uuid" />
+    <result column="action" jdbcType="INTEGER" property="action" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="possible" jdbcType="VARCHAR" property="possibleStr" />
+    <result column="max_possible" jdbcType="INTEGER" property="maxPossible" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="group" jdbcType="INTEGER" property="group" />
+    <result column="site_name" jdbcType="VARCHAR" property="siteName" />
+    <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
+    <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
+    <result column="feature" jdbcType="LONGVARCHAR" property="feature" />
+    <result column="elec_name" jdbcType="VARCHAR" property="elecName" />
+
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, company_id, device_id, device_code, `type`, power, power_type, uuid, `action`, add_time,
+    possible, max_possible, department_id, `group`, site_name, floor_id, building_id, feature, elec_name
+  </sql>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_electric_appliance_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+
+  <select id="getListBySearch" parameterType="com.firecontrol.domain.entity.ElectricLog" resultMap="BaseResultMap">
+    select *
+    from tb_server_electric_appliance_log
+
+    where 1=1
+    <if test="deviceCode != null">
+      and device_code like  concat('%', #{deviceCode}, '%')
+    </if>
+
+    <if test="action != null">
+      and `action` = #{action}
+    </if>
+
+    <if test="powerType != null">
+      and power_type = #{powerType}
+    </if>
+
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+
+    order by id DESC
+    <if test="currentPage != null">
+      limit #{currentPage}, #{length}
+    </if>
+
+
+
+  </select>
+
+
+
+
+
+
+
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_electric_appliance_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricLog">
+    insert into tb_server_electric_appliance_log (id, company_id, device_id, 
+      device_code, `type`, power,
+      power_type, uuid, `action`,
+      add_time, possible, max_possible, 
+      department_id, `group`, site_name,
+      floor_id, building_id, feature,elec_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, 
+      #{deviceCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{power,jdbcType=DOUBLE}, 
+      #{powerType,jdbcType=TINYINT}, #{uuid,jdbcType=CHAR}, #{action,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=INTEGER}, #{possibleStr,jdbcType=VARCHAR}, #{maxPossible,jdbcType=INTEGER},
+      #{departmentId,jdbcType=BIGINT}, #{group,jdbcType=INTEGER}, #{siteName,jdbcType=VARCHAR}, 
+      #{floorId,jdbcType=VARCHAR}, #{buildingId,jdbcType=VARCHAR}, #{feature,jdbcType=LONGVARCHAR},
+      #{elecName,jdbcType=VARCHAR}
+      )
+  </insert>
+
+
+  <select id="getCountBySearch" parameterType="com.firecontrol.domain.entity.ElectricLog" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_electric_appliance_log
+    where 1=1
+    <if test="deviceCode != null">
+      and device_code like  concat('%', #{deviceCode}, '%')
+    </if>
+
+    <if test="action != null">
+      and `action` = #{action}
+    </if>
+
+    <if test="powerType != null">
+      and power_type = #{powerType}
+    </if>
+
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+  </select>
+
+
+
+  <update id="updateTypeById" >
+    update tb_server_electric_appliance_log
+    set `type` = #{type}
+    where id = #{id}
+  </update>
+
+
+  <!--<update id="updateByPrimaryKeySelective" parameterType="com.firecontrol.domain.entity.ElectricLog">-->
+    <!--update tb_server_electric_appliance_log-->
+    <!--<set>-->
+      <!--<if test="companyId != null">-->
+        <!--company_id = #{companyId,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="deviceId != null">-->
+        <!--device_id = #{deviceId,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="deviceCode != null">-->
+        <!--device_code = #{deviceCode,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="type != null">-->
+        <!--type = #{type,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="power != null">-->
+        <!--power = #{power,jdbcType=DOUBLE},-->
+      <!--</if>-->
+      <!--<if test="powerType != null">-->
+        <!--power_type = #{powerType,jdbcType=TINYINT},-->
+      <!--</if>-->
+      <!--<if test="uuid != null">-->
+        <!--uuid = #{uuid,jdbcType=CHAR},-->
+      <!--</if>-->
+      <!--<if test="action != null">-->
+        <!--action = #{action,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="addTime != null">-->
+        <!--add_time = #{addTime,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="possible != null">-->
+        <!--possible = #{possible,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="maxPossible != null">-->
+        <!--max_possible = #{maxPossible,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="departmentId != null">-->
+        <!--department_id = #{departmentId,jdbcType=BIGINT},-->
+      <!--</if>-->
+      <!--<if test="group != null">-->
+        <!--group = #{group,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="siteName != null">-->
+        <!--site_name = #{siteName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="floorId != null">-->
+        <!--floor_id = #{floorId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="buildingId != null">-->
+        <!--building_id = #{buildingId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="feature != null">-->
+        <!--feature = #{feature,jdbcType=LONGVARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
+  <!--<update id="updateByPrimaryKey" parameterType="com.firecontrol.domain.entity.ElectricLog">-->
+    <!--update tb_server_electric_appliance_log-->
+    <!--set company_id = #{companyId,jdbcType=INTEGER},-->
+      <!--device_id = #{deviceId,jdbcType=INTEGER},-->
+      <!--device_code = #{deviceCode,jdbcType=VARCHAR},-->
+      <!--type = #{type,jdbcType=INTEGER},-->
+      <!--power = #{power,jdbcType=DOUBLE},-->
+      <!--power_type = #{powerType,jdbcType=TINYINT},-->
+      <!--uuid = #{uuid,jdbcType=CHAR},-->
+      <!--action = #{action,jdbcType=INTEGER},-->
+      <!--add_time = #{addTime,jdbcType=INTEGER},-->
+      <!--possible = #{possible,jdbcType=VARCHAR},-->
+      <!--max_possible = #{maxPossible,jdbcType=INTEGER},-->
+      <!--department_id = #{departmentId,jdbcType=BIGINT},-->
+      <!--group = #{group,jdbcType=INTEGER},-->
+      <!--site_name = #{siteName,jdbcType=VARCHAR},-->
+      <!--floor_id = #{floorId,jdbcType=VARCHAR},-->
+      <!--building_id = #{buildingId,jdbcType=VARCHAR}-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
+
+</mapper>

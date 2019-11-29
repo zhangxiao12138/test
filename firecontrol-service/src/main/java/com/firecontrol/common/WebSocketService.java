@@ -28,6 +28,7 @@ public class WebSocketService {
     //记录当前在线人数
     private static int onlineCount = 0;
 
+
     //线程安全set，保存当前每个登录用户的webSocketService 对象
     private static CopyOnWriteArraySet<WebSocketService> webSocketSet = new CopyOnWriteArraySet<WebSocketService>();
 

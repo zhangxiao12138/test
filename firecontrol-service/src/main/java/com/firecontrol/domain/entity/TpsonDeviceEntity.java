@@ -139,6 +139,8 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
 
     private List<CameraEntity> cameras;
 
+    private List<SensorLog> sensorList;
+
 
     public Long getId() {
         return id;
@@ -522,5 +524,13 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
 
     public void setRunStateKeep(Integer runStateKeep) {
         this.runStateKeep = runStateKeep;
+    }
+
+    public List<SensorLog> getSensorList() {
+        return sensorList;
+    }
+
+    public void setSensorList(List<SensorLog> sensorList) {
+        this.sensorList = sensorList;
     }
 }

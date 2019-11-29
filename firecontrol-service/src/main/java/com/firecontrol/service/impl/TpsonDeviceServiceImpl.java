@@ -9,12 +9,10 @@ import com.firecontrol.domain.dto.DeviceSearch;
 import com.firecontrol.domain.dto.DeviceStatMap;
 import com.firecontrol.domain.dto.FaultCountDto;
 import com.firecontrol.domain.entity.*;
-import com.firecontrol.mapper.iotmapper.CameraMapper;
-import com.firecontrol.mapper.iotmapper.TpsonDeviceMapper;
-import com.firecontrol.mapper.iotmapper.TpsonDeviceTypeMapper;
-import com.firecontrol.mapper.iotmapper.TpsonDeviceVersionMapper;
+import com.firecontrol.mapper.iotmapper.*;
 import com.firecontrol.service.TpsonDeviceService;
 import com.firecontrol.service.TpsonSensorService;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -42,6 +42,8 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     private CameraMapper cameraMapper;
     @Autowired
     private TpsonDeviceTypeMapper deviceTypeMapper;
+    @Autowired
+    private ElectricLogMapper electricLogMapper;
 
 
 
@@ -199,6 +201,27 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
                 result.put("deviceList", list);
                 op.setDataValue(result);
             }
+
+        }catch (Exception e){
+            log.info("TpsonDeviceServiceImpl.getDeviceByPage error! param ={}, e={}", device, e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        return op;
+    }
+
+    @Override
+    public OpResult getDeviceList(DeviceSearch device) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map result = new HashMap();
+        List<TpsonDeviceEntity> list = new ArrayList<>();
+        try{
+                list = tpsonDeviceMapper.getDeviceListBySearch(device);
+                result.put("deviceList", list);
+                op.setDataValue(result);
+
 
         }catch (Exception e){
             log.info("TpsonDeviceServiceImpl.getDeviceByPage error! param ={}, e={}", device, e);
@@ -475,7 +498,195 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         return op;
     }
 
+    @Override
+    public OpResult getElectricDiagram(Integer companyId, Long start, Long end, String deviceCode) {
 
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        List<Map> rtnList = null;
+        List<String> timeList = new ArrayList<>();
+        List<Double> dataList = new ArrayList<>();
+        Map rtnMap = new HashMap();
+
+
+        log.info("getElectricDiagram: campanyId:" + companyId + ", startTime:" + start + "endTime:" + end);
+
+        if(start == null){
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("startTime不可为空!");
+            return op;
+        }
+        try{
+            Date startTime = new Date(start*1000);
+            Date endTime = (end==null)? new Date() : new Date(end*1000);
+            //初始化list
+            rtnList = initFaultResultList(startTime, endTime);
+            if(CollectionUtils.isEmpty(rtnList)) {
+                op.setStatus(OpResult.OP_FAILED);
+                op.setMessage("未知错误，一定是打开姿势不对");
+                return op;
+            }
+
+            for(Map m : rtnList){
+                timeList.add((String)m.get("time"));
+                dataList.add(((Integer)m.get("count")).doubleValue());
+            }
+
+            rtnMap.put("timeList", timeList);
+            rtnMap.put("dataList", dataList);
+
+
+
+            //获取起止时间之内的所有报警记录
+            //List<Long> deviceTypeList = null;
+
+
+
+
+
+
+
+            //if(!CollectionUtils.isEmpty(deviceTypeList)) {
+//            List<TpsonAlarmEntity> alarmList = tpsonAlarmMapper.getAlarmByTime(deviceTypeList, start, end);
+//            if(!CollectionUtils.isEmpty(alarmList)){
+//                //往list里塞数据
+//                for(Map m : rtnList){
+//                    Integer tempCount = 0;
+//                    for(TpsonAlarmEntity alarm : alarmList) {
+//                        if(alarm.getAddTime() > (Long)m.get("start") && alarm.getAddTime() < (Long)m.get("end")){
+//                            tempCount ++;
+//                        }
+//                    }
+//                    m.put("count", tempCount);
+//                }
+//            }
+            op.setDataValue(rtnMap);
+            // }
+        }catch (Exception e) {
+            log.error("getElectricDiagram ERROR! exception: {}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
+
+    }
+
+    @Override
+    public OpResult getElectricDeviceStatistic(DeviceSearch search) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        Map rtnMap = new HashMap();
+        if(search.getIsOutdoor() == null){
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("是否室外选项为必选项！");
+            return op;
+        }
+
+        try{
+
+            search.setDeviceType(3);
+
+            Integer all=0;
+            Integer access=0;
+            Integer online=0;
+            Double totalPower = 0D;
+
+
+            List<TpsonDeviceEntity> list = tpsonDeviceMapper.getDeviceListBySearch(search);
+            for(TpsonDeviceEntity device : list){
+                all ++;
+                if(device.getRunningState() == TBConstants.RunningState.online){
+                    online ++;
+                }
+            }
+
+            rtnMap.put("allDeviceAmount", all);
+            rtnMap.put("electricAccessAmount", access);
+            rtnMap.put("onlineDeviceAmount", online);
+            rtnMap.put("totalPower", totalPower);
+
+            op.setDataValue(rtnMap);
+
+        }catch (Exception e) {
+            log.error("getElectricDeviceStatistic error! e = {}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        return op;
+    }
+
+    @Override
+    public OpResult realTimeWatch(DeviceSearch search) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+
+        try{
+            if(search.getCurrentPage() == null){
+                search.setCurrentPage(1);
+            }
+            if(search.getLength() == null) {
+                search.setLength(15);
+            }
+            search.setDeviceType(3);
+
+            List<TpsonDeviceEntity> list = tpsonDeviceMapper.getDeviceListBySearch(search);
+            for(TpsonDeviceEntity device : list){
+
+
+
+            }
+            //TODO:
+
+
+            op.setDataValue(rtnMap);
+
+        }catch (Exception e) {
+            log.error("getElectricDeviceStatistic error! e = {}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        return op;
+
+
+
+    }
+
+
+    private List<Map> initFaultResultList(Date startTime, Date endTime) {
+        List<Map> rtnList = new ArrayList<>();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        try{
+            Calendar cstart = Calendar.getInstance();
+            Calendar cend = Calendar.getInstance();
+            cstart.setTime(startTime);
+            //防止前端传的时间不是0点0分，这里重置一遍
+            cstart.set(Calendar.HOUR, 0);
+            cstart.set(Calendar.MINUTE, 0);
+            cstart.set(Calendar.SECOND, 0);
+            cend.setTime(endTime);
+
+            while(cstart.getTimeInMillis() < cend.getTimeInMillis()){
+                Map map = new HashMap();
+                map.put("time", dateFormat.format(cstart.getTime()));
+                map.put("count", 0);
+                map.put("start", cstart.getTimeInMillis()/1000);
+                cstart.add(Calendar.DAY_OF_MONTH,1);
+                map.put("end", cstart.getTimeInMillis()/1000);
+                rtnList.add(map);
+            }
+            //Long diffDays = (cend.getTimeInMillis() - cstart.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+
+        }catch (Exception e) {
+            log.error("initFaultResultList error! e={}", e);
+            return null;
+        }
+        return rtnList;
+    }
 
     //添加故障电弧传感器
     private boolean insertGZDHSensor(TpsonDeviceEntity device){

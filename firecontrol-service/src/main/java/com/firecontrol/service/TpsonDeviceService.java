@@ -1,7 +1,9 @@
 package com.firecontrol.service;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.common.TBConstants;
 import com.firecontrol.domain.dto.DeviceSearch;
+import com.firecontrol.domain.entity.ElectricLog;
 import com.firecontrol.domain.entity.TpsonDeviceEntity;
 import io.swagger.models.auth.In;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,6 +18,8 @@ public interface TpsonDeviceService {
     OpResult updateDeviceInfo(TpsonDeviceEntity device);
 
     OpResult getDeviceByPage(DeviceSearch device);
+
+    OpResult getDeviceList(DeviceSearch device);
 
     OpResult getDeviceById(Long id);
 
@@ -39,4 +43,12 @@ public interface TpsonDeviceService {
     OpResult deviceLog(String deviceCode, String logData, Integer startTime, Integer endTime, Integer currentPage, Integer length);
 
     OpResult deviceStat(Long companyId);
+
+    OpResult getElectricDiagram(Integer companyId, Long start, Long end, String deviceCode);
+
+    OpResult getElectricDeviceStatistic(DeviceSearch search);
+
+    //电器设备实时监控数据
+    OpResult realTimeWatch(DeviceSearch search);
+
 }

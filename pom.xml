@@ -137,6 +137,7 @@
 			</plugin>
 
 
+
 			<!--<plugin>-->
 				<!--<groupId>org.mybatis.generator</groupId>-->
 				<!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
@@ -163,11 +164,11 @@
 					<!--</execution>-->
 				<!--</executions>-->
 				<!--<configuration>-->
-					<!--允许移动生成的文件-->
+					<!--&lt;!&ndash;&lt;!&ndash;允许移动生成的文件&ndash;&gt;&ndash;&gt;-->
 					<!--<verbose>true</verbose>-->
-					<!--是否覆盖-->
+					<!--&lt;!&ndash;&lt;!&ndash;是否覆盖&ndash;&gt;&ndash;&gt;-->
 					<!--<overwrite>true</overwrite>-->
-					<!--自动生成的配置-->
+					<!--&lt;!&ndash;&lt;!&ndash;自动生 成的配置&ndash;&gt;&ndash;&gt;-->
 					<!--<configurationFile>-->
 						<!--src/main/resources/mybatis-generator.xml</configurationFile>-->
 				<!--</configuration>-->

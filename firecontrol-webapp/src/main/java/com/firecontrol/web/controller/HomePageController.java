@@ -1,7 +1,9 @@
 package com.firecontrol.web.controller;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.common.WebSocketService;
 import com.firecontrol.domain.dto.AlarmFaultCount;
+import com.firecontrol.mapper.ydmapper.UserMapper;
 import com.firecontrol.service.TpsonAlarmService;
 import com.firecontrol.service.TpsonDeviceFaultService;
 import com.firecontrol.service.TpsonDeviceService;
@@ -34,6 +36,13 @@ public class HomePageController {
 
     @Autowired
     private TpsonAlarmService tpsonAlarmService;
+
+    @Autowired
+    private WebSocketService webSocketService;
+    @Autowired
+    private UserMapper userMapper;
+
+
 
 
 
@@ -73,10 +82,13 @@ public class HomePageController {
         AlarmFaultCount rtn = new AlarmFaultCount();
         rtn = tpsonAlarmService.homePageAlarmCount(rtn);
         rtn = tpsonDeviceFaultService.homePageFaultCount(rtn);
-        rtn.setTodayLogin(3);
-        rtn.setCurrentLogin(1);
-        rtn.setTotalUserAmount(23);
 
+
+        //TODO:
+        rtn.setTodayLogin(3);
+
+        rtn.setCurrentLogin(webSocketService.getOnlineCount());
+        rtn.setTotalUserAmount(userMapper.getTotal());
         op.setDataValue(rtn);
 
         return op;

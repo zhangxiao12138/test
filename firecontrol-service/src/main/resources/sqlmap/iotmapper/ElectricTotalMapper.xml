@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.ElectricTotalMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.ElectricTotal">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="power" jdbcType="DOUBLE" property="power" />
+    <result column="power_type" jdbcType="TINYINT" property="powerType" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="end_time" jdbcType="INTEGER" property="endTime" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="group" jdbcType="INTEGER" property="group" />
+    <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
+    <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, company_id, device_id, device_code, type, power, power_type, add_time, end_time, 
+    department_id, group, floor_id, building_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_electric_appliance_total
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_server_electric_appliance_total
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricTotal">
+    insert into tb_server_electric_appliance_total (id, company_id, device_id, 
+      device_code, type, power, 
+      power_type, add_time, end_time, 
+      department_id, group, floor_id, 
+      building_id)
+    values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, 
+      #{deviceCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{power,jdbcType=DOUBLE}, 
+      #{powerType,jdbcType=TINYINT}, #{addTime,jdbcType=INTEGER}, #{endTime,jdbcType=INTEGER}, 
+      #{departmentId,jdbcType=BIGINT}, #{group,jdbcType=INTEGER}, #{floorId,jdbcType=VARCHAR}, 
+      #{buildingId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.ElectricTotal">
+    insert into tb_server_electric_appliance_total
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="deviceCode != null">
+        device_code,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="power != null">
+        power,
+      </if>
+      <if test="powerType != null">
+        power_type,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="group != null">
+        group,
+      </if>
+      <if test="floorId != null">
+        floor_id,
+      </if>
+      <if test="buildingId != null">
+        building_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="power != null">
+        #{power,jdbcType=DOUBLE},
+      </if>
+      <if test="powerType != null">
+        #{powerType,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="group != null">
+        #{group,jdbcType=INTEGER},
+      </if>
+      <if test="floorId != null">
+        #{floorId,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.firecontrol.domain.entity.ElectricTotal">
+    update tb_server_electric_appliance_total
+    <set>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceCode != null">
+        device_code = #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="power != null">
+        power = #{power,jdbcType=DOUBLE},
+      </if>
+      <if test="powerType != null">
+        power_type = #{powerType,jdbcType=TINYINT},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="group != null">
+        group = #{group,jdbcType=INTEGER},
+      </if>
+      <if test="floorId != null">
+        floor_id = #{floorId,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.firecontrol.domain.entity.ElectricTotal">
+    update tb_server_electric_appliance_total
+    set company_id = #{companyId,jdbcType=INTEGER},
+      device_id = #{deviceId,jdbcType=INTEGER},
+      device_code = #{deviceCode,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      power = #{power,jdbcType=DOUBLE},
+      power_type = #{powerType,jdbcType=TINYINT},
+      add_time = #{addTime,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=BIGINT},
+      group = #{group,jdbcType=INTEGER},
+      floor_id = #{floorId,jdbcType=VARCHAR},
+      building_id = #{buildingId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.ElectricTypeMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.ElectricType">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, parent_id, device_id, level, name, code
+  </sql>
+
+  <select id="getAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select *
+    from tb_server_electric_appliance_type
+  </select>
+
+  <select id="getByName"  resultMap="BaseResultMap">
+    select *
+    from tb_server_electric_appliance_type
+    where 1=1
+    <if test="name != null">
+      and `name` like concat('%', #{name}, '%');
+    </if>
+  </select>
+
+  <select id="getByFullName"  resultMap="BaseResultMap">
+    select *
+    from tb_server_electric_appliance_type
+    where  `name` = #{name}
+    limit 1
+  </select>
+
+
+  <select id="getNameByType"  resultType="java.lang.String">
+    select `name`
+    from tb_server_electric_appliance_type
+    where  id = #{id}
+  </select>
+
+
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricType">
+    insert into tb_server_electric_appliance_type (id, parent_id, device_id, 
+      level, name, code)
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, 
+      #{level,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR})
+  </insert>
+
+
+
+</mapper>

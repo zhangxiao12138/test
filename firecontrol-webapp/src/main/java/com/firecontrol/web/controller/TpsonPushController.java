@@ -73,6 +73,18 @@ public class TpsonPushController {
         return op;
     }
 
+    /**
+     * SMR 3002 电气识别系统
+     */
+    @RequestMapping(value = "/open/device/log/smr3002/tpson/open/device/log/smr3002")
+    @ResponseBody
+    public OpResult receiveSMR3002InfoLongUrl(@RequestBody SMR3002Dto dto) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        op = tpsonSMR3002Service.saveSMR3002Data(dto);
+
+        return op;
+    }
+
 
 
 }

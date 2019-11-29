@@ -1,5 +1,6 @@
 package com.firecontrol.mapper.iotmapper;
 
+import com.firecontrol.domain.dto.BuildingAlarmDto;
 import com.firecontrol.domain.entity.TpsonDeviceType;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +23,7 @@ public interface TpsonDeviceTypeMapper {
     public List<Long> getDeviceTypeBySystemType(@Param("systemType") Integer systemType);
 
     public String getDeviceTypeNameByType(@Param("type") Integer type);
+
 
 }
 

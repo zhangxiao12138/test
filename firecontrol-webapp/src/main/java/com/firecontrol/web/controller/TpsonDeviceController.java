@@ -102,8 +102,6 @@ public class TpsonDeviceController {
 
 
 
-
-
     @ApiOperation(value = "更改设备状态(0 启用 1停用)" ,  notes="更改设备状态(0 启用 1停用)")
     @RequestMapping(value = "/changeDeviceStatus", method = {RequestMethod.POST})
     @ApiImplicitParams({

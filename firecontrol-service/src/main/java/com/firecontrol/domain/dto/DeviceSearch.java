@@ -15,6 +15,8 @@ public class DeviceSearch extends BasePager{
     private String searchStr;
     @ApiModelProperty(value = "搜索设备号" ,example = "1")
     private String searchCode;
+    @ApiModelProperty(value = "搜索设备号" ,example = "1")
+    private String deviceCode;
 
 
     /*
@@ -69,5 +71,13 @@ public class DeviceSearch extends BasePager{
 
     public void setSearchStr(String searchStr) {
         this.searchStr = searchStr;
+    }
+
+    public String getDeviceCode() {
+        return deviceCode;
+    }
+
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 }

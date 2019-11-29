@@ -1,15 +1,8 @@
 package com.firecontrol.domain.entity;
 
-import io.swagger.models.auth.In;
-
 public class SensorLog {
+
     private Long id;
-
-    //TODO: 添加deviceCode 与deviceId
-
-    private String deviceCode;
-
-    private Long deviceId;
 
     private Long sensorId;
 
@@ -17,11 +10,16 @@ public class SensorLog {
 
     private Integer logTime;
 
-    private Byte logType;
-
     private Byte dataType;
 
+    private Byte logType;
+
     private String logData;
+
+    private Long deviceId;
+
+    private String deviceCode;
+
 
     public SensorLog() {}
 
@@ -71,6 +69,13 @@ public class SensorLog {
         this.logTime = logTime;
     }
 
+    public Byte getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Byte dataType) {
+        this.dataType = dataType;
+    }
 
     public Byte getLogType() {
         return logType;
@@ -80,28 +85,12 @@ public class SensorLog {
         this.logType = logType;
     }
 
-    public Byte getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(Byte dataType) {
-        this.dataType = dataType;
-    }
-
     public String getLogData() {
         return logData;
     }
 
     public void setLogData(String logData) {
-        this.logData = logData == null ? null : logData.trim();
-    }
-
-    public String getDeviceCode() {
-        return deviceCode;
-    }
-
-    public void setDeviceCode(String deviceCode) {
-        this.deviceCode = deviceCode;
+        this.logData = logData;
     }
 
     public Long getDeviceId() {
@@ -110,5 +99,13 @@ public class SensorLog {
 
     public void setDeviceId(Long deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getDeviceCode() {
+        return deviceCode;
+    }
+
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
     }
 }

@@ -116,13 +116,9 @@ public class SMR3002DataDto {
     /*
     [{"name":"电瓶车充电器","possible":0.98},{"name":"电风扇","possible":0.6}], //识别结果集
      */
-    private List<Map> identifyResult;
+    private String identifyResult;
 
-
-
-
-
-
+    private List<ElectricPossible> resultList;
 
 
 
@@ -270,11 +266,19 @@ public class SMR3002DataDto {
         this.uuid = uuid;
     }
 
-    public List<Map> getIdentifyResult() {
+    public String getIdentifyResult() {
         return identifyResult;
     }
 
-    public void setIdentifyResult(List<Map> identifyResult) {
+    public void setIdentifyResult(String identifyResult) {
         this.identifyResult = identifyResult;
+    }
+
+    public List<ElectricPossible> getResultList() {
+        return resultList;
+    }
+
+    public void setResultList(List<ElectricPossible> resultList) {
+        this.resultList = resultList;
     }
 }

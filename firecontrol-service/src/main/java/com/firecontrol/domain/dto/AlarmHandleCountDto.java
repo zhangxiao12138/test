@@ -4,7 +4,7 @@ package com.firecontrol.domain.dto;
  * Created by mariry on 2019/11/4.
  */
 public class AlarmHandleCountDto {
-    private Long dealUserId;
+    private String dealUserId;
 
     private Integer amount;
 
@@ -14,11 +14,11 @@ public class AlarmHandleCountDto {
 
     private String typeName;
 
-    public Long getDealUserId() {
+    public String getDealUserId() {
         return dealUserId;
     }
 
-    public void setDealUserId(Long dealUserId) {
+    public void setDealUserId(String dealUserId) {
         this.dealUserId = dealUserId;
     }
 

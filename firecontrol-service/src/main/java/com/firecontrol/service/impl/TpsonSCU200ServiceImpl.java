@@ -9,14 +9,12 @@ import com.firecontrol.domain.dto.SCU200DataDto;
 import com.firecontrol.domain.dto.SCU200Dto;
 import com.firecontrol.domain.dto.WebSocketMsg;
 import com.firecontrol.domain.dto.WsAlarmPush;
-import com.firecontrol.domain.entity.TpsonAlarmEntity;
-import com.firecontrol.domain.entity.TpsonDeviceEntity;
-import com.firecontrol.domain.entity.TpsonDeviceFaultEntity;
-import com.firecontrol.domain.entity.TpsonDeviceHeartLog;
+import com.firecontrol.domain.entity.*;
 import com.firecontrol.mapper.iotmapper.TpsonAlarmMapper;
 import com.firecontrol.mapper.iotmapper.TpsonDeviceFaultMapper;
 import com.firecontrol.mapper.iotmapper.TpsonDeviceHeartLogMapper;
 import com.firecontrol.mapper.iotmapper.TpsonDeviceMapper;
+import com.firecontrol.mapper.ydmapper.FloorMapper;
 import com.firecontrol.service.TpsonSCU200Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +41,8 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
     private TpsonDeviceFaultMapper tpsonFaultMapper;
     @Autowired
     private WebSocketService webSocketService;
+    @Autowired
+    private FloorMapper floorMapper;
 
     @Override
     public OpResult saveSCU200Data(SCU200Dto dto) {
@@ -173,17 +173,20 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
                 alarm.setSensorName(device.getName() + "NB烟雾传感器000003");
                 alarm.setStatus((byte)0);
 
-                alarm.setDetail("NB烟雾传感器报警");//TODO:写成地址+ NB传感器报警的形式
-                alarm.setFloorName("凤凰城二楼消火栓急救箱");
-                alarm.setPosition("凤凰城二楼消火栓急救箱");//TODO: 设为设备地址
-                alarm.setSiteName("凤凰城二楼消火栓急救箱");//TODO:设为设备地址
+                Floor floor  = floorMapper.selectById(device.getFloorId());
+
+                alarm.setDetail(floor.getName() + "NB烟雾传感器报警");
+                alarm.setFloorName(floor.getName());
+                alarm.setPosition(floor.getName());
+                alarm.setSiteName(floor.getName());
+                alarm.setFloorId(device.getFloorId());
+
                 alarm.setIsPending(false);
                 alarm.setCameraId(device.getCameraId());
                 alarm.setCount(1);
                 alarm.setRecoverTime(0);
                 alarm.setIsDelete(false);
-                //TODO:全部building_id由long改为string
-                // alarm.setBuildingId(device.getBuildingId());
+                alarm.setBuildingId(device.getBuildingId());
                 tpsonAlarmMapper.insert(alarm);
 
 
@@ -214,6 +217,9 @@ public class TpsonSCU200ServiceImpl implements TpsonSCU200Service {
 
         //直接添加故障信息
         TpsonDeviceFaultEntity fault = new TpsonDeviceFaultEntity();
+        //TODO:
+
+
 
 
 

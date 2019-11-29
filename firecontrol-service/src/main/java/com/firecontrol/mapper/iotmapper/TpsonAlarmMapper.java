@@ -54,7 +54,8 @@ public interface TpsonAlarmMapper {
 
     public List<String>getDeviceCodeByAlarmId(@Param("idList") List<String> idList);
 
-    public Integer updateAlarmDeal(@Param("id") Long id, @Param("status") Integer status, @Param("dealDetail") String dealDetail);
+    public Integer updateAlarmDeal(@Param("id") Long id, @Param("status") Integer status, @Param("dealDetail") String dealDetail,
+                                   @Param("dealUserId") String dealUserId, @Param("dealUserName") String dealUserName);
 
     public List<AlarmDealCountDto> dealTypeCount(@Param("deviceTypeList") List<Long>deviceTypeList,
                                                      @Param("startTime") Integer startTime,
@@ -85,6 +86,16 @@ public interface TpsonAlarmMapper {
     public String getAlarmTypeNameByType(@Param("id") Integer id);
 
     public List<SumRateStatDto> homePageSumRateStat(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("companyId") Long companyId);
+
+    public List<BuildingAlarmDto> getBuildingAlarm(@Param("deviceTypeList") List<Long>deviceTypeList,
+                                                   @Param("startTime") Integer startTime,
+                                                   @Param("endTime")Integer endTime,
+                                                   @Param("companyId")String companyId);
+
+    public List<BuildingAlarmDto> getBuildingUnhandleAlarm(@Param("deviceTypeList") List<Long>deviceTypeList,
+                                                   @Param("startTime") Integer startTime,
+                                                   @Param("endTime")Integer endTime,
+                                                   @Param("companyId")String companyId);
 
 
 }

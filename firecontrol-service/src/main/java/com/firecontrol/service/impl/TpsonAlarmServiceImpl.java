@@ -8,6 +8,8 @@ import com.firecontrol.common.WebSocketService;
 import com.firecontrol.domain.dto.*;
 import com.firecontrol.domain.entity.*;
 import com.firecontrol.mapper.iotmapper.*;
+import com.firecontrol.mapper.ydmapper.FloorMapper;
+import com.firecontrol.mapper.ydmapper.UserMapper;
 import com.firecontrol.service.TpsonAlarmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,10 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
     private TpsonDeviceVersionMapper versionMapper;
     @Autowired
     private WebSocketService webSocketService;
+    @Autowired
+    private FloorMapper floorMapper;
+    @Autowired
+    private UserMapper userMapper;
 
 
 
@@ -182,12 +188,6 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 if(total > 0) {
                     alarmList = tpsonAlarmMapper.getAlarmBySearch(deviceTypeList,
                             faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage, length);
-                    if(!CollectionUtils.isEmpty(alarmList)){
-                        //TODO: 从多数据源根据id获取用户名
-                        for(TpsonAlarmEntity a : alarmList) {
-                            a.setDealUserName("学习中");
-                        }
-                    }
                 }
 //            }
             rtnMap.put("total", total);
@@ -318,7 +318,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             detail.setLevel(alarm.getLevel());
             detail.setLevelName(fmtLevelName(alarm.getLevel()));
             detail.setDealUserId(alarm.getDealUserId());
-            detail.setDealUserName(fmtDealUserName(alarm.getDealUserId()));
+            detail.setDealUserName(alarm.getDealUserName());
 
             //TODO: 完善各种楼宇信息
 
@@ -337,7 +337,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
 
 
     @Override
-    public OpResult updateAlarmDetailById(Long id, Integer status, String dealDetail) {
+    public OpResult updateAlarmDetailById(Long id, Integer status, String dealDetail, User user) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         try{
             if(id == null || status == null || StringUtils.isEmpty(dealDetail)) {
@@ -345,7 +345,12 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 op.setMessage("id/处理状态/处理备注均不可为空!");
                 return op;
             }
-            tpsonAlarmMapper.updateAlarmDeal(id, status, dealDetail);
+            if(user == null) {
+                op.setStatus(OpResult.OP_FAILED);
+                op.setMessage("cookie 校验不通过！");
+                return op;
+            }
+            tpsonAlarmMapper.updateAlarmDeal(id, status, dealDetail, user.getId(), user.getUsername());
 
             List<String> ids = new ArrayList<>();
             ids.add(id.toString());
@@ -423,19 +428,30 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 return op;
             }
 
-            //TODO: 多数据源，自己获取楼宇信息；
-            // 获取楼宇信息之后，再看看这里怎么做好
-            List<Map> list = new ArrayList<>();
-            Map tmp = new HashMap();
+            List<Long> deviceTypeList = null;
+            if(systemType != 0){
+                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+            }
 
-            tmp.put("buildingId", "wwM75Oa0");
-            tmp.put("name", "凤凰城");
-            tmp.put("total", 12);
-            tmp.put("unhandle", 0);
-            list.add(tmp);
-            op.setDataValue(list);
+            //查询没栋楼宇total报警数量
+            List<BuildingAlarmDto> blist = tpsonAlarmMapper.getBuildingAlarm(deviceTypeList, startTime, endTime, companyId);
+            //查询没栋楼宇未处理报警数量
+            List<BuildingAlarmDto> ulist = tpsonAlarmMapper.getBuildingUnhandleAlarm(deviceTypeList, startTime, endTime, companyId);
 
+            for(BuildingAlarmDto b : blist) {
+                for(BuildingAlarmDto a : ulist) {
+                    if(b.getBuildingId().equals(a.getBuildingId())) {
+                        b.setUnhandle(a.getUnhandle());
+                        break;
+                    }
+                }
+                Floor f = floorMapper.selectById(b.getBuildingId());
+                if(f != null) {
+                    b.setName(f.getName());
+                }
+            }
 
+            op.setDataValue(blist);
 
         }catch (Exception e){
             log.error("getBuildingAlarmCount ERROR! e={}", e);
@@ -508,9 +524,12 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
             }
 
-//            if(!CollectionUtils.isEmpty(deviceTypeList)){
-                list = tpsonAlarmMapper.getAlarmHandleRank(deviceTypeList, startTime, endTime, companyId);
-//            }
+            list = tpsonAlarmMapper.getAlarmHandleRank(deviceTypeList, startTime, endTime, companyId);
+
+            for(AlarmHandleCountDto a : list) {
+                User user = userMapper.getById(a.getDealUserId());
+                a.setDealUserName(user.getUsername());
+            }
 
             op.setDataValue(list);
         }catch (Exception e){
@@ -686,10 +705,5 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
         return rtn;
     }
 
-
-    private String fmtDealUserName(Long id) {
-        //TODO: 多数据源根据id直接查询
-        return "学习中";
-    }
 
 }

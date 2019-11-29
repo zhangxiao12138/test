@@ -48,7 +48,6 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
             return op;
         }
         try{
-            //TODO: 先写死数据，后续改为查库
             //查询systemType下的设备总数
             List<Long> deviceTypeList = null;
             if(systemType != 0) {
@@ -366,6 +365,7 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
         Calendar cal = Calendar.getInstance();
         cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH), 0, 0,0);
         cal.set(Calendar.DAY_OF_MONTH,cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+        log.info("this month morning: " + cal.getTimeInMillis()/1000);
         return (int) (cal.getTimeInMillis()/1000);
     }
 

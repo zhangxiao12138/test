@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.ydmapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.User">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="department_id" jdbcType="VARCHAR" property="departmentId" />
+    <result column="street" jdbcType="VARCHAR" property="street" />
+    <result column="pass_strength" jdbcType="VARCHAR" property="passStrength" />
+    <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+    <result column="adress" jdbcType="VARCHAR" property="adress" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, create_by, create_time, update_by, update_time, address, avatar, description, 
+    email, mobile, nick_name, password, sex, status, type, username, del_flag, department_id, 
+    street, pass_strength, company_id, adress
+  </sql>
+
+  <select id="getTotal"  resultType="java.lang.Integer">
+    select count(*)  from t_user where del_flag = 0
+  </select>
+
+  <select id="getById"  resultMap="BaseResultMap">
+    select *  from t_user where id = #{id} and del_flag = 0
+  </select>
+
+
+</mapper>

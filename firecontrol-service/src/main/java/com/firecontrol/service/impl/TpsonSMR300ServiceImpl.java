@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +33,10 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
 
     @Autowired
     private TpsonDeviceMapper tpsonDeviceMapper;
-
     @Autowired
     private TpsonSensorMapper tpsonSensorMapper;
-
     @Autowired
     private SensorLogMapper sensorLogMapper;
-
     @Autowired
     private TpsonDeviceHeartLogMapper heartLogMapper;
     @Autowired
@@ -47,14 +45,16 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
     private WebSocketService webSocketService;
     @Autowired
     private FloorMapper floorMapper;
-
+    @Autowired
+    private ElectricLogMapper logMapper;
 
 
     @Override
     public OpResult saveSMR3002Data(SMR3002Dto dto) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
 
-        log.info("SMR3002 data received: {}", dto);
+
+        log.info("SMR3002 data received: {}", JSON.toJSONString(dto));
         if(dto == null) {
             op.setStatus(OpResult.OP_FAILED);
             op.setMessage("接收到数据为空!");
@@ -77,8 +77,6 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
         SensorSearch search = new SensorSearch(device.getCode());
         List<TpsonSensorEntity> sensorList = tpsonSensorMapper.getSensorListBySearch(search);
 
-
-
         //data_type 固定为“REAL_DATA"/WARNING_DATA/ALARM_DATA/FAULT_DATA/IDENTIFY_DATA（电器识别推送）
         if(TBConstants.DATATYPE.realData.equals(dto.getDataType())){
             // 录入实时传感器数据到sensor_log表
@@ -88,25 +86,24 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
                 op.setMessage(OpResult.OpMsg.SAVE_FAIL);
                 return op;
             }
-            updateDeviceStatue(device.getId(), TBConstants.DeviceStatus.online);
-
+            //若设备状态是未激活，则更新为正常
+            if(device.getRunningState() != TBConstants.RunningState.alarm || device.getRunningState() != TBConstants.RunningState.fault) {
+                updateDeviceStatue(device.getId(), TBConstants.RunningState.online);
+            }
         }else if(TBConstants.DATATYPE.alarmData.equals(dto.getDataType())){
             //生成并处理报警信息，且推送前端
-
-            //TODO: 添加或更新报警信息，添加设备心跳日志,
-            //TODO:添加事务层，写入小事务
             insertOrUpdateAlarm(dto, device);
-            updateDeviceStatue(device.getId(), TBConstants.DeviceStatus.alarm);
+            updateDeviceStatue(device.getId(), TBConstants.RunningState.alarm);
 
         }else if(TBConstants.DATATYPE.faultData.equals(dto.getDataType())) {
             //生成并处理故障数据
             //TODO:若runningState 不是禁用状态，则更改设备信息runningState信息为故障
-
+            //更改设备状态为故障状态
+            updateDeviceStatue(device.getId(), TBConstants.DeviceStatus.fault);
 
         }else if(TBConstants.DATATYPE.identifyData.equals(dto.getDataType())) {
             //电器识别数据，记录电器日志device_log, 等
-
-            if(!handleRealTimeData(dto,device.getId(), device.getCode(), sensorList, dto.getTime())) {
+            if(!handleIdentifyData(dto,device.getId(), device.getCode(), sensorList, device.getType().intValue(), device.getFloorId(), device.getBuildingId())) {
                 log.error("saveSMR3002Data handleRealTimeData error! param = {}", dto);
                 op.setStatus(OpResult.OP_FAILED);
                 op.setMessage(OpResult.OpMsg.SAVE_FAIL);
@@ -137,6 +134,67 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
         return token;
     }
 
+
+    /**
+     * 录入实时记录数据
+     * @param dto
+     * @param deviceId
+     * @param deviceCode
+     * @param sensorList
+     * @param logTime
+     * @return
+     */
+    private Boolean handleIdentifyData(SMR3002Dto dto, Long deviceId, String deviceCode, List<TpsonSensorEntity> sensorList, Integer deviceType, String floorId, String buildingId) {
+        Boolean b = true;
+//        {
+//            "time":1515294211, //UNIX时间戳，时间
+//                "deviceType":"SMR3002", //固定为此
+//                "deviceCode":"12345678", //设备编码
+//                "dataType":"IDENTIFY_DATA", //固定为此
+//                "data":{
+//            "elecName":"电瓶车充电器",//电器名称
+//                    "identifyResult":[{"name":"电瓶车充电器","possible":0.98},{"name":"电风扇","possible":0.6}], //识别结果集
+//            "power":202, //功率,浮点数，单位瓦
+//                    "elecType":0, //int，电器类型（0普通类型，2大功率电器，4发热电器，6大功率发热电器）
+//                    "action":1, //int，电器状态：-1拔出，0无动作，1接入，2换挡或模式变化，只有接入(action=1)的电器才能学习
+//                    "uuid":"3850335492070604572" //记录id
+//        }
+//        }
+
+        ElectricLog log = new ElectricLog();
+        SMR3002DataDto data = dto.getData();
+
+        log.setElecName(data.getElecName());
+        log.setAction(data.getAction());
+        log.setAddTime(dto.getTime());
+        log.setUuid(data.getUuid());
+        log.setPower(data.getPower());
+        log.setDeviceCode(dto.getDeviceCode());
+        log.setDeviceId(deviceId.intValue());
+        log.setType(deviceType);
+        log.setFeature("");
+
+
+        log.setPowerType(data.getElecType().byteValue());
+        log.setPossibleStr(data.getIdentifyResult());
+        log.setFloorId(floorId);
+        log.setBuildingId(buildingId);
+
+        List<ElectricPossible> list = JSON.parseArray(data.getIdentifyResult(), ElectricPossible.class);
+
+        Double maxPossible;
+        if(!CollectionUtils.isEmpty(list)){
+            maxPossible  = (Double)list.get(0).getPossible() *100;
+        }else{
+            maxPossible = 0D;
+        }
+        log.setMaxPossible(maxPossible.intValue());//已知电器最大概率值,百分比
+
+        logMapper.insert(log);
+
+        return b;
+
+    }
 
     /**
      * 录入实时传感器数据到sensor_log表

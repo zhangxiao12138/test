@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.ElectricRealMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.ElectricReal">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+    <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="power" jdbcType="DOUBLE" property="power" />
+    <result column="power_type" jdbcType="TINYINT" property="powerType" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="action" jdbcType="INTEGER" property="action" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="max_possible" jdbcType="INTEGER" property="maxPossible" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="site_name" jdbcType="VARCHAR" property="siteName" />
+    <result column="group" jdbcType="INTEGER" property="group" />
+    <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
+    <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, company_id, device_id, device_code, type, power, power_type, uuid, action, add_time, 
+    max_possible, department_id, site_name, group, floor_id, building_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_electric_appliance_real
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_server_electric_appliance_real
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricReal">
+    insert into tb_server_electric_appliance_real (id, company_id, device_id, 
+      device_code, type, power, 
+      power_type, uuid, action, 
+      add_time, max_possible, department_id, 
+      site_name, group, floor_id, 
+      building_id)
+    values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER}, 
+      #{deviceCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{power,jdbcType=DOUBLE}, 
+      #{powerType,jdbcType=TINYINT}, #{uuid,jdbcType=VARCHAR}, #{action,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=INTEGER}, #{maxPossible,jdbcType=INTEGER}, #{departmentId,jdbcType=BIGINT}, 
+      #{siteName,jdbcType=VARCHAR}, #{group,jdbcType=INTEGER}, #{floorId,jdbcType=VARCHAR}, 
+      #{buildingId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.ElectricReal">
+    insert into tb_server_electric_appliance_real
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="deviceId != null">
+        device_id,
+      </if>
+      <if test="deviceCode != null">
+        device_code,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="power != null">
+        power,
+      </if>
+      <if test="powerType != null">
+        power_type,
+      </if>
+      <if test="uuid != null">
+        uuid,
+      </if>
+      <if test="action != null">
+        action,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="maxPossible != null">
+        max_possible,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="siteName != null">
+        site_name,
+      </if>
+      <if test="group != null">
+        group,
+      </if>
+      <if test="floorId != null">
+        floor_id,
+      </if>
+      <if test="buildingId != null">
+        building_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null">
+        #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="power != null">
+        #{power,jdbcType=DOUBLE},
+      </if>
+      <if test="powerType != null">
+        #{powerType,jdbcType=TINYINT},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        #{action,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="maxPossible != null">
+        #{maxPossible,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="siteName != null">
+        #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="group != null">
+        #{group,jdbcType=INTEGER},
+      </if>
+      <if test="floorId != null">
+        #{floorId,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.firecontrol.domain.entity.ElectricReal">
+    update tb_server_electric_appliance_real
+    <set>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=INTEGER},
+      </if>
+      <if test="deviceCode != null">
+        device_code = #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="power != null">
+        power = #{power,jdbcType=DOUBLE},
+      </if>
+      <if test="powerType != null">
+        power_type = #{powerType,jdbcType=TINYINT},
+      </if>
+      <if test="uuid != null">
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        action = #{action,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="maxPossible != null">
+        max_possible = #{maxPossible,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="siteName != null">
+        site_name = #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="group != null">
+        group = #{group,jdbcType=INTEGER},
+      </if>
+      <if test="floorId != null">
+        floor_id = #{floorId,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.firecontrol.domain.entity.ElectricReal">
+    update tb_server_electric_appliance_real
+    set company_id = #{companyId,jdbcType=INTEGER},
+      device_id = #{deviceId,jdbcType=INTEGER},
+      device_code = #{deviceCode,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      power = #{power,jdbcType=DOUBLE},
+      power_type = #{powerType,jdbcType=TINYINT},
+      uuid = #{uuid,jdbcType=VARCHAR},
+      action = #{action,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=INTEGER},
+      max_possible = #{maxPossible,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=BIGINT},
+      site_name = #{siteName,jdbcType=VARCHAR},
+      group = #{group,jdbcType=INTEGER},
+      floor_id = #{floorId,jdbcType=VARCHAR},
+      building_id = #{buildingId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -511,7 +511,9 @@
     <if test="searchCode != null">
       and code like concat('%', #{searchCode}, '%')
     </if>
-
+    <if test="deviceCode != null">
+      and code like concat('%', #{deviceCode}, '%')
+    </if>
     <if test="isOutdoor != null">
       and is_outdoor = #{isOutdoor,jdbcType=BIT}
     </if>
@@ -524,7 +526,6 @@
 
 
 
-
   <select id="getDeviceListBySearch" parameterType="com.firecontrol.domain.entity.TpsonDeviceEntity" resultMap="BaseResultMap">
     select *
     from tb_server_device
@@ -534,6 +535,10 @@
     </if>
     <if test="searchCode != null">
       and code like concat('%', #{searchCode}, '%')
+    </if>
+
+    <if test="deviceCode != null">
+      and code like concat('%', #{deviceCode}, '%')
     </if>
 
     <if test="isOutdoor != null">
@@ -554,7 +559,7 @@
   <update id="updateDeviceRunningState">
     update tb_server_device
     <set>
-      update_time = unix_timestamp(now())),running_state = #{runningState}
+      update_time = unix_timestamp(now()),running_state = #{runningState}
     </set>
     where id = #{id}
   </update>

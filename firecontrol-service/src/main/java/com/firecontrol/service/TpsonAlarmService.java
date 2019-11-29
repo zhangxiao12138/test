@@ -2,6 +2,7 @@ package com.firecontrol.service;
 
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.AlarmFaultCount;
+import com.firecontrol.domain.entity.User;
 
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public interface TpsonAlarmService {
 
     OpResult getAlarmDetailById(Long id);
 
-    OpResult updateAlarmDetailById(Long id, Integer status, String dealDetail);
+    OpResult updateAlarmDetailById(Long id, Integer status, String dealDetail, User user);
 
     OpResult dealTypeCount(Integer systemType, Integer startTime, Integer endTime, String companyId);
 

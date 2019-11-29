@@ -10,7 +10,7 @@
     <result column="device_id" jdbcType="BIGINT" property="deviceId" />
     <result column="sensor_id" jdbcType="BIGINT" property="sensorId" />
     <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="deal_user_id" jdbcType="BIGINT" property="dealUserId" />
+    <result column="deal_user_id" jdbcType="VARCHAR" property="dealUserId" />
     <result column="deal_detail" jdbcType="VARCHAR" property="dealDetail" />
     <result column="add_time" jdbcType="INTEGER" property="addTime" />
     <result column="update_time" jdbcType="INTEGER" property="updateTime" />
@@ -58,6 +58,7 @@
     <result column="review_id" jdbcType="BIGINT" property="reviewId" />
     <result column="recover_time" jdbcType="INTEGER" property="recoverTime" />
     <result column="pending_time" jdbcType="INTEGER" property="pendingTime" />
+    <result column="deal_user_name" jdbcType="VARCHAR" property="dealUserName" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonAlarmEntity">
     <result column="detail" jdbcType="LONGVARCHAR" property="detail" />
@@ -70,7 +71,7 @@
     device_name, sensor_name, company_name, floor_name, device_code, photo_id, device_type, 
     site_man, site_phone, site_id, department_id, department_name, department_man, department_phone, 
     open_id, device_version, geographic_id, is_outdoor, out_pos_x, out_pos_y, review_time, 
-    is_review, review_id, recover_time, pending_time
+    is_review, review_id, recover_time, pending_time, deal_user_name
   </sql>
   <sql id="Blob_Column_List">
     detail
@@ -150,11 +151,11 @@
       open_id, device_version, geographic_id, 
       is_outdoor, out_pos_x, out_pos_y, 
       review_time, is_review, review_id, 
-      recover_time, pending_time, detail
+      recover_time, pending_time, detail, deal_user_name
       )
     values ( #{type,jdbcType=BIGINT}, #{level,jdbcType=INTEGER},
       #{companyId,jdbcType=BIGINT}, #{floorId,jdbcType=VARCHAR}, #{deviceId,jdbcType=BIGINT},
-      #{sensorId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, #{dealUserId,jdbcType=BIGINT}, 
+      #{sensorId,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}, #{dealUserId,jdbcType=VARCHAR},
       #{dealDetail,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
       #{dealTime,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{position,jdbcType=VARCHAR}, 
       #{isDelete,jdbcType=BIT}, #{alarmData,jdbcType=VARCHAR}, #{limitUp,jdbcType=VARCHAR}, 
@@ -170,7 +171,7 @@
       #{openId,jdbcType=VARCHAR}, #{deviceVersion,jdbcType=INTEGER}, #{geographicId,jdbcType=BIGINT}, 
       #{isOutdoor,jdbcType=BIT}, #{outPosX,jdbcType=VARCHAR}, #{outPosY,jdbcType=VARCHAR}, 
       #{reviewTime,jdbcType=INTEGER}, #{isReview,jdbcType=BIT}, #{reviewId,jdbcType=BIGINT}, 
-      #{recoverTime,jdbcType=INTEGER}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR}
+      #{recoverTime,jdbcType=INTEGER}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR},#{dealUserName,jdbcType=VARCHAR},
       )
   </insert>
   <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonAlarmEntity">
@@ -368,7 +369,7 @@
         #{status,jdbcType=TINYINT},
       </if>
       <if test="dealUserId != null">
-        #{dealUserId,jdbcType=BIGINT},
+        #{dealUserId,jdbcType=VARCHAR},
       </if>
       <if test="dealDetail != null">
         #{dealDetail,jdbcType=VARCHAR},
@@ -541,7 +542,7 @@
         status = #{status,jdbcType=TINYINT},
       </if>
       <if test="dealUserId != null">
-        deal_user_id = #{dealUserId,jdbcType=BIGINT},
+        deal_user_id = #{dealUserId,jdbcType=VARCHAR},
       </if>
       <if test="dealDetail != null">
         deal_detail = #{dealDetail,jdbcType=VARCHAR},
@@ -725,11 +726,13 @@
   <select id="getAlarmBySearch" resultMap="BaseResultMap">
     select *
     from tb_server_alarm
-    where
-    device_type in
+    where 1=1
+    <if test="deviceTypeList != null">
+      and device_type in
     <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    </if>
     <if test="startTime != null">
       and add_time >= #{startTime}
     </if>
@@ -812,6 +815,12 @@
       </if>
       <if test="status != null">
         status = #{status},
+      </if>
+      <if test="dealUserId != null">
+        deal_user_id = #{dealUserId},
+      </if>
+      <if test="dealUserName != null">
+        deal_user_name = #{dealUserName},
       </if>
       deal_time = unix_timestamp(now()),
       update_time = unix_timestamp(now())
@@ -910,7 +919,7 @@
   </select>
 
   <select id="getAlarmHandleRank" resultType="com.firecontrol.domain.dto.AlarmHandleCountDto" >
-    SELECT deal_user_id as dealUserId, count(*) as amount from tb_server_alarm
+    SELECT deal_user_id as dealUserId,  count(*) as amount from tb_server_alarm
     where is_delete = 0
     <if test="deviceTypeList != null">
     and
@@ -932,6 +941,50 @@
 
   </select>
 
+
+
+  <select id="getBuildingAlarm" resultType="com.firecontrol.domain.dto.BuildingAlarmDto" >
+    SELECT floor_id as buildingId, count(*) as total from tb_server_alarm
+    where is_delete = 0
+    <if test="deviceTypeList != null">
+      and device_type in
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+    GROUP BY floor_id order by floor_id desc
+  </select>
+
+
+  <select id="getBuildingUnhandleAlarm" resultType="com.firecontrol.domain.dto.BuildingAlarmDto" >
+    SELECT floor_id as buildingId, count(*) as unhandle from tb_server_alarm
+    where is_delete = 0 and status = 0
+    <if test="deviceTypeList != null">
+      and device_type in
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      <![CDATA[ and add_time < #{endTime} ]]>
+    </if>
+    <if test="companyId != null">
+      and companyId = #{companyId}
+    </if>
+    GROUP BY floor_id order by floor_id desc
+  </select>
 
   <select id="getUnhandleAlarmByDeviceInfo" resultMap="BaseResultMap" >
     SELECT * from tb_server_alarm
