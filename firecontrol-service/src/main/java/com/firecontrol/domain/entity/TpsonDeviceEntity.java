@@ -141,6 +141,15 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
 
     private List<SensorLog> sensorList;
 
+    private Integer switchOn;
+
+    public Integer getSwitchOn() {
+        return switchOn;
+    }
+
+    public void setSwitchOn(Integer switchOn) {
+        this.switchOn = switchOn;
+    }
 
     public Long getId() {
         return id;

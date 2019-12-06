@@ -52,4 +52,6 @@ public interface TpsonDeviceMapper {
 
     public Integer updateDeviceRunningStateByCodeList(@Param("deviceCodeList")List<String>deviceCodeList, @Param("runningState") Integer runningState);
 
+    public Integer setRelay(@Param("devcieCode") String deviceCode, @Param("switchOn") Integer switchOn);
+
 }

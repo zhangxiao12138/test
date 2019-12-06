@@ -134,6 +134,27 @@
   </update>
 
 
+
+
+  <select id="getPowerAccessCount" resultType="com.firecontrol.domain.dto.ElectricAccess">
+    select power_type as powerType, count(*) as amount
+    from tb_server_electric_appliance_log
+    where `action`=1
+    <if test="deviceCode != null">
+      and device_code = #{deviceCode}
+    </if>
+
+    <if test="deviceId != null">
+      and device_id = deviceId
+    </if>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    group by power_type
+    ORDER by power_type
+  </select>
+
+
   <!--<update id="updateByPrimaryKeySelective" parameterType="com.firecontrol.domain.entity.ElectricLog">-->
     <!--update tb_server_electric_appliance_log-->
     <!--<set>-->

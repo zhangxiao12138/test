@@ -2,6 +2,7 @@ package com.firecontrol.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.firecontrol.common.HttpRequestUtil;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.common.RunningStateCount;
 import com.firecontrol.common.TBConstants;
@@ -11,15 +12,18 @@ import com.firecontrol.domain.dto.FaultCountDto;
 import com.firecontrol.domain.entity.*;
 import com.firecontrol.mapper.iotmapper.*;
 import com.firecontrol.service.TpsonDeviceService;
+import com.firecontrol.service.TpsonSMR3002Service;
 import com.firecontrol.service.TpsonSensorService;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,6 +48,19 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     private TpsonDeviceTypeMapper deviceTypeMapper;
     @Autowired
     private ElectricLogMapper electricLogMapper;
+    @Autowired
+    private SensorLogMapper sensorLogMapper;
+    @Autowired
+    private TpsonSMR3002Service tpsonSMR3002Service;
+
+    @Value("${tpson.ip}")
+    private String tosonIP;
+
+    @Value("${tpson.relay}")
+    private String relayUrl;
+
+    @Value("${tpson.getToken}")
+    private String getToken;
 
 
 
@@ -131,10 +148,20 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         insertASensor(device);
         //添加故障电弧传感器
         insertGZDHSensor(device);
+        //功率
+        insertGLSensor(device);
+        //能耗
+        insertNHSensor(device);
+        //电压传感器
+        insertDYSensor(device);
+        //电流传感器
+        insertDLSensor(device);
+
 
         //TODO: transaction
         return "success";
     }
+
 
 
 
@@ -180,7 +207,7 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
                 return op;
             }else{
                 result.put("total", total);
-                device.setCurrentPage(device.getCurrentPage() -1);
+                device.setCurrentPage((device.getCurrentPage() -1) * device.getLength());
                 list = tpsonDeviceMapper.getDeviceListBySearch(device);
                 if(!CollectionUtils.isEmpty(list)){
 //                    List.stream().forEach(sku -> {
@@ -622,7 +649,7 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
 
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         Map rtnMap = new HashMap();
-
+        List<TpsonDeviceEntity> list = new ArrayList<>();
         try{
             if(search.getCurrentPage() == null){
                 search.setCurrentPage(1);
@@ -632,28 +659,70 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
             }
             search.setDeviceType(3);
 
-            List<TpsonDeviceEntity> list = tpsonDeviceMapper.getDeviceListBySearch(search);
-            for(TpsonDeviceEntity device : list){
-
-
-
+            search.setCurrentPage((search.getCurrentPage()-1) * search.getLength());
+            Integer total = tpsonDeviceMapper.getTotal(search);
+            rtnMap.put("total", total);
+            if(total <= 0){
+                rtnMap.put("deviceList",list);
+                op.setDataValue(rtnMap);
+                return op;
             }
-            //TODO:
 
 
+            list = tpsonDeviceMapper.getDeviceListBySearch(search);
+            Integer end = (int) (System.currentTimeMillis() / 1000);
+            Integer start = end - 9;
+            for(TpsonDeviceEntity device : list){
+                List<SensorLog> sensorList = sensorLogMapper.getRealTimeData(device.getCode(), start, end);
+                device.setSensorList(sensorList);
+            }
+            rtnMap.put("deviceList", list);
             op.setDataValue(rtnMap);
 
         }catch (Exception e) {
-            log.error("getElectricDeviceStatistic error! e = {}", e);
+            log.error("realTimeWatch error! e = {}", e);
             op.setStatus(OpResult.OP_FAILED);
             op.setMessage(OpResult.OpMsg.OP_FAIL);
             return op;
         }
-
         return op;
 
+    }
 
+    @Override
+    public OpResult setRelay(String deviceCode, Integer switchOn) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
 
+        tpsonDeviceMapper.setRelay(deviceCode, switchOn);
+
+        //调用tpson接口，反向控制电器
+        //1. 获取token
+        Map param = new HashMap();
+        param.put("company", "000002");
+        param.put("secret", "ccd448e44f5314b2930b044e53af6bfd");
+
+        Response t = HttpRequestUtil.sendPostRequest(tosonIP + getToken, param, "");
+        Map map = (Map)t.getData();
+
+        String token = "Bearer " + (String)map.get("token") ;
+
+//        {
+//            "data": {
+//            "expire": 1800,
+//                    "time": 1575624078,
+//                    "token": "CE6F75ACC730815B2DF9F7A75FC152FB"
+//        },
+//            "success": true,
+//                "code": 0
+//        }
+        Map p = new HashMap();
+        p.put("devcieCode", deviceCode);
+        p.put("enable", switchOn == 1 ? true : false);
+
+        t = HttpRequestUtil.sendPostRequest(tosonIP + relayUrl, p, token);
+        log.info("2. return: " + JSON.toJSONString(t));
+
+        return op;
     }
 
 
@@ -718,6 +787,115 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         tpsonSensorService.insertSensor(sensor);
 
         return b;
+    }
+
+    //添加电流传感器
+    private void insertDLSensor(TpsonDeviceEntity device) {
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("12");
+        sensor.setSensorType(new Long(39));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
+    }
+
+    //添加电压传感器
+    private void insertDYSensor(TpsonDeviceEntity device) {
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("11");
+        sensor.setSensorType(new Long(38));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
+    }
+
+
+    //添加能耗传感器
+    private void insertNHSensor(TpsonDeviceEntity device) {
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("9");
+        sensor.setSensorType(new Long(18));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
+    }
+
+    //添加功率传感器
+    private void insertGLSensor(TpsonDeviceEntity device) {
+        TpsonSensorEntity sensor = new TpsonSensorEntity();
+        sensor.setCode("8");
+        sensor.setSensorType(new Long(17));
+        sensor.setSensorTypeName(formatSensorTypeName(sensor.getSensorType()));
+        sensor.setName(device.getName() + sensor.getSensorTypeName() + sensor.getCode());
+        sensor.setIsOutdoor(device.getIsOutdoor());
+        sensor.setDeviceCode(device.getCode());
+        sensor.setFaultStatus(new Byte((byte)1));
+        sensor.setOnline(false);
+        sensor.setDeviceType(device.getType());
+        sensor.setStatus(new Byte((byte)0));
+        sensor.setAlarmLevel(new Byte((byte)1));
+        sensor.setCompanyId(device.getCompanyId());
+        sensor.setPosX(device.getPosX());
+        sensor.setPosY(device.getPosY());
+
+        sensor.setChannelSwitch(true);
+        sensor.setWarningSwitch(true);
+        sensor.setTriggerSwitch(true);
+        sensor.setMan(device.getMan());
+        sensor.setPhone(device.getPhone());
+        sensor.setPosition(device.getPosition());
+        tpsonSensorService.insertSensor(sensor);
     }
 
     //添加剩余电流传感器

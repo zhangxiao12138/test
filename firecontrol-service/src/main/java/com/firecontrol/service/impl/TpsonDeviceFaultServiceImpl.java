@@ -177,7 +177,7 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
                         faultType, status, isOutdoor, deviceCode, startTime, endTime);
                 if(total > 0) {
                     faultList = tpsonDeviceFaultMapper.getFaultBySearch(deviceTypeList,
-                            faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage, length);
+                            faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage*length, length);
                 }
 //            }
             rtnMap.put("total", total);

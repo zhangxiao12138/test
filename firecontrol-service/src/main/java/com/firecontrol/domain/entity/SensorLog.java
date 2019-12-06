@@ -24,7 +24,6 @@ public class SensorLog {
     public SensorLog() {}
 
     public SensorLog(Long deviceId, String deviceCode, Long sensorId, Integer sensorType, Integer logTime, Byte logType, Byte dataType, String logData) {
-
         this.deviceCode = deviceCode;
         this.deviceId = deviceId;
         this.sensorId = sensorId;
@@ -33,7 +32,6 @@ public class SensorLog {
         this.logType = logType;
         this.dataType = dataType;
         this.logData = logData;
-
     }
 
 

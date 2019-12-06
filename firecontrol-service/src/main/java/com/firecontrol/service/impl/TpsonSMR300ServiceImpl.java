@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -47,6 +48,10 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
     private FloorMapper floorMapper;
     @Autowired
     private ElectricLogMapper logMapper;
+
+    @Value("${tpson.company}")
+    private String companyCode;
+
 
 
     @Override
@@ -122,14 +127,10 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
 
     @Override
     public String getTpsonToken() {
-        String company = "000002";
-        String secret = StringMD5Util.stringMD5(company + "#" + company);
-        String token = StringMD5Util.stringMD5(company + "#" + secret + "#" + 1800 + "#" + System.currentTimeMillis());
+        String secret = StringMD5Util.stringMD5("000002" + "#" + "000002");
+        String token = StringMD5Util.stringMD5("000002" + "#" + secret + "#" + 1800 + "#" + System.currentTimeMillis());
 
         //坑：新增company时（即000002这种）,需要将生成的secret手工写入tp_third_party_certification表
-//        Map rtnMap = new HashMap();
-//        rtnMap.put("secret", secret);
-//        rtnMap.put("token", token);
 
         return token;
     }
@@ -141,7 +142,6 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
      * @param deviceId
      * @param deviceCode
      * @param sensorList
-     * @param logTime
      * @return
      */
     private Boolean handleIdentifyData(SMR3002Dto dto, Long deviceId, String deviceCode, List<TpsonSensorEntity> sensorList, Integer deviceType, String floorId, String buildingId) {
@@ -209,7 +209,7 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
             for (TpsonSensorEntity sensor : sensorList) {
                 if (sensor.getSensorType() == TBConstants.SensorType.sydl) {//剩余电流
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
-                            logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getRealElectricity().toString());
+                            logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getResidueCurrent().toString());
                     sensorLogMapper.insert(log);
                 } else if (sensor.getSensorType() == TBConstants.SensorType.dqwd && "1".equals(sensor.getCode())) {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
@@ -239,11 +239,11 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getPower().toString());
                     sensorLogMapper.insert(log);
-                } else if (sensor.getSensorType() == TBConstants.SensorType.gl) {//能耗
+                } else if (sensor.getSensorType() == TBConstants.SensorType.nh) {//能耗
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getRealElectricity().toString());
                     sensorLogMapper.insert(log);
-                }else if (sensor.getSensorType() == TBConstants.SensorType.gl) {//故障电弧
+                }else if (sensor.getSensorType() == TBConstants.SensorType.gzdh) {//故障电弧
                     SensorLog log = new SensorLog(deviceId, deviceCode, sensor.getId(), sensor.getSensorType().intValue(),
                             logTime, new Byte((byte) (1)), new Byte((byte) (0)), data.getFaultArcCount().toString());
                     sensorLogMapper.insert(log);

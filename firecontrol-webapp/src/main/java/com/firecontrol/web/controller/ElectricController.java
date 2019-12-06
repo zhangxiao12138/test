@@ -136,6 +136,31 @@ public class ElectricController {
     }
 
 
+    //electrical_access_count
+    @ApiOperation(value = "接入电器数据统计" ,  notes="接入电器数据统计")
+    @RequestMapping(value = "/accessStatistic", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "isOutdoor", value = "是否室外 1是 0否", paramType = "query",required = true),
+            @ApiImplicitParam(name = "deviceId", value = "电气设备id", paramType = "query"),
+            @ApiImplicitParam(name = "deviceCode", value = "电气设备Code", paramType = "query"),
+            @ApiImplicitParam(name = "companyId", value = "商家id", paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult accessStatistic(Integer isOutdoor, Long deviceId, String deviceCode, Long companyId){
+        return electricLogService.accessStatistic(isOutdoor, deviceId, deviceCode, companyId);
+    }
+
+    @ApiOperation(value = "关电闸" ,  notes="关电闸")
+    @RequestMapping(value = "/setRelay", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "deviceCode", value = "电气设备Code", paramType = "query"),
+            @ApiImplicitParam(name = "switchOn", value = "目标状态1开 0关", paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult setRelay(String deviceCode, Integer switchOn){
+        return tpsonDeviceService.setRelay(deviceCode, switchOn);
+    }
+
 
     @ApiOperation(value = "实时监测-获取设备数据" ,  notes="实时监测-获取设备数据")
     @RequestMapping(value = "/realTimeWatch", method = {RequestMethod.POST,RequestMethod.GET})

@@ -171,7 +171,7 @@
       #{openId,jdbcType=VARCHAR}, #{deviceVersion,jdbcType=INTEGER}, #{geographicId,jdbcType=BIGINT}, 
       #{isOutdoor,jdbcType=BIT}, #{outPosX,jdbcType=VARCHAR}, #{outPosY,jdbcType=VARCHAR}, 
       #{reviewTime,jdbcType=INTEGER}, #{isReview,jdbcType=BIT}, #{reviewId,jdbcType=BIGINT}, 
-      #{recoverTime,jdbcType=INTEGER}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR},#{dealUserName,jdbcType=VARCHAR},
+      #{recoverTime,jdbcType=INTEGER}, #{pendingTime,jdbcType=INTEGER}, #{detail,jdbcType=LONGVARCHAR},#{dealUserName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.TpsonAlarmEntity">

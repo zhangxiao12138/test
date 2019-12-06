@@ -23,3 +23,9 @@ tyterminal:
   pic: /opt/screenshot/
   header: http://139.129.100.51
 
+#拓深对应的我们的公司号，用来生成token
+tpson:
+  company: 000002
+  ip: http://219.147.8.30:801
+  relay: /gateway/device/ctl/smr3002/setRelay
+  getToken: /gateway/certification

@@ -12,6 +12,6 @@ public interface ElectricLogService {
 
     public OpResult getLog(ElectricLog search);
 
-
+    OpResult accessStatistic(Integer isOutdoor, Long deviceId, String deviceCode, Long companyId);
 
 }

@@ -3,6 +3,7 @@ package com.firecontrol.service.impl;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.dto.ElectricAccess;
 import com.firecontrol.domain.dto.ElectricPossible;
 import com.firecontrol.domain.entity.ElectricLog;
 import com.firecontrol.domain.entity.ElectricType;
@@ -13,11 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.management.relation.RelationTypeNotFoundException;
+import java.util.*;
 
 /**
  * Created by mariry on 2019/11/26.
@@ -59,6 +59,60 @@ public class ElectricLogServiceImpl implements ElectricLogService{
             return op;
         }
 
+        return op;
+    }
+
+    @Override
+    public OpResult accessStatistic(Integer isOutdoor, Long deviceId, String deviceCode, Long companyId) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+        List<ElectricAccess> list;
+        List<Integer> powerTypeList = new ArrayList<>();
+        List<Integer> accessAmount = new ArrayList<>();
+
+        //获取本月第一天时间
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+        Long startTime = cal.getTimeInMillis()/1000;
+
+        try{
+            list = electricLogMapper.getPowerAccessCount(startTime,isOutdoor,companyId,deviceId,deviceCode);
+            if(!CollectionUtils.isEmpty(list)) {
+                for(Integer k=0; k <= 6; k=k+2){
+                    powerTypeList.add(k);
+                    Boolean tag = false;
+                    for(ElectricAccess ea : list){
+                        if(ea.getPowerType() == k){
+                            accessAmount.add(ea.getAmount());
+                            tag = true;
+                            break;
+                        }
+                    }
+                    if(!tag) {
+                        accessAmount.add(0);
+                    }
+                }
+            }else{
+                for(Integer k = 0; k<= 6; k+=2) {
+                    powerTypeList.add(k);
+                    accessAmount.add(0);
+                }
+            }
+
+            rtnMap.put("powerType", powerTypeList);
+            rtnMap.put("access", accessAmount);
+
+            op.setDataValue(rtnMap);
+        }catch (Exception e) {
+            log.error("getLog error! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
         return op;
     }
 
@@ -109,14 +163,13 @@ public class ElectricLogServiceImpl implements ElectricLogService{
             }
             op.setDataValue(rtnMap);
         }catch (Exception e) {
-            log.error("getLog error! e={}", e);
+            log.error("accessStatistic error! e={}", e);
             op.setStatus(OpResult.OP_FAILED);
             op.setMessage(OpResult.OpMsg.OP_FAIL);
             return op;
         }
         return op;
     }
-
 
 
     private String fmtActionName(Integer action){

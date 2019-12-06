@@ -187,7 +187,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                         faultType, status, isOutdoor, deviceCode, startTime, endTime);
                 if(total > 0) {
                     alarmList = tpsonAlarmMapper.getAlarmBySearch(deviceTypeList,
-                            faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage, length);
+                            faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage*length, length);
                 }
 //            }
             rtnMap.put("total", total);
@@ -421,6 +421,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
     public OpResult getBuildingAlarmCount(Integer systemType, Integer startTime, Integer endTime, String companyId) {
 
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        List<BuildingAlarmDto> blist = new ArrayList<>();
         try{
             if(systemType == null || startTime == null) {
                 op.setStatus(OpResult.OP_FAILED);
@@ -434,7 +435,7 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             }
 
             //查询没栋楼宇total报警数量
-            List<BuildingAlarmDto> blist = tpsonAlarmMapper.getBuildingAlarm(deviceTypeList, startTime, endTime, companyId);
+            blist = tpsonAlarmMapper.getBuildingAlarm(deviceTypeList, startTime, endTime, companyId);
             //查询没栋楼宇未处理报警数量
             List<BuildingAlarmDto> ulist = tpsonAlarmMapper.getBuildingUnhandleAlarm(deviceTypeList, startTime, endTime, companyId);
 
@@ -448,6 +449,16 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                 Floor f = floorMapper.selectById(b.getBuildingId());
                 if(f != null) {
                     b.setName(f.getName());
+                }
+            }
+            //若所有楼宇都没有报警，则返回一级楼宇信息
+            if(CollectionUtils.isEmpty(blist)){
+                //TODO:
+                List<Floor> floorList = floorMapper.getTopFloor(companyId);
+                for(Floor floor : floorList) {
+                    BuildingAlarmDto b = new BuildingAlarmDto();
+                    b.setName(floor.getName());
+                    blist.add(b);
                 }
             }
 

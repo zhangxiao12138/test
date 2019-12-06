@@ -1,6 +1,8 @@
 package com.firecontrol.mapper.iotmapper;
 
+import com.firecontrol.domain.dto.ElectricAccess;
 import com.firecontrol.domain.entity.ElectricLog;
+import com.firecontrol.domain.entity.SensorLog;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -22,6 +24,8 @@ public interface ElectricLogMapper {
 
     Integer updateTypeById(@Param("id") Long id, @Param("type") Long type);
 
+    List<ElectricAccess> getPowerAccessCount(@Param("startTime") Long startTime, @Param("isOutdoor")Integer isOutdoor, @Param("companyId") Long companyId,
+                                             @Param("deviceId") Long deviceId, @Param("deviceCode") String deviceCode);
 
 
 }

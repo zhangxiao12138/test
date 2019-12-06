@@ -410,6 +410,9 @@
   </update>
 
 
+
+
+
   <delete id="deleteSensorByDevice" parameterType="java.util.List">
     delete from tb_server_sensor
     where device_code IN

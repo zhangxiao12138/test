@@ -44,6 +44,7 @@
     <result column="style" jdbcType="INTEGER" property="style" />
     <result column="signal_quality" jdbcType="INTEGER" property="signalQuality" />
     <result column="running_state" jdbcType="TINYINT" property="runningState" />
+    <result column="switch_on" jdbcType="INTEGER" property="switchOn" />
     <result column="run_state_keep" jdbcType="INTEGER" property="runStateKeep" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TpsonDeviceEntityWithBLOBs">
@@ -55,7 +56,7 @@
     online, status, pos_x, pos_y, ip, port, man, relay, fault_status, position, site_id, 
     department_id, sim, period, is_sync, is_alarm_linkage, silence_status, geographic_id, 
     is_outdoor, sensor_mode, imei, iccid, last_log_time, enable_sms, enable_call, sms_unenable_alarm_type_ids, 
-    call_unenable_alarm_type_ids, public_security_code, style, signal_quality, running_state
+    call_unenable_alarm_type_ids, public_security_code, style, signal_quality,switch_on, running_state
   </sql>
   <sql id="Blob_Column_List">
     phone, photo_ids
@@ -657,6 +658,12 @@
     </foreach>
   </update>
 
+  <update id="setRelay">
+    update tb_server_device
+    set update_time = unix_timestamp(now()), switch_on = #{switchOn}
+    where code = #{devcieCode}
+  </update>
+
 
   <select id="getTotalBySystemType"  resultType="java.lang.Integer">
     select count(*)
@@ -681,7 +688,6 @@
     <if test="companyId != null">
       and companyId = #{companyId}
     </if>
-
 
   </select>
 

@@ -1,6 +1,7 @@
 package com.firecontrol.mapper.iotmapper;
 
 import com.firecontrol.domain.dto.SensorSearch;
+import com.firecontrol.domain.entity.SensorLog;
 import com.firecontrol.domain.entity.TpsonSensorEntity;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
@@ -27,5 +28,7 @@ public interface TpsonSensorMapper {
     public Integer updateSensorState(@Param("idList") List<String> idList, @Param("state") Integer state);
 
     public Integer deleteSensorByDevice(@Param("idList")List<String> idList);
+
+
 
 }

@@ -35,7 +35,6 @@ public interface TpsonDeviceService {
 
     OpResult getDeviceByCode(String deviceCode);
 
-
     OpResult getDeviceStatusStatic(Integer systemType);
 
     OpResult offLineStat(Integer systemType, Long companyId);
@@ -50,5 +49,9 @@ public interface TpsonDeviceService {
 
     //电器设备实时监控数据
     OpResult realTimeWatch(DeviceSearch search);
+
+    //反向控制电闸
+    OpResult setRelay(String deviceCode, Integer switchOn);
+
 
 }
