@@ -1,7 +1,5 @@
 package com.firecontrol.service.impl;
 
-import com.firecontrol.common.FireSocket;
-import com.firecontrol.common.FireSocketService;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.common.VideoOpResult;
 import com.firecontrol.domain.dto.VideoUrlQueryDto;
@@ -20,9 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mariry on 2019/6/21.
@@ -40,8 +36,7 @@ public class DemoServiceImpl implements DemoService {
 
     @Autowired
     private DemoMapper demoMapper;
-    @Autowired
-    private FireSocketService fireSocketService;
+
     @Autowired
     private VodMsgServiceImpl vodMsgService;
     @Autowired
@@ -60,17 +55,6 @@ public class DemoServiceImpl implements DemoService {
         return demoMapper.getAll();
     }
 
-    @Override
-    public String setDirection(String d) {
-        FireSocket fs = new FireSocket(1, 1, d);
-        try{
-            fireSocketService.send(fs);
-        }catch (Exception e) {
-            log.info("socket sent exception! e: " + e);
-            return "failure";
-        }
-        return "success";
-    }
 
     @Override
     public VideoOpResult getVideoAddr(VideoUrlQueryDto query) {

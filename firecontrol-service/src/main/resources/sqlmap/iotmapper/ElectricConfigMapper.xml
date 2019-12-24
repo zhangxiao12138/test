@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.ElectricConfigMapper">
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.ElectricConfig">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="company_code" jdbcType="VARCHAR" property="companyCode" />
+        <result column="ele_power_threshold" jdbcType="REAL" property="elePowerThreshold" />
+        <result column="device_power_threshold" jdbcType="REAL" property="devicePowerThreshold" />
+        <result column="ele_overload_is_outage" jdbcType="BIT" property="eleOverloadIsOutage" />
+        <result column="device_overload_is_outage" jdbcType="BIT" property="deviceOverloadIsOutage" />
+        <result column="mini_power_value" jdbcType="DOUBLE" property="miniPowerValue" />
+        <result column="mini_power_is_show" jdbcType="BIT" property="miniPowerIsShow" />
+        <result column="heating_power_threshold" jdbcType="REAL" property="heatingPowerThreshold" />
+        <result column="heating_overload_is_outage" jdbcType="BIT" property="heatingOverloadIsOutage" />
+        <result column="show_small_possible" jdbcType="BIT" property="showSmallPossible" />
+        <result column="possible_threshold" jdbcType="INTEGER" property="possibleThreshold" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.ElectricConfig">
+        <result column="shield_ele_type_ids" jdbcType="LONGVARCHAR" property="shieldEleTypeIds" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, company_code, ele_power_threshold, device_power_threshold, ele_overload_is_outage,
+        device_overload_is_outage, mini_power_value, mini_power_is_show, heating_power_threshold,
+        heating_overload_is_outage, show_small_possible, possible_threshold
+    </sql>
+    <sql id="Blob_Column_List">
+        shield_ele_type_ids
+    </sql>
+
+
+    <select id="getByCompanyCode" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from tb_server_electric_company_config
+        where company_code = #{companyCode}
+    </select>
+
+
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from tb_server_electric_company_config
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from tb_server_electric_company_config
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricConfig">
+        insert into tb_server_electric_company_config (id, company_code, ele_power_threshold,
+        device_power_threshold, ele_overload_is_outage, device_overload_is_outage,
+        mini_power_value, mini_power_is_show, heating_power_threshold,
+        heating_overload_is_outage, show_small_possible, possible_threshold,
+        shield_ele_type_ids)
+        values (#{id,jdbcType=INTEGER}, #{companyCode,jdbcType=VARCHAR}, #{elePowerThreshold,jdbcType=REAL},
+        #{devicePowerThreshold,jdbcType=REAL}, #{eleOverloadIsOutage,jdbcType=BIT}, #{deviceOverloadIsOutage,jdbcType=BIT},
+        #{miniPowerValue,jdbcType=DOUBLE}, #{miniPowerIsShow,jdbcType=BIT}, #{heatingPowerThreshold,jdbcType=REAL},
+        #{heatingOverloadIsOutage,jdbcType=BIT}, #{showSmallPossible,jdbcType=BIT}, #{possibleThreshold,jdbcType=INTEGER},
+        #{shieldEleTypeIds,jdbcType=LONGVARCHAR})
+    </insert>
+    <update id="update" parameterType="com.firecontrol.domain.entity.ElectricConfig">
+        update tb_server_electric_company_config
+        <set>
+            <if test="companyCode != null">
+                company_code = #{companyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="elePowerThreshold != null">
+                ele_power_threshold = #{elePowerThreshold,jdbcType=REAL},
+            </if>
+            <if test="devicePowerThreshold != null">
+                device_power_threshold = #{devicePowerThreshold,jdbcType=REAL},
+            </if>
+            <if test="eleOverloadIsOutage != null">
+                ele_overload_is_outage = #{eleOverloadIsOutage,jdbcType=BIT},
+            </if>
+            <if test="deviceOverloadIsOutage != null">
+                device_overload_is_outage = #{deviceOverloadIsOutage,jdbcType=BIT},
+            </if>
+            <if test="miniPowerValue != null">
+                mini_power_value = #{miniPowerValue,jdbcType=DOUBLE},
+            </if>
+            <if test="miniPowerIsShow != null">
+                mini_power_is_show = #{miniPowerIsShow,jdbcType=BIT},
+            </if>
+            <if test="heatingPowerThreshold != null">
+                heating_power_threshold = #{heatingPowerThreshold,jdbcType=REAL},
+            </if>
+            <if test="heatingOverloadIsOutage != null">
+                heating_overload_is_outage = #{heatingOverloadIsOutage,jdbcType=BIT},
+            </if>
+            <if test="showSmallPossible != null">
+                show_small_possible = #{showSmallPossible,jdbcType=BIT},
+            </if>
+            <if test="possibleThreshold != null">
+                possible_threshold = #{possibleThreshold,jdbcType=INTEGER},
+            </if>
+            <if test="shieldEleTypeIds != null">
+                shield_ele_type_ids = #{shieldEleTypeIds,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

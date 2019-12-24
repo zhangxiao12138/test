@@ -20,5 +20,7 @@ public interface ElectricTypeMapper {
 
     String getNameByType(@Param("id") Long id);
 
+    Long getTypeByName(@Param("elecName") String elecName);
+
 
 }

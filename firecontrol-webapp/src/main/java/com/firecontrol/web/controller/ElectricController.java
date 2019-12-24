@@ -2,6 +2,7 @@ package com.firecontrol.web.controller;
 
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.DeviceSearch;
+import com.firecontrol.domain.entity.ElectricConfig;
 import com.firecontrol.domain.entity.ElectricLog;
 import com.firecontrol.domain.entity.ElectricType;
 import com.firecontrol.mapper.iotmapper.ElectricTypeMapper;
@@ -90,6 +91,7 @@ public class ElectricController {
             @ApiImplicitParam(name = "startTime", value = "开始时间", paramType = "query"),
             @ApiImplicitParam(name = "endTime", value = "结束时间", paramType = "query"),
             @ApiImplicitParam(name = "companyId", value = "companyId", paramType = "query"),
+            @ApiImplicitParam(name = "onlineDevice", value = "是否只获取在线设备 1：是 0：否", paramType = "query"),
             @ApiImplicitParam(name = "currentPage", value = "当前页从1开始", paramType = "query"),
             @ApiImplicitParam(name = "length", value = "分页大小", paramType = "query"),
 
@@ -173,6 +175,32 @@ public class ElectricController {
     @ResponseBody
     public OpResult realTimeWatch(DeviceSearch search){
         return tpsonDeviceService.realTimeWatch(search);
+    }
+
+    @ApiOperation(value = "电器监管-设置报警阈值" ,  notes="电器监管-设置报警阈值")
+    @RequestMapping(value = "/updateThreshold", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "elePowerThreshold", value = "电器功率阈值", paramType = "query"),
+            @ApiImplicitParam(name = "eleOverloadIsOutage", value = "电器功率报警是否自动断电 1是 0否", paramType = "query"),
+            @ApiImplicitParam(name = "heatingPowerThreshold", value = "加热电器功率阈值", paramType = "query"),
+            @ApiImplicitParam(name = "heatingOverloadIsOutage", value = "加热电器报警是否自动断电 1是 0否", paramType = "query"),
+            @ApiImplicitParam(name = "devicePowerThreshold", value = "主机功率门限", paramType = "query"),
+            @ApiImplicitParam(name = "deviceOverloadIsOutage", value = "主机报警是否自动断电 1是 0否", paramType = "query"),
+            @ApiImplicitParam(name = "companyCode", value = "公司编码", paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult updateThreshold(ElectricConfig search){
+        return tpsonDeviceService.updateThreshold(search);
+    }
+
+    @ApiOperation(value = "电器监管-获取报警阈值" ,  notes="电器监管-获取报警阈值")
+    @RequestMapping(value = "/getThreshold", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "companyCode", value = "公司编码", paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult getThreshold(String companyCode){
+        return tpsonDeviceService.getThreshold(companyCode);
     }
 
 

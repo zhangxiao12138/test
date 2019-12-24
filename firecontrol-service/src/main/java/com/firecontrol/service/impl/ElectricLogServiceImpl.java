@@ -2,17 +2,20 @@ package com.firecontrol.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.firecontrol.common.HttpRequestUtil;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.ElectricAccess;
 import com.firecontrol.domain.dto.ElectricPossible;
 import com.firecontrol.domain.entity.ElectricLog;
 import com.firecontrol.domain.entity.ElectricType;
+import com.firecontrol.domain.entity.Response;
 import com.firecontrol.mapper.iotmapper.ElectricLogMapper;
 import com.firecontrol.mapper.iotmapper.ElectricTypeMapper;
 import com.firecontrol.service.ElectricLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,6 +34,17 @@ public class ElectricLogServiceImpl implements ElectricLogService{
     private ElectricLogMapper electricLogMapper;
     @Autowired
     private ElectricTypeMapper electricTypeMapper;
+    @Autowired
+    private HttpRequestUtil httpRequestUtil;
+
+    @Value("${tpson.ip}")
+    private String tosonIP;
+
+    @Value("${tpson.learn}")
+    private String learnUrl;
+
+    @Value("${tpson.getToken}")
+    private String getToken;
 
 
     @Override
@@ -43,14 +57,28 @@ public class ElectricLogServiceImpl implements ElectricLogService{
                 op.setMessage("id 和 电器种类type均不可为空!");
                 return op;
             }
-            electricLogMapper.updateTypeById(id, type);
+            ElectricLog log = electricLogMapper.getById(id);
+            if(log.getAction() != 1){
+                //只有插入的动作才能学习，即action=1
+                op.setStatus(OpResult.OP_FAILED);
+                op.setMessage("只能识别[插入]动作的电器!");
+                return op;
+            }
 
-            //TODO: 反向推送拓深学习结果
-
-            //当前log
+            electricLogMapper.updateAllTypeByOldType(type, log.getType().longValue());
 
 
-
+            //反向推送拓深学习结果
+            //1. 获取token
+            Map param = new HashMap();
+            String token = httpRequestUtil.getTpsonToken(tosonIP + getToken, "000002");
+            //2. 推送
+            Map p = new HashMap();
+            p.put("deviceCode", log.getDeviceCode());
+            p.put("uuid", log.getUuid());//给拓深的参数：false:开电闸  true:关电闸
+            p.put("newElecName", electricTypeMapper.getNameByType(type));
+            p.put("syncToCommon", false);
+            Response t = httpRequestUtil.sendPostRequest(tosonIP + learnUrl, p, token);
 
         }catch (Exception e) {
             log.error("learn ERROR! e={}", e);
@@ -80,6 +108,9 @@ public class ElectricLogServiceImpl implements ElectricLogService{
         Long startTime = cal.getTimeInMillis()/1000;
 
         try{
+            if(StringUtils.isEmpty(deviceCode)){
+                deviceCode = null;
+            }
             list = electricLogMapper.getPowerAccessCount(startTime,isOutdoor,companyId,deviceId,deviceCode);
             if(!CollectionUtils.isEmpty(list)) {
                 for(Integer k=0; k <= 6; k=k+2){
@@ -151,13 +182,14 @@ public class ElectricLogServiceImpl implements ElectricLogService{
                     }
                     //处理eleName
                     //TODO: 不要循环查库
-                    if(elecNameMap.containsKey(l.getType())){
-                        l.setElecName((String)elecNameMap.get(l.getType()));
-                    }else{
-                        elecNameMap.put(l.getType(), electricTypeMapper.getNameByType(l.getType().longValue()));
-                        l.setElecName((String)elecNameMap.get(l.getType()));
+                    if(l.getType() != null){
+                        if(elecNameMap.containsKey(l.getType())){
+                            l.setElecName((String)elecNameMap.get(l.getType()));
+                        }else{
+                            elecNameMap.put(l.getType(), electricTypeMapper.getNameByType(l.getType().longValue()));
+                            l.setElecName((String)elecNameMap.get(l.getType()));
+                        }
                     }
-
                 });
                 rtnMap.put("deviceList", list);
             }

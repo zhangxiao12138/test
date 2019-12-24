@@ -7,7 +7,6 @@ public class StartConfigProperty {
 
     public String startupPath;
 
-
     public String getStartupPath() {
         return startupPath;
     }

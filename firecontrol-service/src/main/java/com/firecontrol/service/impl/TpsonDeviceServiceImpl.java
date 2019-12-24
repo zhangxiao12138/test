@@ -8,6 +8,7 @@ import com.firecontrol.common.RunningStateCount;
 import com.firecontrol.common.TBConstants;
 import com.firecontrol.domain.dto.DeviceSearch;
 import com.firecontrol.domain.dto.DeviceStatMap;
+import com.firecontrol.domain.dto.DeviceUpdateDto;
 import com.firecontrol.domain.dto.FaultCountDto;
 import com.firecontrol.domain.entity.*;
 import com.firecontrol.mapper.iotmapper.*;
@@ -17,6 +18,7 @@ import com.firecontrol.service.TpsonSensorService;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,13 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
     private SensorLogMapper sensorLogMapper;
     @Autowired
     private TpsonSMR3002Service tpsonSMR3002Service;
+    @Autowired
+    private HttpRequestUtil httpRequestUtil;
+    @Autowired
+    private ElectricEnergyMapper electricEnergyMapper;
+    @Autowired
+    private ElectricConfigMapper electricConfigMapper;
+
 
     @Value("${tpson.ip}")
     private String tosonIP;
@@ -164,17 +173,22 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
 
 
 
-
-
     @Override
-    public OpResult updateDeviceInfo(TpsonDeviceEntity device) {
+    public OpResult updateDeviceInfo(DeviceUpdateDto dto) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         try{
-            if(device.getId() == null) {
+            if(dto == null){
+                op.setMessage("缺少必要参数!");
+                op.setStatus(OpResult.OP_FAILED);
+                return op;
+            }
+            if(dto.getId() == null) {
                 op.setMessage("设备id不可为空!");
                 op.setStatus(OpResult.OP_FAILED);
                 return op;
             }
+            TpsonDeviceEntity device = new TpsonDeviceEntity();
+            BeanUtils.copyProperties(dto, device);
             tpsonDeviceMapper.updateById(device);
 
         }catch (Exception e) {
@@ -553,9 +567,19 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
                 return op;
             }
 
+            //按照rtnList的时间戳，循环查询每日电量,因为要每日求和，所以循环查吧，懒的想算法了
+            if(StringUtils.isEmpty(deviceCode)) {
+                deviceCode = null;
+            }
             for(Map m : rtnList){
+                Double energyConsumption = electricEnergyMapper.getDailyEnergyConsumption((Long)m.get("start"),
+                        (Long)m.get("end"),
+                        null,
+                        deviceCode);
+
+                m.put("count", energyConsumption);
                 timeList.add((String)m.get("time"));
-                dataList.add(((Integer)m.get("count")).doubleValue());
+                dataList.add(energyConsumption);
             }
 
             rtnMap.put("timeList", timeList);
@@ -689,6 +713,12 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
 
     }
 
+    /**
+     *
+     * @param deviceCode
+     * @param switchOn   1:开电闸 0：关电闸
+     * @return
+     */
     @Override
     public OpResult setRelay(String deviceCode, Integer switchOn) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
@@ -698,30 +728,64 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
         //调用tpson接口，反向控制电器
         //1. 获取token
         Map param = new HashMap();
-        param.put("company", "000002");
-        param.put("secret", "ccd448e44f5314b2930b044e53af6bfd");
+        String token = httpRequestUtil.getTpsonToken(tosonIP + getToken, "000002");
+//        Map param = new HashMap();
+//        param.put("company", "000002");
+//        param.put("secret", "ccd448e44f5314b2930b044e53af6bfd");
+//
+//        Response t = HttpRequestUtil.sendPostRequest(tosonIP + getToken, param, "");
+//        Map map = (Map)t.getData();
+//
+//        String token = "Bearer " + (String)map.get("token") ;
+//
 
-        Response t = HttpRequestUtil.sendPostRequest(tosonIP + getToken, param, "");
-        Map map = (Map)t.getData();
-
-        String token = "Bearer " + (String)map.get("token") ;
-
-//        {
-//            "data": {
-//            "expire": 1800,
-//                    "time": 1575624078,
-//                    "token": "CE6F75ACC730815B2DF9F7A75FC152FB"
-//        },
-//            "success": true,
-//                "code": 0
-//        }
         Map p = new HashMap();
-        p.put("devcieCode", deviceCode);
-        p.put("enable", switchOn == 1 ? true : false);
+        p.put("deviceCode", deviceCode);
+        p.put("enable", switchOn == 1 ? false : true);//给拓深的参数：false:开电闸  true:关电闸
 
-        t = HttpRequestUtil.sendPostRequest(tosonIP + relayUrl, p, token);
-        log.info("2. return: " + JSON.toJSONString(t));
+        Response t = httpRequestUtil.sendPostRequest(tosonIP + relayUrl, p, token);
+        log.info("setRelay return: " + JSON.toJSONString(t));
+        return op;
+    }
 
+    @Override
+    public OpResult updateThreshold(ElectricConfig search) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        if(search == null) {
+            return op;
+        }
+
+        try{
+            electricConfigMapper.update(search);
+
+        }catch (Exception e) {
+            log.error("updateThreshold Exception! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        return op;
+    }
+
+    @Override
+    public OpResult getThreshold(String companyCode) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        try{
+            if(StringUtils.isEmpty(companyCode)) {
+                companyCode = "0";
+            }
+            ElectricConfig config =  electricConfigMapper.getByCompanyCode(companyCode);
+            op.setDataValue(config);
+
+        }catch (Exception e) {
+            log.error("updateThreshold Exception! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
         return op;
     }
 

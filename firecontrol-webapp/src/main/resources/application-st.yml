@@ -28,3 +28,4 @@ tpson:
   ip: http://219.147.8.30:801
   relay: /gateway/device/ctl/smr3002/setRelay
   getToken: /gateway/certification
+  learn: /gateway/device/ctl/smr3002/learn

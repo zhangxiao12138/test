@@ -116,6 +116,10 @@
     <if test="powerType != null">
       and power_type = #{powerType}
     </if>
+    <!-- 仅获取在线设备信息 怎么办呢？-->
+    <!--<if test="onlineDevice == 1">-->
+      <!--and power_type = #{powerType}-->
+    <!--</if>-->
 
     <if test="startTime != null">
       and add_time >= #{startTime}
@@ -132,6 +136,15 @@
     set `type` = #{type}
     where id = #{id}
   </update>
+
+
+
+  <update id="updateAllTypeByOldType" >
+    update tb_server_electric_appliance_log
+    set `type` = #{newType}
+    where `type` = #{oldType}
+  </update>
+
 
 
 

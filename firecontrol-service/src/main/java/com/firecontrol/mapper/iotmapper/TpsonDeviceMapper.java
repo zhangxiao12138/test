@@ -54,4 +54,6 @@ public interface TpsonDeviceMapper {
 
     public Integer setRelay(@Param("devcieCode") String deviceCode, @Param("switchOn") Integer switchOn);
 
+    String getDeviceNameById(@Param("id") Long deviceId);
+
 }

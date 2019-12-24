@@ -1,12 +1,15 @@
-package com.firecontrol.domain.entity;
+package com.firecontrol.domain.dto;
 
-import com.firecontrol.common.BasePager;
+import com.firecontrol.domain.entity.CameraEntity;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class TpsonDeviceEntity extends BasePager implements Serializable {
+/**
+ * Created by mariry on 2019/12/13.
+ */
+public class DeviceUpdateDto {
+
 
     @ApiModelProperty(value = "id" )
     private Long id;
@@ -139,7 +142,6 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
 
     private List<CameraEntity> cameras;
 
-    private List<SensorLog> sensorList;
 
     private Integer switchOn;
 
@@ -533,14 +535,6 @@ public class TpsonDeviceEntity extends BasePager implements Serializable {
 
     public void setRunStateKeep(Integer runStateKeep) {
         this.runStateKeep = runStateKeep;
-    }
-
-    public List<SensorLog> getSensorList() {
-        return sensorList;
-    }
-
-    public void setSensorList(List<SensorLog> sensorList) {
-        this.sensorList = sensorList;
     }
 
 }

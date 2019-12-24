@@ -97,5 +97,4 @@ public interface TpsonAlarmMapper {
                                                    @Param("endTime")Integer endTime,
                                                    @Param("companyId")String companyId);
 
-
 }

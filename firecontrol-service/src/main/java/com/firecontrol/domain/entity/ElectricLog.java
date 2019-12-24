@@ -55,6 +55,13 @@ public class ElectricLog extends BasePager{
 
     private Integer endTime;
 
+    private String position;
+
+    /*
+    是否只获取在线设备 1：是  0:否
+     */
+    private Integer onlineDevice;
+
     public Long getId() {
         return id;
     }
@@ -181,6 +188,7 @@ public class ElectricLog extends BasePager{
 
     public void setSiteName(String siteName) {
         this.siteName = siteName == null ? null : siteName.trim();
+        this.position = this.siteName;
     }
 
     public String getFloorId() {
@@ -247,5 +255,21 @@ public class ElectricLog extends BasePager{
 
     public void setActionName(String actionName) {
         this.actionName = actionName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public Integer getOnlineDevice() {
+        return onlineDevice;
+    }
+
+    public void setOnlineDevice(Integer onlineDevice) {
+        this.onlineDevice = onlineDevice;
     }
 }

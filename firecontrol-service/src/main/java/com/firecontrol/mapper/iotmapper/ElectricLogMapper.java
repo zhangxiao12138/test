@@ -27,5 +27,7 @@ public interface ElectricLogMapper {
     List<ElectricAccess> getPowerAccessCount(@Param("startTime") Long startTime, @Param("isOutdoor")Integer isOutdoor, @Param("companyId") Long companyId,
                                              @Param("deviceId") Long deviceId, @Param("deviceCode") String deviceCode);
 
+    Integer updateAllTypeByOldType(@Param("newType") Long newType, @Param("oldType") Long oldType);
+
 
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.ElectricEnergyMapper">
+    <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.ElectricEnergy">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="company_id" jdbcType="INTEGER" property="companyId" />
+        <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+        <result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+        <result column="sensor_id" jdbcType="BIGINT" property="sensorId" />
+        <result column="sensor_type" jdbcType="INTEGER" property="sensorType" />
+        <result column="log_data" jdbcType="DOUBLE" property="logData" />
+        <result column="diff_data" jdbcType="DOUBLE" property="diffData" />
+        <result column="floor_id" jdbcType="VARCHAR" property="floorId" />
+        <result column="building_id" jdbcType="VARCHAR" property="buildingId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, company_id, device_id, device_code, sensor_id, sensor_type, log_data, diff_data,
+        floor_id, building_id
+    </sql>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tb_server_electric_energy_total
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getDailyEnergyConsumption" resultType="java.lang.Double">
+        select
+        ifnull(sum(diff_data),0)
+        from tb_server_electric_energy_total
+        where add_time >= #{start}
+        <if test="end != null">
+            <![CDATA[ and add_time < #{end} ]]>
+        </if>
+        <if test="deviceCode != null">
+            and device_code = #{deviceCode}
+        </if>
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from tb_server_electric_energy_total
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricEnergy">
+        insert into tb_server_electric_energy_total (id, company_id, device_id,
+        device_code, sensor_id, sensor_type,
+        log_data, diff_data, floor_id,
+        building_id)
+        values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=INTEGER}, #{deviceId,jdbcType=INTEGER},
+        #{deviceCode,jdbcType=VARCHAR}, #{sensorId,jdbcType=BIGINT}, #{sensorType,jdbcType=INTEGER},
+        #{logData,jdbcType=DOUBLE}, #{diffData,jdbcType=DOUBLE}, #{floorId,jdbcType=VARCHAR},
+        #{buildingId,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="com.firecontrol.domain.entity.ElectricEnergy">
+        update tb_server_electric_energy_total
+        <set>
+            <if test="companyId != null">
+                company_id = #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId,jdbcType=INTEGER},
+            </if>
+            <if test="deviceCode != null">
+                device_code = #{deviceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sensorId != null">
+                sensor_id = #{sensorId,jdbcType=BIGINT},
+            </if>
+            <if test="sensorType != null">
+                sensor_type = #{sensorType,jdbcType=INTEGER},
+            </if>
+            <if test="logData != null">
+                log_data = #{logData,jdbcType=DOUBLE},
+            </if>
+            <if test="diffData != null">
+                diff_data = #{diffData,jdbcType=DOUBLE},
+            </if>
+            <if test="floorId != null">
+                floor_id = #{floorId,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingId != null">
+                building_id = #{buildingId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

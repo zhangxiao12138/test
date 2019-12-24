@@ -3,6 +3,8 @@ package com.firecontrol.service;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.common.TBConstants;
 import com.firecontrol.domain.dto.DeviceSearch;
+import com.firecontrol.domain.dto.DeviceUpdateDto;
+import com.firecontrol.domain.entity.ElectricConfig;
 import com.firecontrol.domain.entity.ElectricLog;
 import com.firecontrol.domain.entity.TpsonDeviceEntity;
 import io.swagger.models.auth.In;
@@ -15,7 +17,7 @@ public interface TpsonDeviceService {
 
     public OpResult insertDevice(TpsonDeviceEntity device);
 
-    OpResult updateDeviceInfo(TpsonDeviceEntity device);
+    OpResult updateDeviceInfo(DeviceUpdateDto device);
 
     OpResult getDeviceByPage(DeviceSearch device);
 
@@ -52,6 +54,11 @@ public interface TpsonDeviceService {
 
     //反向控制电闸
     OpResult setRelay(String deviceCode, Integer switchOn);
+
+    //电器设备报警阈值配置
+    OpResult updateThreshold(ElectricConfig search);
+    //获取电器设备报警阈值
+    OpResult getThreshold(String companyCode);
 
 
 }

@@ -85,7 +85,7 @@ public class HomePageController {
 
 
         //TODO:
-        rtn.setTodayLogin(3);
+        rtn.setTodayLogin(webSocketService.getVisitCount());
 
         rtn.setCurrentLogin(webSocketService.getOnlineCount());
         rtn.setTotalUserAmount(userMapper.getTotal());

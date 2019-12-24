@@ -34,6 +34,14 @@
     limit 1
   </select>
 
+  <select id="getTypeByName"  resultType="java.lang.Long">
+    select id
+    from tb_server_electric_appliance_type
+    where  `name` = #{elecName}
+    limit 1
+  </select>
+
+
 
   <select id="getNameByType"  resultType="java.lang.String">
     select `name`

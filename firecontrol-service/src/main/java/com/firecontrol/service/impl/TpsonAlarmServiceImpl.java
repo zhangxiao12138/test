@@ -659,9 +659,10 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
             Calendar cend = Calendar.getInstance();
             cstart.setTime(startTime);
             //防止前端传的时间不是0点0分，这里重置一遍
-            cstart.set(Calendar.HOUR, 0);
+            cstart.set(Calendar.HOUR_OF_DAY, 0);
             cstart.set(Calendar.MINUTE, 0);
             cstart.set(Calendar.SECOND, 0);
+
             cend.setTime(endTime);
 
             while(cstart.getTimeInMillis() < cend.getTimeInMillis()){

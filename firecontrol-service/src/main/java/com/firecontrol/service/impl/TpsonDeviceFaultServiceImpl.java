@@ -42,28 +42,32 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
     public OpResult getFaultStatistics(Integer systemType, Long companyId) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         Integer deviceNum = 0;
+        Integer unhandledFault = 0;
+        Integer monthHandledFault = 0;
+        Integer daylyHandledFault = 0;
+
         if(systemType == null) {
             op.setMessage("systemType不可为空");
             op.setStatus(OpResult.OP_FAILED);
             return op;
         }
-        try{
+        try {
             //查询systemType下的设备总数
             List<Long> deviceTypeList = null;
-            if(systemType != 0) {
+            if (systemType != 0) {
                 deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
             }
 
-            if(!CollectionUtils.isEmpty(deviceTypeList)) {
+            if (!CollectionUtils.isEmpty(deviceTypeList)) {
                 deviceNum = deviceMapper.countDeviceNumByDeviceType(deviceTypeList);
+                //当前未处理故障数量
+                //TODO:传入companyId
+                unhandledFault = tpsonDeviceFaultMapper.countUnhandledFault(null, deviceTypeList);
+                //本月处理故障数
+                monthHandledFault = tpsonDeviceFaultMapper.countMonthlyHandledFault(null, getTimeThisMonthMorning(), deviceTypeList);
+                //今天处理故障数
+                daylyHandledFault = tpsonDeviceFaultMapper.countDayleHandledFault(null, getTimeThisMorning(), deviceTypeList);
             }
-            //当前未处理故障数量
-            //TODO:传入companyId
-            Integer unhandledFault = tpsonDeviceFaultMapper.countUnhandledFault(null);
-            //本月处理故障数
-            Integer monthHandledFault = tpsonDeviceFaultMapper.countMonthlyHandledFault(null, getTimeThisMonthMorning());
-            //今天处理故障数
-            Integer daylyHandledFault = tpsonDeviceFaultMapper.countDayleHandledFault(null, getTimeThisMorning());
 
             FaultStatisticsDto f = new FaultStatisticsDto(deviceNum, daylyHandledFault,monthHandledFault,unhandledFault);
             op.setDataValue(f);
@@ -163,6 +167,11 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
         Integer total = 0;
         if(currentPage != null){
             currentPage = currentPage -1;
+        }else{
+            currentPage = 0;
+        }
+        if(length == null){
+            length = 15;
         }
         List<TpsonDeviceFaultEntity> faultList = new ArrayList<>();
         Map rtnMap = new HashMap();
@@ -177,13 +186,12 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
                         faultType, status, isOutdoor, deviceCode, startTime, endTime);
                 if(total > 0) {
                     faultList = tpsonDeviceFaultMapper.getFaultBySearch(deviceTypeList,
-                            faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage*length, length);
+                            faultType, status, isOutdoor, deviceCode, startTime, endTime, (currentPage)*length, length);
                 }
 //            }
             rtnMap.put("total", total);
             rtnMap.put("faultList", faultList);
             op.setDataValue(rtnMap);
-
         }catch (Exception e) {
             log.error("getFaultList ERROR! exception: {}", e);
             op.setStatus(OpResult.OP_FAILED);
@@ -340,6 +348,11 @@ public class TpsonDeviceFaultServiceImpl implements TpsonDeviceFaultService {
             Calendar cstart = Calendar.getInstance();
             Calendar cend = Calendar.getInstance();
             cstart.setTime(startTime);
+            //防止前端传的时间不是0点0分，这里重置一遍
+            cstart.set(Calendar.HOUR_OF_DAY, 0);
+            cstart.set(Calendar.MINUTE, 0);
+            cstart.set(Calendar.SECOND, 0);
+
             cend.setTime(endTime);
 
             while(cstart.getTimeInMillis() < cend.getTimeInMillis()){

@@ -177,6 +177,12 @@
     <if test="companyId != null">
       and company_id = #{startTime}
     </if>
+    <if test="deviceTypeList != null">
+      and device_type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
   </select>
 
   <select id="countMonthlyHandledFault" resultType="java.lang.Integer">
@@ -185,6 +191,12 @@
     where df = 0 and status = 1
     <if test="startTime != null">
       and deal_time > #{startTime}
+    </if>
+    <if test="deviceTypeList != null">
+      and device_type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
     </if>
   </select>
 
@@ -195,6 +207,12 @@
     where df = 0 and status = 1
     <if test="startTime != null">
       and deal_time > #{startTime}
+    </if>
+    <if test="deviceTypeList != null">
+      and device_type IN
+      <foreach collection="deviceTypeList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
     </if>
   </select>
 
@@ -584,6 +602,30 @@
     </foreach>
 
   </update>
+
+
+
+  <update id="updateFaultCountById" >
+    update tb_server_device_fault
+    set count = count + 1,
+    update_time = unix_timestamp(now())
+    where id = #{id}
+  </update>
+
+
+
+  <select id="getUnhandleFaultByDeviceCode" resultMap="ResultMapWithBLOBs">
+    select *
+    from tb_server_device_fault
+    where df = 0 and `status` = 0
+    <if test="deviceCode != null">
+      and device_code = #{deviceCode}
+    </if>
+    <if test="type != null">
+      and type = #{type}
+    </if>
+    limit 1
+  </select>
 
 
 </mapper>

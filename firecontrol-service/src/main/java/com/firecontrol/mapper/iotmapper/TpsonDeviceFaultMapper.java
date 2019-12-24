@@ -43,14 +43,18 @@ public interface TpsonDeviceFaultMapper {
                                                          @Param("currentPage") Integer currentPage,
                                                          @Param("length") Integer length);
 
-    public Integer countUnhandledFault(@Param("companyId")Long companyId);
-    public Integer countMonthlyHandledFault(@Param("companyId")Long companyId,@Param("startTime") Integer startTime);
-    public Integer countDayleHandledFault(@Param("companyId")Long companyId,@Param("startTime") Integer startTime);
+    public Integer countUnhandledFault(@Param("companyId")Long companyId, @Param("deviceTypeList") List<Long> deviceTypeList);
+    public Integer countMonthlyHandledFault(@Param("companyId")Long companyId,@Param("startTime") Integer startTime, @Param("deviceTypeList") List<Long> deviceTypeList);
+    public Integer countDayleHandledFault(@Param("companyId")Long companyId,@Param("startTime") Integer startTime, @Param("deviceTypeList") List<Long> deviceTypeList);
 
     public List<Long> getUnhandledFaultByIds(@Param("idList") List<String> idList);
 
     public void deleteHandledFaultByIds(@Param("idList") List<String>idList);
 
     public Integer updateBatchDeal(@Param("idList") List<String> idList, @Param("dealDetail") String dealDetail);
+
+    public TpsonDeviceFaultEntity getUnhandleFaultByDeviceCode(@Param("deviceCode") String deviceCode, @Param("type") Long type);
+
+    public Integer updateFaultCountById(@Param("id") Long id);
 
 }

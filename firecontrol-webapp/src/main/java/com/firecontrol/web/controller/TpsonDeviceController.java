@@ -2,6 +2,7 @@ package com.firecontrol.web.controller;
 
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.dto.DeviceSearch;
+import com.firecontrol.domain.dto.DeviceUpdateDto;
 import com.firecontrol.domain.entity.TpsonDeviceEntity;
 import com.firecontrol.service.TpsonDeviceService;
 import io.swagger.annotations.Api;
@@ -96,7 +97,7 @@ public class TpsonDeviceController {
     @ApiOperation(value = "更新设备信息" ,  notes="更新设备信息")
     @RequestMapping(value = "/update", method = {RequestMethod.POST})
     @ResponseBody
-    public OpResult update(TpsonDeviceEntity device){
+    public OpResult update(DeviceUpdateDto device){
         return tpsonDeviceService.updateDeviceInfo(device);
     }
 

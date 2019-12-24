@@ -136,8 +136,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 
-
-
+			<!---->
 			<!--<plugin>-->
 				<!--<groupId>org.mybatis.generator</groupId>-->
 				<!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
@@ -164,11 +163,11 @@
 					<!--</execution>-->
 				<!--</executions>-->
 				<!--<configuration>-->
-					<!--&lt;!&ndash;&lt;!&ndash;允许移动生成的文件&ndash;&gt;&ndash;&gt;-->
+					<!--&lt;!&ndash;允许移动生成的文件&ndash;&gt;-->
 					<!--<verbose>true</verbose>-->
-					<!--&lt;!&ndash;&lt;!&ndash;是否覆盖&ndash;&gt;&ndash;&gt;-->
+					<!--&lt;!&ndash;是否覆盖&ndash;&gt;-->
 					<!--<overwrite>true</overwrite>-->
-					<!--&lt;!&ndash;&lt;!&ndash;自动生 成的配置&ndash;&gt;&ndash;&gt;-->
+					<!--&lt;!&ndash;自动生 成的配置&ndash;&gt;-->
 					<!--<configurationFile>-->
 						<!--src/main/resources/mybatis-generator.xml</configurationFile>-->
 				<!--</configuration>-->

@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -37,6 +38,7 @@ import java.util.concurrent.Executors;
 //TODO:添加config Bean, 把druid的依赖加进来。暂时直接加载yml配置，注释掉druid
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @EnableAutoConfiguration(exclude={DruidDataSourceAutoConfigure.class})
+@EnableScheduling
 @ComponentScan(basePackages = {
 		"com.firecontrol.config",
 		"com.firecontrol.common",
@@ -64,27 +66,10 @@ public class FirecontrolWebappApplication {
 		//context.getBean(Startup.class).mainForStart(startConfigProperty.getStartupPath());
 
 
-		//TODO:写入配置文件--done
-		//windows
-//		path.append("D:").append(File.separator)
-//				.append("serverConfig.properties");
-
-		//172.16.20.83
-//		if(File.separator.equals("\\")){
-//			path.append("D:");
-//		}
-//		path.append(File.separator).append("app").append(File.separator)
-//				.append("deploy").append(File.separator).append("jars")
-//				.append(File.separator).append("serverConfig.properties");
-
-
-//		path.append(File.separator).append("etc").append(File.separator)
-//				.append("serverConfig.properties");
-
-
 
 /*		ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
 		e.execute(new TerminalServer());*/
+
 //	}
 
 	@Bean

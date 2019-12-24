@@ -27,6 +27,8 @@ public class WebSocketService {
 
     //记录当前在线人数
     private static int onlineCount = 0;
+    //记录累计登陆量
+    private static int visitCount = 0;
 
 
     //线程安全set，保存当前每个登录用户的webSocketService 对象
@@ -141,8 +143,14 @@ public class WebSocketService {
         return onlineCount;
     }
 
+    public static synchronized int getVisitCount() {
+        return visitCount;
+    }
+
+
     public static synchronized void addOnlineCount() {
         WebSocketService.onlineCount++;
+        WebSocketService.visitCount++;
     }
 
     public static synchronized void subOnlineCount() {
