@@ -46,10 +46,12 @@
         from tb_server_electric_company_config
         where id = #{id,jdbcType=INTEGER}
     </select>
+
     <delete id="deleteById" parameterType="java.lang.Integer">
         delete from tb_server_electric_company_config
         where id = #{id,jdbcType=INTEGER}
     </delete>
+
     <insert id="insert" parameterType="com.firecontrol.domain.entity.ElectricConfig">
         insert into tb_server_electric_company_config (id, company_code, ele_power_threshold,
         device_power_threshold, ele_overload_is_outage, device_overload_is_outage,
@@ -65,9 +67,6 @@
     <update id="update" parameterType="com.firecontrol.domain.entity.ElectricConfig">
         update tb_server_electric_company_config
         <set>
-            <if test="companyCode != null">
-                company_code = #{companyCode,jdbcType=VARCHAR},
-            </if>
             <if test="elePowerThreshold != null">
                 ele_power_threshold = #{elePowerThreshold,jdbcType=REAL},
             </if>
@@ -102,7 +101,7 @@
                 shield_ele_type_ids = #{shieldEleTypeIds,jdbcType=LONGVARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where id = 1
     </update>
 
 </mapper>
