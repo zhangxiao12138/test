@@ -115,8 +115,7 @@ public class TpsonSMR3002AlarmService implements Runnable{
         //查询是否有已存在的同设备同类型未处理报警
         Boolean rtn = true;
         try{
-            //22	主机功率过载报警
-            TpsonAlarmEntity alarm = tpsonAlarmMapper.getUnhandleAlarmByDeviceInfo(dto.getDeviceCode(), (long)22);
+            TpsonAlarmEntity alarm = tpsonAlarmMapper.getUnhandleAlarmByDeviceInfo(dto.getDeviceCode(), dto.getAlarmType());
             if(alarm != null){
                 tpsonAlarmMapper.updateAlarmCountById(alarm.getId());
 
@@ -136,7 +135,7 @@ public class TpsonSMR3002AlarmService implements Runnable{
                 Floor floor = null;
                 alarm = new TpsonAlarmEntity();
                 alarm.setAddTime(dto.getTime());
-                alarm.setType((long)22);//主机功率过载报警，type =22
+                alarm.setType(dto.getAlarmType());//主机功率过载报警，type =22
                 alarm.setLevel(1);//hardcode， 默认1:低
                 alarm.setDeviceCode(dto.getDeviceCode());
                 alarm.setDeviceId(device.getId());
@@ -161,7 +160,7 @@ public class TpsonSMR3002AlarmService implements Runnable{
                     }
                 }
 
-                alarm.setDetail(floor.getName() + "主机功率过载报警");
+                alarm.setDetail(floor.getName() + dto.getAlarmName());
                 alarm.setFloorName(floor.getName());
                 alarm.setPosition(floor.getName());
                 alarm.setSiteName(floor.getName());

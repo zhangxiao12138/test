@@ -91,13 +91,13 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
         SensorSearch search = new SensorSearch(device.getCode());
         List<TpsonSensorEntity> sensorList = tpsonSensorMapper.getSensorListBySearch(search);
 
+
+        //获取主机功率报警阈值与是否断电配置
+        //TODO:配置/获取companyCode
+        ElectricConfig config = electricConfigMapper.getByCompanyCode("0");
+
         //data_type 固定为“REAL_DATA"/WARNING_DATA/ALARM_DATA/FAULT_DATA/IDENTIFY_DATA（电器识别推送）
         if(TBConstants.DATATYPE.realData.equals(dto.getDataType())){
-            //获取主机功率报警阈值与是否断电配置
-            //TODO:配置/获取companyCode
-            ElectricConfig config = electricConfigMapper.getByCompanyCode("0");
-
-
             // 录入实时传感器数据到sensor_log表
             if(!handleRealTimeData(dto,device.getId(), device.getCode(), sensorList, dto.getTime(), config)) {
                 log.error("saveSMR3002Data handleRealTimeData error! param = {}", dto);
@@ -123,7 +123,7 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
 
         }else if(TBConstants.DATATYPE.identifyData.equals(dto.getDataType())) {
             //电器识别数据，记录电器日志device_log, 等
-            if(!handleIdentifyData(dto,device.getId(), device.getCode(), sensorList, device.getType().intValue(), device.getFloorId(), device.getBuildingId())) {
+            if(!handleIdentifyData(dto,device.getId(), device.getCode(), sensorList, device.getType().intValue(), device.getFloorId(), device.getBuildingId(), config)) {
                 log.error("saveSMR3002Data handleRealTimeData error! param = {}", dto);
                 op.setStatus(OpResult.OP_FAILED);
                 op.setMessage(OpResult.OpMsg.SAVE_FAIL);
@@ -153,7 +153,7 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
      * @param sensorList
      * @return
      */
-    private Boolean handleIdentifyData(SMR3002Dto dto, Long deviceId, String deviceCode, List<TpsonSensorEntity> sensorList, Integer deviceType, String floorId, String buildingId) {
+    private Boolean handleIdentifyData(SMR3002Dto dto, Long deviceId, String deviceCode, List<TpsonSensorEntity> sensorList, Integer deviceType, String floorId, String buildingId, ElectricConfig config) {
         Boolean b = true;
 
         ElectricLog log = new ElectricLog();
@@ -190,6 +190,14 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
         }
         log.setMaxPossible(maxPossible.intValue());//已知电器最大概率值,百分比
         logMapper.insert(log);
+
+
+        //TODO：用电器,添加报警信息，websocket 推送，判断是否需要断电
+        dto.setAlarmType(13L);
+        dto.setAlarmName("大功率电器报警");
+        ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
+        e.execute(new TpsonSMR3002AlarmService(config, dto, deviceCode));
+
         return b;
     }
 
@@ -238,9 +246,10 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
                     sensorLogMapper.insert(log);
                     if(data.getPower() != null && data.getPower() > config.getDevicePowerThreshold()) {
                         //TODO：主机功率过载,添加报警信息，websocket 推送，判断是否需要断电
-                        		ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
-		                        e.execute(new TpsonSMR3002AlarmService(config, dto, deviceCode));
-
+                        dto.setAlarmType(22L);
+                        dto.setAlarmName("主机功率过载报警");
+                        ExecutorService e = Executors.newFixedThreadPool(3);        //新建线程池3
+                        e.execute(new TpsonSMR3002AlarmService(config, dto, deviceCode));
                     }
 
                 } else if (sensor.getSensorType() == TBConstants.SensorType.nh) {//能耗

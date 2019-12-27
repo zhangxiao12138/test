@@ -24,10 +24,25 @@ public class SMR3002Dto {
 
     private SMR3002DataDto data;
 
+    private Long alarmType;
 
+    private String alarmName;
 
+    public String getAlarmName() {
+        return alarmName;
+    }
 
+    public void setAlarmName(String alarmName) {
+        this.alarmName = alarmName;
+    }
 
+    public Long getAlarmType() {
+        return alarmType;
+    }
+
+    public void setAlarmType(Long alarmType) {
+        this.alarmType = alarmType;
+    }
 
     public Integer getTime() {
         return time;
