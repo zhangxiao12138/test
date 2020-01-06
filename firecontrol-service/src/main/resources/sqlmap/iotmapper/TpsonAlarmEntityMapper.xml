@@ -920,7 +920,7 @@
 
   <select id="getAlarmHandleRank" resultType="com.firecontrol.domain.dto.AlarmHandleCountDto" >
     SELECT deal_user_id as dealUserId,  count(*) as amount from tb_server_alarm
-    where is_delete = 0
+    where is_delete = 0 and !isnull(deal_user_id)
     <if test="deviceTypeList != null">
     and
     device_type in

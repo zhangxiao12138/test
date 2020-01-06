@@ -72,7 +72,7 @@
 
 
   <select id="getDeviceNameById" resultType="java.lang.String">
-    select device_name
+    select `name`
     from tb_server_device
     where id = #{id}
   </select>

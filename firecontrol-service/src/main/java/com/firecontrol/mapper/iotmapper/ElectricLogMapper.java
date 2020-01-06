@@ -3,6 +3,7 @@ package com.firecontrol.mapper.iotmapper;
 import com.firecontrol.domain.dto.ElectricAccess;
 import com.firecontrol.domain.entity.ElectricLog;
 import com.firecontrol.domain.entity.SensorLog;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,6 +29,9 @@ public interface ElectricLogMapper {
                                              @Param("deviceId") Long deviceId, @Param("deviceCode") String deviceCode);
 
     Integer updateAllTypeByOldType(@Param("newType") Long newType, @Param("oldType") Long oldType);
+
+    Integer getPowerAccCount(@Param("startTime") Long startTime, @Param("isOutdoor")Integer isOutdoor, @Param("companyId") Long companyId,
+                             @Param("deviceId") Long deviceId, @Param("deviceCode") String deviceCode,@Param("bottom") Integer bottom, @Param("top") Integer top);
 
 
 }

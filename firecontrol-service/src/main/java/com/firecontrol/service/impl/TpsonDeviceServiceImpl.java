@@ -692,14 +692,19 @@ public class TpsonDeviceServiceImpl implements TpsonDeviceService {
                 return op;
             }
 
-
             list = tpsonDeviceMapper.getDeviceListBySearch(search);
             Integer end = (int) (System.currentTimeMillis() / 1000);
             Integer start = end - 9;
             for(TpsonDeviceEntity device : list){
                 List<SensorLog> sensorList = sensorLogMapper.getRealTimeData(device.getCode(), start, end);
+                for(SensorLog l : sensorList){
+                    if(l.getSensorType() == 17){
+                        l.setLogData(String.format("%.2f", Double.parseDouble(l.getLogData())/1000D) + "");
+                    }
+                }
                 device.setSensorList(sensorList);
             }
+
             rtnMap.put("deviceList", list);
             op.setDataValue(rtnMap);
 

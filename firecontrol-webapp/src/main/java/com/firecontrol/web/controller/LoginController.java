@@ -28,6 +28,8 @@ public class LoginController {
     @Autowired
     protected HttpServletRequest request;
 
+
+
     /**
      * 登录
      */
@@ -36,11 +38,6 @@ public class LoginController {
         return new ModelAndView("index");
     }
 
-/*    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ModelAndView login(Model model) {
-
-        return new ModelAndView("mainPage");
-    }*/
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model) {

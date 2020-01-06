@@ -111,28 +111,25 @@ public class ElectricLogServiceImpl implements ElectricLogService{
             if(StringUtils.isEmpty(deviceCode)){
                 deviceCode = null;
             }
-            list = electricLogMapper.getPowerAccessCount(startTime,isOutdoor,companyId,deviceId,deviceCode);
-            if(!CollectionUtils.isEmpty(list)) {
-                for(Integer k=0; k <= 6; k=k+2){
-                    powerTypeList.add(k);
-                    Boolean tag = false;
-                    for(ElectricAccess ea : list){
-                        if(ea.getPowerType() == k){
-                            accessAmount.add(ea.getAmount());
-                            tag = true;
-                            break;
-                        }
-                    }
-                    if(!tag) {
-                        accessAmount.add(0);
-                    }
-                }
-            }else{
-                for(Integer k = 0; k<= 6; k+=2) {
-                    powerTypeList.add(k);
-                    accessAmount.add(0);
-                }
+
+            //小于1kw
+            Integer xsCount = electricLogMapper.getPowerAccCount(startTime,isOutdoor,companyId,deviceId,deviceCode,0, 1000);
+            //1kw-3kw
+            Integer sCount = electricLogMapper.getPowerAccCount(startTime,isOutdoor,companyId,deviceId,deviceCode,1000, 3000);
+            //3-5kw
+            Integer mCount = electricLogMapper.getPowerAccCount(startTime,isOutdoor,companyId,deviceId,deviceCode,3000, 5000);
+            //大于5kw
+            Integer lCount = electricLogMapper.getPowerAccCount(startTime,isOutdoor,companyId,deviceId,deviceCode,5000, null);
+
+
+
+            for(Integer k=0; k <= 6; k=k+2){
+                powerTypeList.add(k);
             }
+            accessAmount.add(xsCount);
+            accessAmount.add(sCount);
+            accessAmount.add(mCount);
+            accessAmount.add(lCount);
 
             rtnMap.put("powerType", powerTypeList);
             rtnMap.put("access", accessAmount);

@@ -147,6 +147,27 @@
 
 
 
+  <select id="getPowerAccCount" resultType="java.lang.Integer">
+    select count(*)
+    from tb_server_electric_appliance_log
+    where `action`=1
+    <if test="deviceCode != null">
+      and device_code = #{deviceCode}
+    </if>
+
+    <if test="deviceId != null">
+      and device_id = deviceId
+    </if>
+    <if test="startTime != null">
+      and add_time >= #{startTime}
+    </if>
+    <if test="bottom != null">
+      and power >= #{bottom}
+    </if>
+    <if test="top != null">
+      <![CDATA[ and power < #{top} ]]>
+    </if>
+  </select>
 
 
   <select id="getPowerAccessCount" resultType="com.firecontrol.domain.dto.ElectricAccess">

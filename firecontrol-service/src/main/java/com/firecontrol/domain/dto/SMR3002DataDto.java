@@ -117,6 +117,7 @@ public class SMR3002DataDto {
     [{"name":"电瓶车充电器","possible":0.98},{"name":"电风扇","possible":0.6}], //识别结果集
      */
     private String identifyResult;
+//    private Object identifyResult;
 
     private List<ElectricPossible> resultList;
 

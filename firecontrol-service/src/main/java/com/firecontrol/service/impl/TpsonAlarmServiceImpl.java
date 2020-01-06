@@ -539,7 +539,9 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
 
             for(AlarmHandleCountDto a : list) {
                 User user = userMapper.getById(a.getDealUserId());
-                a.setDealUserName(user.getUsername());
+                if(user != null) {
+                    a.setDealUserName(user.getUsername());
+                }
             }
 
             op.setDataValue(list);
