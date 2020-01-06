@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.UserEntityMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.UserEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="CHAR" property="password" />
+    <result column="salt" jdbcType="CHAR" property="salt" />
+    <result column="login_times" jdbcType="INTEGER" property="loginTimes" />
+    <result column="last_login_time" jdbcType="INTEGER" property="lastLoginTime" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+    <result column="delete_time" jdbcType="INTEGER" property="deleteTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="is_disable" jdbcType="BIT" property="isDisable" />
+    <result column="effective_time" jdbcType="INTEGER" property="effectiveTime" />
+    <result column="vendor_id" jdbcType="BIGINT" property="vendorId" />
+    <result column="secret" jdbcType="VARCHAR" property="secret" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="token_time" jdbcType="INTEGER" property="tokenTime" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    id, code, role_id, username, password, salt, login_times, last_login_time, add_time, 
+    update_time, delete_time, is_delete, is_disable, effective_time, vendor_id, secret, 
+    token, token_time
+  </sql>
+
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="getUserByUserName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_server_user
+    where username = #{userName} and vendor_id = #{vendorId}
+  </select>
+
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.UserEntity">
+    insert into tb_server_user (id, code, role_id, 
+      username, password, salt, 
+      login_times, last_login_time, add_time, 
+      update_time, delete_time, is_delete, 
+      is_disable, effective_time, vendor_id, 
+      secret, token, token_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{roleId,jdbcType=BIGINT}, 
+      #{username,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{salt,jdbcType=CHAR}, 
+      #{loginTimes,jdbcType=INTEGER}, #{lastLoginTime,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{deleteTime,jdbcType=INTEGER}, #{isDelete,jdbcType=BIT}, 
+      #{isDisable,jdbcType=BIT}, #{effectiveTime,jdbcType=INTEGER}, #{vendorId,jdbcType=BIGINT}, 
+      #{secret,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{tokenTime,jdbcType=INTEGER}
+      )
+  </insert>
+
+
+  <update id="updateUserToken">
+    update tb_server_user
+    <set>
+      update_time = now(), token = #{token},
+    </set>
+    where id = #{id}
+  </update>
+
+
+
+</mapper>

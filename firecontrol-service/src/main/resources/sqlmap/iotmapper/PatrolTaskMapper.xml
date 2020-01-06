@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.PatrolTaskMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.PatrolTask">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_date" jdbcType="INTEGER" property="createDate" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="user_fk" jdbcType="BIGINT" property="userFk" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="is_stop" jdbcType="BIT" property="isStop" />
+    <result column="site_count" jdbcType="INTEGER" property="siteCount" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="device_count" jdbcType="INTEGER" property="deviceCount" />
+    <result column="percentage" jdbcType="DOUBLE" property="percentage" />
+    <result column="is_repetition" jdbcType="INTEGER" property="isRepetition" />
+    <result column="device_percentage" jdbcType="DOUBLE" property="devicePercentage" />
+    <result column="create_user_fk" jdbcType="BIGINT" property="createUserFk" />
+    <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
+    <result column="useful_time" jdbcType="INTEGER" property="usefulTime" />
+    <result column="is_outdoor" jdbcType="INTEGER" property="isOutdoor" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, create_date, description, user_fk, type, is_stop, site_count, count, device_count, 
+    percentage, is_repetition, device_percentage, create_user_fk, company_fk, useful_time, 
+    is_outdoor, sort
+  </sql>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_patrol_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getTaskListByVendorId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_server_patrol_task
+    where company_fk = #{vendorId}
+    order by id DESC
+  </select>
+
+
+  <update id="updateTaskStop" >
+    update tb_server_patrol_task
+    set is_stop = 1
+    where id = #{id}
+  </update>
+
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_patrol_task
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.PatrolTask">
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_server_patrol_task (id, name, create_date, 
+      description, user_fk, type, 
+      is_stop, site_count, count, 
+      device_count, percentage, is_repetition, 
+      device_percentage, create_user_fk, company_fk, 
+      useful_time, is_outdoor, sort
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{userFk,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, 
+      #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, #{isRepetition,jdbcType=INTEGER}, 
+      #{devicePercentage,jdbcType=DOUBLE}, #{createUserFk,jdbcType=BIGINT}, #{companyFk,jdbcType=BIGINT}, 
+      #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}
+      )
+  </insert>
+
+
+
+</mapper>

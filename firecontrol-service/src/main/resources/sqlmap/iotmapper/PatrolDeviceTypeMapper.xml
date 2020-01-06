@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.PatrolDeviceTypeMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.PatrolDeviceType">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="checkType" jdbcType="INTEGER" property="checktype" />
+    <result column="all_name" jdbcType="VARCHAR" property="allName" />
+    <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, parent_id, level, name, description, checkType, all_name, company_fk, is_delete
+  </sql>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_patrol_device_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="getTopNode"  resultMap="BaseResultMap">
+    select *
+    from tb_server_patrol_device_type
+    where company_fk = #{vendorId}
+    and `level` = 0
+    and is_delete = 0
+  </select>
+
+  <select id="getListByParentNodeId"  resultMap="BaseResultMap">
+    select *
+    from tb_server_patrol_device_type
+    where company_fk = #{vendorId}
+    and  is_delete = 0
+    and parent_id = #{parentNode}
+  </select>
+
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_patrol_device_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.PatrolDeviceType">
+    insert into tb_server_patrol_device_type (id, parent_id, level, 
+      name, description, checkType, 
+      all_name, company_fk, is_delete
+      )
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{level,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{checktype,jdbcType=INTEGER}, 
+      #{allName,jdbcType=VARCHAR}, #{companyFk,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}
+      )
+  </insert>
+
+
+
+
+
+
+</mapper>

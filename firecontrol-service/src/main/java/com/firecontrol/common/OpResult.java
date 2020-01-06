@@ -53,5 +53,7 @@ public class OpResult implements Serializable {
         public static final String DELETE_FAIL = "删除失败";
         public static final String OP_SUCCESS = "操作成功";
         public static final String OP_FAIL = "操作失败";
+        public static final String OP_LOGIN_SUCCESS = "登录成功";
+        public static final String OP_LOGIN_FAIL = "登录失败";
     }
 }
