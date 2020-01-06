@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.PatrolCheckItemMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.PatrolCheckItem">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="frequency" jdbcType="INTEGER" property="frequency" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="patrol_device_type_fk" jdbcType="BIGINT" property="patrolDeviceTypeFk" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.PatrolCheckItemWithBLOBs">
+    <result column="name" jdbcType="LONGVARCHAR" property="name" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, frequency, type, patrol_device_type_fk, status, company_fk, is_delete
+  </sql>
+  <sql id="Blob_Column_List">
+    name, description
+  </sql>
+
+
+  <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_server_patrol_check_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getCheckItemsByNodeId"  resultMap="ResultMapWithBLOBs">
+    select *
+    from tb_server_patrol_check_item
+    where company_fk = #{vendorId}
+    and is_delete = 0
+    and patrol_device_type_fk = #{nodeId}
+  </select>
+
+
+
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from tb_server_patrol_check_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.PatrolCheckItemWithBLOBs">
+    insert into tb_server_patrol_check_item (id, frequency, type, 
+      patrol_device_type_fk, status, company_fk, 
+      is_delete, name, description
+      )
+    values (#{id,jdbcType=INTEGER}, #{frequency,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{patrolDeviceTypeFk,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{companyFk,jdbcType=BIGINT}, 
+      #{isDelete,jdbcType=BIT}, #{name,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+
+
+</mapper>

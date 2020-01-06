@@ -1,6 +1,9 @@
 package com.firecontrol.web.controller;
 
 import com.firecontrol.boot.FirecontrolWebappApplication;
+import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.entity.LoginParam;
+import com.firecontrol.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,8 @@ public class LoginController {
     protected HttpServletResponse response;
     @Autowired
     protected HttpServletRequest request;
-
-
+    @Autowired
+    private LoginService loginService;
 
     /**
      * 登录
@@ -39,11 +42,23 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(Model model) {
+//    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    public String login(Model model) {
+//
+//        return "mainPage";
+//    }
 
-        return "mainPage";
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public OpResult login(LoginParam model, HttpServletRequest request, HttpServletResponse response) {
+
+        return loginService.login(model);
     }
+
+
+
+
 
 
 }
