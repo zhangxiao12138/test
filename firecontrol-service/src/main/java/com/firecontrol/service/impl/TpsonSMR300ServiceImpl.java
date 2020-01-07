@@ -395,6 +395,7 @@ public class TpsonSMR300ServiceImpl implements TpsonSMR3002Service {
                 alarm.setIsDelete(false);
                 //TODO:全部building_id由long改为string
                 alarm.setBuildingId(device.getBuildingId());
+                alarm.setFloorId(device.getFloorId());
                 tpsonAlarmMapper.insert(alarm);
 
 
