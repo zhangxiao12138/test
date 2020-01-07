@@ -10,6 +10,8 @@ public class OpResult implements Serializable {
     private static final long serialVersionUID = -5217263946675824590L;
     public static final int OP_SUCCESS = 1;
     public static final int OP_FAILED = 0;
+    //登录超时
+    public static final int OP_LOGIN_EXP = 2;
     private int status;//1 成功  0失败
     private String message;//提示信息
     private Object dataValue;//数据值

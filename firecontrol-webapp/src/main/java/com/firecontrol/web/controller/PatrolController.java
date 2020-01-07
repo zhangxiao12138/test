@@ -40,7 +40,7 @@ public class PatrolController {
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.newTask(vendorId, userId, description);
         }else{
-            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
         }
 
@@ -63,7 +63,7 @@ public class PatrolController {
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.finishTask(vendorId, userId, taskId);
         }else{
-            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
         }
 
@@ -85,7 +85,7 @@ public class PatrolController {
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.taskList(vendorId, userId);
         }else{
-            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
         }
 
@@ -108,7 +108,7 @@ public class PatrolController {
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.getTopNode(vendorId, userId, token);
         }else{
-            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
         }
 
@@ -131,7 +131,7 @@ public class PatrolController {
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.getListByParentNodeId(vendorId,parentNodeId);
         }else{
-            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
         }
 
@@ -153,9 +153,10 @@ public class PatrolController {
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.getCheckItemsByNodeId(vendorId,leafNodeId);
         }else{
-            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
         }
+
 
     }
 
