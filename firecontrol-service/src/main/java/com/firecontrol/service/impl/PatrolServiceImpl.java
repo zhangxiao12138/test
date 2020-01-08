@@ -86,6 +86,31 @@ public class PatrolServiceImpl implements PatrolService{
     }
 
     @Override
+    public Boolean isSystemManger(Long userId, String token) {
+
+        Boolean rtn = true;
+
+        UserEntity userEntity = userEntityMapper.getById(userId);
+
+        if(userEntity == null) {
+            log.error("hasAuthority error, userId: " + userId);
+            return false;
+        }
+        if(!token.equals(userEntity.getToken())) {
+            log.error("token失效! 入参token: " + token + ", normal token： " + userEntity.getToken());
+            return false;
+        }else if(userEntity.getRoleId() == null ||userEntity.getRoleId() == 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+
+
+    @Override
     public OpResult getTopNode(Long vendorId, Long userId, String token) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         Map rtnMap = new HashMap();
@@ -198,7 +223,7 @@ public class PatrolServiceImpl implements PatrolService{
 
     @Override
     public OpResult taskList(Long vendorId, Long userId) {
-
+//TODO:条件查询
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         Map rtnMap = new HashMap();
         Long resultId = 0L;
@@ -223,6 +248,42 @@ public class PatrolServiceImpl implements PatrolService{
 
         op.setDataValue(rtnMap);
         return op;
+    }
+
+    @Override
+    public OpResult setCheckItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+
+        if(vendorId == null || userId == null || checkItemId == null) {
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("vendorId or userId or checkItemId can not be null!");
+            return op;
+        }
+
+        try{
+            if(amount != null) {
+                checkItemMapper.updateItemAmount(vendorId, userId, checkItemId, amount);
+
+
+            }
+
+
+
+        }catch (Exception e) {
+            log.error("PatrolServiceImpl.setCheckItemAmount error! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+
+
+
+
+
+
+        return null;
     }
 
 

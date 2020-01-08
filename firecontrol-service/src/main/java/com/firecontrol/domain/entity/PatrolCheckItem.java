@@ -15,6 +15,12 @@ public class PatrolCheckItem {
 
     private Boolean isDelete;
 
+    private Integer amount;
+
+    private Integer totalAmount;
+
+    private Long floorId;
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +75,29 @@ public class PatrolCheckItem {
 
     public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public Integer getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Integer totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
     }
 }

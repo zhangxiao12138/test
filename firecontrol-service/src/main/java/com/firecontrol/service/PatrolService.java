@@ -7,9 +7,11 @@ import com.firecontrol.common.OpResult;
  */
 public interface PatrolService {
 
-    public OpResult newTask(Long vendorId, Long userId, String description);
+    OpResult newTask(Long vendorId, Long userId, String description);
 
     Boolean hasAuthority(Long userId, String token);
+
+    Boolean isSystemManger(Long userId, String token);
 
     OpResult getTopNode(Long vendorId, Long userId, String token);
 
@@ -20,6 +22,10 @@ public interface PatrolService {
     OpResult finishTask(Long vendorId, Long userId, Long taskId);
 
     OpResult taskList(Long vendorId, Long userId);
+
+    OpResult setCheckItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount);
+
+
 
 
 

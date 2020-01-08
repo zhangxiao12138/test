@@ -18,5 +18,9 @@ public interface PatrolCheckItemMapper {
 
     List<PatrolCheckItem> getCheckItemsByNodeId(@Param("vendorId") Long vendorId, @Param("nodeId") Long nodeId);
 
+    Integer updateItemAmount(@Param("vendorId") Long vendorId, @Param("userId")Long  userId, @Param("checkItemId") Long checkItemId, @Param("amount") Integer amount);
+
+
+
 
 }

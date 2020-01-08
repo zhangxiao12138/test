@@ -8,7 +8,11 @@
     <result column="patrol_device_type_fk" jdbcType="BIGINT" property="patrolDeviceTypeFk" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="total_amount" jdbcType="INTEGER" property="totalAmount" />
+
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.PatrolCheckItemWithBLOBs">
     <result column="name" jdbcType="LONGVARCHAR" property="name" />
@@ -40,6 +44,13 @@
   </select>
 
 
+  <update id="updateItemAmount">
+    update tb_server_patrol_check_item
+    <set>
+      update_time = unix_timestamp(now()), amount= #{amount},
+    </set>
+    where id = #{checkItemId} and company_fk = #{vendorId}
+  </update>
 
 
   <delete id="deleteById" parameterType="java.lang.Integer">
@@ -49,13 +60,15 @@
 
 
   <insert id="insert" parameterType="com.firecontrol.domain.entity.PatrolCheckItemWithBLOBs">
-    insert into tb_server_patrol_check_item (id, frequency, type, 
+    insert into tb_server_patrol_check_item (frequency, type,
       patrol_device_type_fk, status, company_fk, 
-      is_delete, name, description
+      is_delete, name, description,total_amount, floor_id
       )
-    values (#{id,jdbcType=INTEGER}, #{frequency,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+    values (#{frequency,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
       #{patrolDeviceTypeFk,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{companyFk,jdbcType=BIGINT}, 
-      #{isDelete,jdbcType=BIT}, #{name,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR}
+      #{isDelete,jdbcType=BIT}, #{name,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR},
+      #{totalAmount,jdbcType=INTEGER},
+      #{floorId,jdbcType=BIGINT}
       )
   </insert>
 
