@@ -21,6 +21,9 @@ public interface PatrolService {
 
     OpResult taskList(Long vendorId, Long userId);
 
+    OpResult addTaskDetail(Long vendorId, Long userId, String userName, Long taskId, Long checkItemId, String checkItemName,
+                           String description, Integer totalCount, Integer deviceCount);
 
+    OpResult taskDetailList(Long vendorId, Long userId, Long taskId);
 
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.TaskDetailMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.TaskDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="check_item_name" jdbcType="VARCHAR" property="checkItemName" />
+    <result column="user_fk" jdbcType="BIGINT" property="userFk" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="create_date" jdbcType="INTEGER" property="createDate" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="is_stop" jdbcType="BIT" property="isStop" />
+    <result column="site_count" jdbcType="INTEGER" property="siteCount" />
+    <result column="total_count" jdbcType="INTEGER" property="totalCount" />
+    <result column="device_count" jdbcType="INTEGER" property="deviceCount" />
+    <result column="percentage" jdbcType="DOUBLE" property="percentage" />
+    <result column="device_percentage" jdbcType="DOUBLE" property="devicePercentage" />
+    <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
+    <result column="is_outdoor" jdbcType="INTEGER" property="isOutdoor" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TaskDetail">
+    <result column="check_item_id" jdbcType="LONGVARCHAR" property="checkItemId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, check_item_name, user_fk, user_name, create_date, description, type, is_stop, 
+    site_count, total_count, device_count, percentage, device_percentage, company_fk, 
+    is_outdoor, task_id
+  </sql>
+  <sql id="Blob_Column_List">
+    check_item_id
+  </sql>
+  <select id="getById" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_server_patrol_task_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="getDetailByTaskId" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_server_patrol_task_detail
+    where company_fk = #{vendorId,jdbcType=BIGINT} and task_id = #{taskId}
+  </select>
+
+
+
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_patrol_task_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.TaskDetail">
+    insert into tb_server_patrol_task_detail (check_item_name, user_fk,
+      user_name, create_date, description, 
+      type, is_stop, site_count, 
+      total_count, device_count, percentage, 
+      device_percentage, company_fk, is_outdoor, 
+      task_id, check_item_id)
+    values ( #{checkItemName,jdbcType=VARCHAR}, #{userFk,jdbcType=BIGINT},
+      #{userName,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, 
+      #{totalCount,jdbcType=INTEGER}, #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, 
+      #{devicePercentage,jdbcType=DOUBLE}, #{companyFk,jdbcType=BIGINT}, #{isOutdoor,jdbcType=INTEGER}, 
+      #{taskId,jdbcType=BIGINT}, #{checkItemId,jdbcType=LONGVARCHAR})
+  </insert>
+
+
+</mapper>

@@ -28,7 +28,7 @@
     select *
     from tb_server_patrol_device_type
     where company_fk = #{vendorId}
-    and `level` = 0
+    and `level` = 1
     and is_delete = 0
   </select>
 

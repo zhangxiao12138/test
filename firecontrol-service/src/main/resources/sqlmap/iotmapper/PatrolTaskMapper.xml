@@ -56,22 +56,22 @@
   </delete>
 
 
-  <insert id="insert" parameterType="com.firecontrol.domain.entity.PatrolTask">
-    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into tb_server_patrol_task (id, name, create_date, 
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="com.firecontrol.domain.entity.PatrolTask">
+    <!--<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >-->
+    <!--SELECT LAST_INSERT_ID()-->
+  <!--</selectKey>-->
+    insert into tb_server_patrol_task (name, create_date,
       description, user_fk, type, 
       is_stop, site_count, count, 
       device_count, percentage, is_repetition, 
       device_percentage, create_user_fk, company_fk, 
       useful_time, is_outdoor, sort
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER}, 
-      #{description,jdbcType=VARCHAR}, #{userFk,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
-      #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, 
-      #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, #{isRepetition,jdbcType=INTEGER}, 
-      #{devicePercentage,jdbcType=DOUBLE}, #{createUserFk,jdbcType=BIGINT}, #{companyFk,jdbcType=BIGINT}, 
+    values ( #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER},
+      #{description,jdbcType=VARCHAR}, #{userFk,jdbcType=BIGINT}, #{type,jdbcType=INTEGER},
+      #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER},
+      #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, #{isRepetition,jdbcType=INTEGER},
+      #{devicePercentage,jdbcType=DOUBLE}, #{createUserFk,jdbcType=BIGINT}, #{companyFk,jdbcType=BIGINT},
       #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}
       )
   </insert>
