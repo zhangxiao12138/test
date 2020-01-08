@@ -4,6 +4,11 @@ import com.firecontrol.boot.FirecontrolWebappApplication;
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.entity.LoginParam;
 import com.firecontrol.service.LoginService;
+import com.firecontrol.service.UserLoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +36,7 @@ public class LoginController {
     @Autowired
     protected HttpServletRequest request;
     @Autowired
-    private LoginService loginService;
+    private UserLoginService userLoginService;
 
     /**
      * 登录
@@ -48,12 +53,18 @@ public class LoginController {
 //        return "mainPage";
 //    }
 
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ApiOperation(value = "login" ,  notes="login")
+    @RequestMapping(value = "/login", method = {RequestMethod.POST})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userName",value="userName",paramType = "query"),
+            @ApiImplicitParam(name="password",value="md5(密码),32位小写",paramType = "query"),
+            @ApiImplicitParam(name="vendorId",value="vendorId",paramType = "query"),
+    })
     @ResponseBody
     public OpResult login(LoginParam model, HttpServletRequest request, HttpServletResponse response) {
 
-        return loginService.login(model);
+        return userLoginService.userLogin(model);
+
     }
 
 

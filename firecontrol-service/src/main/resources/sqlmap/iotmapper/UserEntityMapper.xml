@@ -73,7 +73,9 @@
   <update id="updateUserToken">
     update tb_server_user
     <set>
+
       update_time = unix_timestamp(now()), token = #{token},
+
     </set>
     where id = #{id}
   </update>

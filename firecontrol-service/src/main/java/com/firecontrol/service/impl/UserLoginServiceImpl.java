@@ -6,7 +6,9 @@ import com.firecontrol.common.StringMD5Util;
 import com.firecontrol.domain.entity.LoginParam;
 import com.firecontrol.domain.entity.UserEntity;
 import com.firecontrol.mapper.iotmapper.UserEntityMapper;
-import com.firecontrol.service.LoginService;
+import com.firecontrol.service.UserLoginService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +16,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by mariry on 2019/6/11.
+ * Created by mary on 2020/1/6.
  */
-
-
 @Service
-public class LoginServiceImpl implements LoginService{
+public class UserLoginServiceImpl implements UserLoginService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserLoginServiceImpl.class);
 
     @Autowired
     private UserEntityMapper userEntityMapper;
 
 
     @Override
-    public OpResult login(LoginParam param) {
+    public OpResult userLogin(LoginParam param) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_LOGIN_SUCCESS);
         Map rtnMap = new HashMap<>();
 
@@ -62,6 +64,7 @@ public class LoginServiceImpl implements LoginService{
 
 
         }catch (Exception e) {
+            log.error("exception! e={}", e);
             op.setStatus(OpResult.OP_FAILED);
             op.setMessage(OpResult.OpMsg.OP_LOGIN_FAIL);
             return op;

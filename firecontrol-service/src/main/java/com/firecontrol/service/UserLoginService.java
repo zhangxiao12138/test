@@ -4,11 +4,10 @@ import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.entity.LoginParam;
 
 /**
- * Created by mariry on 2019/6/13.
+ * Created by mary on 2020/1/6.
  */
-public interface LoginService{
+public interface UserLoginService {
 
-
-    OpResult login(LoginParam param);
+    OpResult userLogin(LoginParam param);
 
 }

@@ -10,6 +10,7 @@ import com.firecontrol.service.PatrolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Map;
 /**
  * Created by mariry on 2020/1/6.
  */
+@Service
 public class PatrolServiceImpl implements PatrolService{
 
     private static final Logger log = LoggerFactory.getLogger(PatrolServiceImpl.class);
@@ -34,6 +36,9 @@ public class PatrolServiceImpl implements PatrolService{
     @Autowired
     private PatrolDeviceTypeMapper deviceTypeMapper;
 
+    @Autowired
+    private TaskDetailMapper taskDetailMapper;
+
 
     @Override
     public OpResult newTask(Long vendorId, Long userId, String description) {
@@ -49,9 +54,8 @@ public class PatrolServiceImpl implements PatrolService{
             task.setUserFk(userId);
             task.setIsStop(false);
             task.setDescription(description);
-
-            resultId = patrolTaskMapper.insert(task);
-            rtnMap.put("taskId", resultId);
+            patrolTaskMapper.insert(task);
+            rtnMap.put("taskId", task.getId());
 
         }catch (Exception e){
             log.error("PatrolServiceImpl.newTask error! e={}", e);
@@ -251,6 +255,70 @@ public class PatrolServiceImpl implements PatrolService{
     }
 
     @Override
+    public OpResult addTaskDetail(Long vendorId, Long userId, String userName, Long taskId, Long checkItemId, String checkItemName, String description, Integer totalCount, Integer deviceCount) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+
+        if(vendorId == null || userId == null || taskId == null) {
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("vendorId or userId or taskId can not be null!");
+            return op;
+        }
+
+        try{
+            TaskDetail detail = new TaskDetail();
+            detail.setCompanyFk(vendorId);
+            detail.setCheckItemId(checkItemId + "");
+            detail.setCheckItemName(checkItemName);
+            detail.setDescription(description);
+            detail.setCreateDate((int) (System.currentTimeMillis() / 1000));
+            detail.setDeviceCount(deviceCount);
+            detail.setTotalCount(totalCount);
+            detail.setUserFk(userId);
+            detail.setUserName(userName);
+            detail.setTaskId(taskId);
+            taskDetailMapper.insert(detail);
+
+        }catch (Exception e){
+            log.error("PatrolServiceImpl.addTaskDetail error! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        op.setDataValue(rtnMap);
+        return op;
+    }
+
+    @Override
+    public OpResult taskDetailList(Long vendorId, Long userId, Long taskId) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+
+        if(vendorId == null || userId == null || taskId == null) {
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("vendorId or userId or taskId can not be null!");
+            return op;
+        }
+
+        try{
+            List<TaskDetail> list = taskDetailMapper.getDetailByTaskId(vendorId, taskId);
+            rtnMap.put("taskDetail", list);
+
+
+        }catch (Exception e){
+            log.error("PatrolServiceImpl.addTaskDetail error! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        op.setDataValue(rtnMap);
+        return op;
+    }
+
+    @Override
     public OpResult setCheckItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount) {
 
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
@@ -278,13 +346,6 @@ public class PatrolServiceImpl implements PatrolService{
         }
 
 
-
-
-
-
-
         return null;
     }
-
-
 }

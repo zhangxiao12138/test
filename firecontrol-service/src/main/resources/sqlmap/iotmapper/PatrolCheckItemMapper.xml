@@ -61,11 +61,11 @@
 
   <insert id="insert" parameterType="com.firecontrol.domain.entity.PatrolCheckItemWithBLOBs">
     insert into tb_server_patrol_check_item (frequency, type,
-      patrol_device_type_fk, status, company_fk, 
+      patrol_device_type_fk, status, company_fk,
       is_delete, name, description,total_amount, floor_id
       )
     values (#{frequency,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
-      #{patrolDeviceTypeFk,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{companyFk,jdbcType=BIGINT}, 
+      #{patrolDeviceTypeFk,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{companyFk,jdbcType=BIGINT},
       #{isDelete,jdbcType=BIT}, #{name,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR},
       #{totalAmount,jdbcType=INTEGER},
       #{floorId,jdbcType=BIGINT}
