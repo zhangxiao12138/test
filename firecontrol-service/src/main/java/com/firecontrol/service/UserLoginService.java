@@ -10,4 +10,6 @@ public interface UserLoginService {
 
     OpResult userLogin(LoginParam param);
 
+    OpResult newUser(Long vendorId, String userName, String password);
+
 }

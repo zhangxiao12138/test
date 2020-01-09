@@ -17,6 +17,8 @@
     <result column="device_percentage" jdbcType="DOUBLE" property="devicePercentage" />
     <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
     <result column="is_outdoor" jdbcType="INTEGER" property="isOutdoor" />
+    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="floor_name" jdbcType="VARCHAR" property="floorName" />
     <result column="task_id" jdbcType="BIGINT" property="taskId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.firecontrol.domain.entity.TaskDetail">
@@ -25,7 +27,7 @@
   <sql id="Base_Column_List">
     id, check_item_name, user_fk, user_name, create_date, description, type, is_stop, 
     site_count, total_count, device_count, percentage, device_percentage, company_fk, 
-    is_outdoor, task_id
+    is_outdoor, task_id, floor_id, floor_name
   </sql>
   <sql id="Blob_Column_List">
     check_item_id
@@ -50,25 +52,26 @@
   </select>
 
 
-
-
   <delete id="deleteById" parameterType="java.lang.Long">
     delete from tb_server_patrol_task_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+
   <insert id="insert" parameterType="com.firecontrol.domain.entity.TaskDetail">
     insert into tb_server_patrol_task_detail (check_item_name, user_fk,
       user_name, create_date, description, 
       type, is_stop, site_count, 
       total_count, device_count, percentage, 
       device_percentage, company_fk, is_outdoor, 
-      task_id, check_item_id)
+      task_id, check_item_id, floor_id, floor_name)
     values ( #{checkItemName,jdbcType=VARCHAR}, #{userFk,jdbcType=BIGINT},
       #{userName,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER}, #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, 
       #{totalCount,jdbcType=INTEGER}, #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, 
       #{devicePercentage,jdbcType=DOUBLE}, #{companyFk,jdbcType=BIGINT}, #{isOutdoor,jdbcType=INTEGER}, 
-      #{taskId,jdbcType=BIGINT}, #{checkItemId,jdbcType=LONGVARCHAR})
+      #{taskId,jdbcType=BIGINT}, #{checkItemId,jdbcType=LONGVARCHAR},#{floorId, jdbcTpye=BIGINT},
+      #{floor_name, jdbcType=VARCHAR})
   </insert>
 
 

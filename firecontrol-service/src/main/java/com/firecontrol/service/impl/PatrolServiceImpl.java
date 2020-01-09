@@ -2,10 +2,7 @@ package com.firecontrol.service.impl;
 
 import com.firecontrol.common.OpResult;
 import com.firecontrol.domain.entity.*;
-import com.firecontrol.mapper.iotmapper.PatrolCheckItemMapper;
-import com.firecontrol.mapper.iotmapper.PatrolDeviceTypeMapper;
-import com.firecontrol.mapper.iotmapper.PatrolTaskMapper;
-import com.firecontrol.mapper.iotmapper.UserEntityMapper;
+import com.firecontrol.mapper.iotmapper.*;
 import com.firecontrol.service.PatrolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -328,16 +325,12 @@ public class PatrolServiceImpl implements PatrolService{
             op.setMessage("vendorId or userId or checkItemId can not be null!");
             return op;
         }
-
         try{
             if(amount != null) {
                 checkItemMapper.updateItemAmount(vendorId, userId, checkItemId, amount);
 
 
             }
-
-
-
         }catch (Exception e) {
             log.error("PatrolServiceImpl.setCheckItemAmount error! e={}", e);
             op.setStatus(OpResult.OP_FAILED);
@@ -346,6 +339,7 @@ public class PatrolServiceImpl implements PatrolService{
         }
 
 
-        return null;
+        return op;
     }
+
 }

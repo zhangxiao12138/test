@@ -1,6 +1,8 @@
 package com.firecontrol.web.controller;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.entity.BuildingFloor;
+import com.firecontrol.service.BuildingFloorService;
 import com.firecontrol.service.PatrolService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,6 +24,9 @@ public class PatrolController {
 
     @Autowired
     private PatrolService patrolService;
+
+    @Autowired
+    private BuildingFloorService buildingFloorService;
 
 
     @ApiOperation(value = "新增巡查任务" ,  notes="新增巡查任务")
@@ -208,7 +213,25 @@ public class PatrolController {
             return op;
         }
 
+    }
 
+    @ApiOperation(value = "获取建筑物列表" ,  notes="获取建筑物列表")
+    @RequestMapping(value = "/archList", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="用户id",paramType = "query"),
+            @ApiImplicitParam(name="token",value="token",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult archList(Long vendorId, Long userId, String token){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+        if(patrolService.hasAuthority(userId, token)){
+            return buildingFloorService.getFloorByVendor(vendorId);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
+            return op;
+        }
     }
 
 

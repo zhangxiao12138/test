@@ -17,6 +17,8 @@
     <result column="device_percentage" jdbcType="DOUBLE" property="devicePercentage" />
     <result column="create_user_fk" jdbcType="BIGINT" property="createUserFk" />
     <result column="company_fk" jdbcType="BIGINT" property="companyFk" />
+    <result column="floor_id" jdbcType="BIGINT" property="floorId" />
+    <result column="floor_name" jdbcType="VARCHAR" property="floorName" />
     <result column="useful_time" jdbcType="INTEGER" property="usefulTime" />
     <result column="is_outdoor" jdbcType="INTEGER" property="isOutdoor" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
@@ -24,7 +26,7 @@
   <sql id="Base_Column_List">
     id, name, create_date, description, user_fk, type, is_stop, site_count, count, device_count, 
     percentage, is_repetition, device_percentage, create_user_fk, company_fk, useful_time, 
-    is_outdoor, sort
+    is_outdoor, sort, floor_id, floor_name
   </sql>
 
   <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -65,14 +67,15 @@
       is_stop, site_count, count, 
       device_count, percentage, is_repetition, 
       device_percentage, create_user_fk, company_fk, 
-      useful_time, is_outdoor, sort
+      useful_time, is_outdoor, sort, floor_id, floor_name
       )
     values ( #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=INTEGER},
       #{description,jdbcType=VARCHAR}, #{userFk,jdbcType=BIGINT}, #{type,jdbcType=INTEGER},
       #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER},
       #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, #{isRepetition,jdbcType=INTEGER},
       #{devicePercentage,jdbcType=DOUBLE}, #{createUserFk,jdbcType=BIGINT}, #{companyFk,jdbcType=BIGINT},
-      #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}
+      #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{floorId, jdbcTpye=BIGINT},
+      #{floor_name, jdbcType=VARCHAR}
       )
   </insert>
 

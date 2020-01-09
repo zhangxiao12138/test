@@ -35,6 +35,10 @@ public class TaskDetail {
 
     private String checkItemId;
 
+    private Long floorId;
+
+    private String floorName;
+
     public Long getId() {
         return id;
     }
@@ -169,5 +173,21 @@ public class TaskDetail {
 
     public void setCheckItemId(String checkItemId) {
         this.checkItemId = checkItemId == null ? null : checkItemId.trim();
+    }
+
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
+    }
+
+    public String getFloorName() {
+        return floorName;
+    }
+
+    public void setFloorName(String floorName) {
+        this.floorName = floorName;
     }
 }

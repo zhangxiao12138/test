@@ -37,6 +37,10 @@ public class PatrolTask {
 
     private Integer sort;
 
+    private Long floorId;
+
+    private String floorName;
+
     public Long getId() {
         return id;
     }
@@ -179,5 +183,21 @@ public class PatrolTask {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
+    }
+
+    public String getFloorName() {
+        return floorName;
+    }
+
+    public void setFloorName(String floorName) {
+        this.floorName = floorName;
     }
 }

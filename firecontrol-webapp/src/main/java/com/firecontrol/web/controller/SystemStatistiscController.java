@@ -1,7 +1,9 @@
 package com.firecontrol.web.controller;
 
 import com.firecontrol.common.OpResult;
+import com.firecontrol.service.BuildingFloorService;
 import com.firecontrol.service.PatrolService;
+import com.firecontrol.service.UserLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -24,6 +26,10 @@ public class SystemStatistiscController {
 
     @Autowired
     private PatrolService patrolService;
+    @Autowired
+    private UserLoginService userLoginService;
+    @Autowired
+    private BuildingFloorService buildingFloorService;
 
     @ApiOperation(value = "设置巡检项总数量接口" ,  notes="设置巡检项总数量接口")
     @RequestMapping(value = "/checkItemAmount", method = {RequestMethod.POST,RequestMethod.GET})
@@ -47,6 +53,46 @@ public class SystemStatistiscController {
     }
 
 
+    @ApiOperation(value = "管理员新增用户" ,  notes="管理员新增用户")
+    @RequestMapping(value = "/newUser", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="管理员id",paramType = "query"),
+            @ApiImplicitParam(name="token",value="管理员token",paramType = "query"),
+            @ApiImplicitParam(name="userName",value="新用户的用户名(仅支持数字和英文字母)",paramType = "query"),
+            @ApiImplicitParam(name="password",value="新用户的密码(32位md5加密后字符串，小写)",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult newUser(Long vendorId, Long userId, String userName, String password, String token){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+        if(patrolService.isSystemManger(userId, token)){
+            return userLoginService.newUser(vendorId, userName, password);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_FAILED, "无权限!");
+            return op;
+        }
+    }
+
+    @ApiOperation(value = "管理员新增建筑物" ,  notes="管理员新增建筑物")
+    @RequestMapping(value = "/newArch", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="管理员id",paramType = "query"),
+            @ApiImplicitParam(name="token",value="管理员token",paramType = "query"),
+            @ApiImplicitParam(name="name",value="建筑物名称",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult newArch(Long vendorId, Long userId, String name, String token){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+        if(patrolService.isSystemManger(userId, token)){
+            return buildingFloorService.addFloor(vendorId, name);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_FAILED, "无权限!");
+            return op;
+        }
+    }
 
 
 

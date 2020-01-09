@@ -18,6 +18,7 @@ public interface UserEntityMapper {
 
     Integer updateUserToken(@Param("id")Long id, @Param("token") String token);
 
+    Integer countUserName(@Param("vendorId") Long vendorId, @Param("userName") String userName);
 
 
 }

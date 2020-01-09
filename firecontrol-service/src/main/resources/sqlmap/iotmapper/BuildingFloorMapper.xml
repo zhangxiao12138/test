@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.iotmapper.BuildingFloorMapper">
+
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.BuildingFloor">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="building_id" jdbcType="BIGINT" property="buildingId" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pos_x" jdbcType="VARCHAR" property="posX" />
+    <result column="pos_y" jdbcType="VARCHAR" property="posY" />
+    <result column="photo_id" jdbcType="BIGINT" property="photoId" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="df" jdbcType="INTEGER" property="df" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    id, building_id, company_id, name, pos_x, pos_y, photo_id, sort, department_id, df
+  </sql>
+
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_server_floor
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from tb_server_floor
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+
+  <select id="checkFloorName" >
+    select count(*)
+    from tb_server_floor
+    where company_id = #{vendorId} and `name` = #{floorName} and df = 0
+  </select>
+
+
+  <select id="getFloorByCompanyId" >
+    select *
+    from tb_server_floor
+    where company_id = #{vendorId} and df = 0
+    ORDER BY id DESC
+  </select>
+
+
+
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.BuildingFloor">
+    insert into tb_server_floor (id, building_id, company_id, 
+      name, pos_x, pos_y, photo_id, 
+      sort, department_id, df
+      )
+    values (#{id,jdbcType=BIGINT}, #{buildingId,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, 
+      #{name,jdbcType=VARCHAR}, #{posX,jdbcType=VARCHAR}, #{posY,jdbcType=VARCHAR}, #{photoId,jdbcType=BIGINT}, 
+      #{sort,jdbcType=INTEGER}, #{departmentId,jdbcType=BIGINT}, #{df,jdbcType=INTEGER}
+      )
+  </insert>
+
+
+
+</mapper>
