@@ -22,8 +22,7 @@ public class BuildingFloorServiceImpl implements BuildingFloorService {
 
     private static final Logger log = LoggerFactory.getLogger(BuildingFloorServiceImpl.class);
 
-    @Autowired
-    private UserEntityMapper userEntityMapper;
+
     @Autowired
     private BuildingFloorMapper buildingFloorMapper;
 

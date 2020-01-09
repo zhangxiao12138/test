@@ -29,7 +29,7 @@ public interface PatrolService {
 
 
     OpResult addTaskDetail(Long vendorId, Long userId, String userName, Long taskId, Long checkItemId, String checkItemName,
-                           String description, Integer totalCount, Integer deviceCount);
+                           String description, Integer totalCount, Integer deviceCount, Integer state);
 
     OpResult taskDetailList(Long vendorId, Long userId, Long taskId);
 

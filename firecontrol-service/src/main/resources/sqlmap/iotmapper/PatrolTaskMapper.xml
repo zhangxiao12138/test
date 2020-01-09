@@ -74,7 +74,7 @@
       #{isStop,jdbcType=BIT}, #{siteCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER},
       #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, #{isRepetition,jdbcType=INTEGER},
       #{devicePercentage,jdbcType=DOUBLE}, #{createUserFk,jdbcType=BIGINT}, #{companyFk,jdbcType=BIGINT},
-      #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{floorId, jdbcTpye=BIGINT},
+      #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{floorId, jdbcType=BIGINT},
       #{floor_name, jdbcType=VARCHAR}
       )
   </insert>

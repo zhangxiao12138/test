@@ -252,7 +252,9 @@ public class PatrolServiceImpl implements PatrolService{
     }
 
     @Override
-    public OpResult addTaskDetail(Long vendorId, Long userId, String userName, Long taskId, Long checkItemId, String checkItemName, String description, Integer totalCount, Integer deviceCount) {
+    public OpResult addTaskDetail(Long vendorId, Long userId, String userName, Long taskId,
+                                  Long checkItemId, String checkItemName, String description,
+                                  Integer totalCount, Integer deviceCount, Integer state) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         Map rtnMap = new HashMap();
 

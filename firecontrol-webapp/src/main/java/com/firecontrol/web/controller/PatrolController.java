@@ -131,17 +131,18 @@ public class PatrolController {
             @ApiImplicitParam(name="description",value="详细描述",paramType = "query"),
             @ApiImplicitParam(name="totalCount",value="总设备数",paramType = "query"),
             @ApiImplicitParam(name="deviceCount",value="巡检设备数",paramType = "query"),
+            @ApiImplicitParam(name="state",value="单项检查结果 1正常 0不正常",paramType = "query"),
     })
     @ResponseBody
     public OpResult taskDetail(Long vendorId, Long userId, String userName,
                                String token, Long taskId, Long checkItemId, String checkItemName,
-                               String description, Integer totalCount, Integer deviceCount){
+                               String description, Integer totalCount, Integer deviceCount,Integer state){
         //TODO:AOP校验token有效性
         //暂时调用service方法
 
         if(patrolService.hasAuthority(userId, token)){
             return patrolService.addTaskDetail(vendorId, userId, userName, taskId, checkItemId, checkItemName, description,
-                    totalCount, deviceCount);
+                    totalCount, deviceCount, state);
         }else{
             OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
             return op;

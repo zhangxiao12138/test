@@ -122,11 +122,11 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     private Boolean existedUserName(String userName, Long vendorId) {
-        Boolean rtn = true;
+        Boolean rtn = false;
 
         Integer countUser = userEntityMapper.countUserName(vendorId, userName);
         if(countUser > 0){
-            return false;
+            return true;
         }
 
         return rtn;

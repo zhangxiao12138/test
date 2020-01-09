@@ -39,6 +39,9 @@ public class TaskDetail {
 
     private String floorName;
 
+    //状态 1：正常 0：不正常
+    private Integer state;
+
     public Long getId() {
         return id;
     }
@@ -189,5 +192,13 @@ public class TaskDetail {
 
     public void setFloorName(String floorName) {
         this.floorName = floorName;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

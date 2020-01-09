@@ -36,14 +36,14 @@
   </delete>
 
 
-  <select id="checkFloorName" >
+  <select id="checkFloorName" resultType="java.lang.Integer">
     select count(*)
     from tb_server_floor
     where company_id = #{vendorId} and `name` = #{floorName} and df = 0
   </select>
 
 
-  <select id="getFloorByCompanyId" >
+  <select id="getFloorByCompanyId" resultMap="BaseResultMap">
     select *
     from tb_server_floor
     where company_id = #{vendorId} and df = 0

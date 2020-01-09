@@ -47,7 +47,7 @@
   <update id="updateItemAmount">
     update tb_server_patrol_check_item
     <set>
-      update_time = unix_timestamp(now()), amount= #{amount},
+      total_amount= #{amount},
     </set>
     where id = #{checkItemId} and company_fk = #{vendorId}
   </update>
