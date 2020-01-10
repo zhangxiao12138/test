@@ -64,7 +64,6 @@ public class TerminalServiceImpl implements TerminalService {
             if(terminal.getLength() == null) {
                 terminal.setLength(15);
             }
-
             Integer total = terminalMapper.getTerminalCount(terminal);
             if(total > 0) {
                 rtn = terminalMapper.getTerminalListByPage(terminal);
@@ -82,6 +81,8 @@ public class TerminalServiceImpl implements TerminalService {
 
         return opResult;
     }
+
+
 
     @Override
     public OpResult getTerminalIds(Integer status) {
