@@ -75,7 +75,7 @@
       #{deviceCount,jdbcType=INTEGER}, #{percentage,jdbcType=DOUBLE}, #{isRepetition,jdbcType=INTEGER},
       #{devicePercentage,jdbcType=DOUBLE}, #{createUserFk,jdbcType=BIGINT}, #{companyFk,jdbcType=BIGINT},
       #{usefulTime,jdbcType=INTEGER}, #{isOutdoor,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{floorId, jdbcType=BIGINT},
-      #{floor_name, jdbcType=VARCHAR}
+      #{floorName, jdbcType=VARCHAR}
       )
   </insert>
 

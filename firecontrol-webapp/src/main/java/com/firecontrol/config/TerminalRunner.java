@@ -1,7 +1,7 @@
 package com.firecontrol.config;
 
 import com.firecontrol.common.StartConfigProperty;
-import com.mycorp.vodplatform.server.Startup;
+//import com.mycorp.vodplatform.server.Startup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +19,16 @@ import javax.annotation.Resource;
  */
 @Component
 @Configuration
-public class TerminalRunner implements ApplicationRunner {
+public class TerminalRunner /*implements ApplicationRunner*/ {
 
 //    private static final Logger log = LoggerFactory.getLogger(TerminalRunner.class);
 
 //    private static ApplicationContext applicationContext = null;
 
-    @Resource
-    private Startup startup;
-    @Resource
-    private StartConfigProperty startConfigProperty;
+//    @Resource
+//    private Startup startup;
+//    @Resource
+//    private StartConfigProperty startConfigProperty;
 //
 //    public static void setApplicationContext(ApplicationContext applicationContext){
 //        if(TerminalRunner.applicationContext == null){
@@ -48,9 +48,9 @@ public class TerminalRunner implements ApplicationRunner {
 //
 //    }
 
-    @Override
-    public void run(ApplicationArguments applicationArguments) throws Exception {
-
-        startup.mainForStart(startConfigProperty.getStartupPath());
-    }
+//    @Override
+//    public void run(ApplicationArguments applicationArguments) throws Exception {
+//
+//        startup.mainForStart(startConfigProperty.getStartupPath());
+//    }
 }

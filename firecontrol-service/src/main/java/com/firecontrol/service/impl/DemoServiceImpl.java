@@ -9,7 +9,7 @@ import com.firecontrol.mapper.iotmapper.DemoMapper;
 import com.firecontrol.service.CameraService;
 import com.firecontrol.service.DemoService;
 //import com.mycorp.message.Vod;
-import com.mycorp.vodplatform.server.service.impl.VodMsgServiceImpl;
+//import com.mycorp.vodplatform.server.service.impl.VodMsgServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,8 @@ public class DemoServiceImpl implements DemoService {
     @Autowired
     private DemoMapper demoMapper;
 
-    @Autowired
-    private VodMsgServiceImpl vodMsgService;
+//    @Autowired
+//    private VodMsgServiceImpl vodMsgService;
     @Autowired
     private CameraService cameraService;
     @Value("${tyterminal.pic}")
@@ -88,7 +88,7 @@ public class DemoServiceImpl implements DemoService {
             }
             //destinationId  按照协议要求(rtmp.hls)要求，随便取一个vod_stream_destination 的id即可，及随机选一个终端服务器
             //TODO: 读数据库取id，添加负载均衡
-            url = vodMsgService.sendVod(query.getUserId(), camera.getTerminalId(), query.getCameraId(), 4, query.getPlayTimeLimit());
+//            url = vodMsgService.sendVod(query.getUserId(), camera.getTerminalId(), query.getCameraId(), 4, query.getPlayTimeLimit());
 
             StringBuffer sb = new StringBuffer().append(serverIp).append(":").append(port).append(pitPath).append(camera.getTerminalId()).append(File.separator)
                     .append(camera.getId()).append(".jpg");
@@ -105,8 +105,8 @@ public class DemoServiceImpl implements DemoService {
     public String getVideoUrl() {
 
         //
-        String url;
-        url = vodMsgService.sendVod("wangliji", "tb221932T001", 1, 1, 60);
+        String url="";
+//        url = vodMsgService.sendVod("wangliji", "tb221932T001", 1, 1, 60);
         return url;
     }
 

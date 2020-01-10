@@ -14,7 +14,6 @@ import com.firecontrol.service.TpsonDeviceService;
 import com.firecontrol.service.TpsonSMR3002AlarmService;
 import com.firecontrol.service.TpsonSMR3002Service;
 import com.firecontrol.service.TpsonSensorService;
-import com.mycorp.vodplatform.server.TerminalServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

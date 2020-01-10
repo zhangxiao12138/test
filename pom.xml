@@ -98,11 +98,11 @@
 		</dependency>
 
 		<!-- 基哥视频jar包依赖 -->
-		<dependency>
-			<groupId>video</groupId>
-			<artifactId>video</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>video</groupId>-->
+			<!--<artifactId>video</artifactId>-->
+			<!--<version>0.0.1</version>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.mybatis.generator</groupId>

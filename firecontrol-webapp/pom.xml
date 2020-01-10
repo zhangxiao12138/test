@@ -66,11 +66,11 @@
         </dependency>
 
 		<!-- 基哥王立基视频jar包依赖 -->
-		<dependency>
-			<groupId>video</groupId>
-			<artifactId>video</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>video</groupId>-->
+			<!--<artifactId>video</artifactId>-->
+			<!--<version>0.0.1</version>-->
+		<!--</dependency>-->
 
 		<!-- websocket 依赖包 -->
 		<dependency>
