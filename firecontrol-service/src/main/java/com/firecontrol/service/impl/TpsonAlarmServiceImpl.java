@@ -172,7 +172,13 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
         Integer total = 0;
         if(currentPage != null && currentPage > 0){
             currentPage = currentPage -1;
+        }else{
+            currentPage = 0;
         }
+        if(length == null || length < 1){
+            length = 15;
+        }
+
         List<TpsonAlarmEntity> alarmList = new ArrayList<>();
         Map rtnMap = new HashMap();
 

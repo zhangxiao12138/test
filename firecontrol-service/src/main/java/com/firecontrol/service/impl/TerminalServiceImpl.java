@@ -57,7 +57,9 @@ public class TerminalServiceImpl implements TerminalService {
         List<TerminalEntity> rtn = null;
         try{
             if(terminal.getCurrentPage() == null){
-                terminal.setCurrentPage(1);
+                terminal.setCurrentPage(0);
+            }else{
+                terminal.setCurrentPage(terminal.getCurrentPage() - 1);
             }
             if(terminal.getLength() == null) {
                 terminal.setLength(15);
