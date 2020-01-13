@@ -39,13 +39,14 @@ public class SystemStatistiscController {
             @ApiImplicitParam(name="token",value="token",paramType = "query"),
             @ApiImplicitParam(name="checkItemId",value="检查项id",paramType = "query"),
             @ApiImplicitParam(name="amount",value="检查项数量",paramType = "query"),
+            @ApiImplicitParam(name="floorId",value="建筑物id",paramType = "query"),
     })
     @ResponseBody
-    public OpResult checkItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount, String token){
+    public OpResult checkItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount, String token, Long floorId){
         //TODO:AOP校验token有效性
         //暂时调用service方法
         if(patrolService.isSystemManger(userId, token)){
-            return patrolService.setCheckItemAmount(vendorId, userId, checkItemId, amount);
+            return patrolService.setCheckItemAmount(vendorId, userId, checkItemId, amount, floorId);
         }else{
             OpResult op = new OpResult(OpResult.OP_FAILED, "无权限!");
             return op;
@@ -94,6 +95,47 @@ public class SystemStatistiscController {
         }
     }
 
+    @ApiOperation(value = "管理员查看本公司巡检员列表" ,  notes="管理员查看本公司巡检员列表")
+    @RequestMapping(value = "/userList", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="管理员id",paramType = "query"),
+            @ApiImplicitParam(name="token",value="管理员token",paramType = "query"),
+            @ApiImplicitParam(name="roleId",value="角色 0：巡检员 1：管理员",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult userList(Long vendorId, Long userId, Long roleId, String token){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+        if(patrolService.isSystemManger(userId, token)){
+            return userLoginService.getUserList(vendorId, roleId);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_FAILED, "无权限!");
+            return op;
+        }
+    }
+
+
+    @ApiOperation(value = "管理员查看本公司巡检员列表" ,  notes="管理员查看本公司巡检员列表")
+    @RequestMapping(value = "/resetPw", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="管理员id",paramType = "query"),
+            @ApiImplicitParam(name="token",value="管理员token",paramType = "query"),
+            @ApiImplicitParam(name="targetUserId",value="需更改密码的用户的id",paramType = "query"),
+            @ApiImplicitParam(name="targetPw",value="新密码（32位md5加密后）",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult resetPw(Long vendorId, Long userId, String token, Long targetUserId, String targetPw){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+        if(patrolService.isSystemManger(userId, token)){
+            return userLoginService.resetPw(vendorId, targetUserId, targetPw);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_FAILED, "无权限!");
+            return op;
+        }
+    }
 
 
 

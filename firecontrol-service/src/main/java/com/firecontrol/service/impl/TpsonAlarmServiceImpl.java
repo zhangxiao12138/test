@@ -176,11 +176,11 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
         List<TpsonAlarmEntity> alarmList = new ArrayList<>();
         Map rtnMap = new HashMap();
 
-        try{
-            List<Long> deviceTypeList = null;
-            if(systemType != 0){
-                deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
-            }
+            try{
+                List<Long> deviceTypeList = null;
+                if(systemType != 0){
+                    deviceTypeList = deviceTypeMapper.getDeviceTypeBySystemType(systemType);
+                }
 
 //            if(!CollectionUtils.isEmpty(deviceTypeList)) {
                 total = tpsonAlarmMapper.getAlarmCountBySearch(deviceTypeList,
@@ -190,9 +190,10 @@ public class TpsonAlarmServiceImpl implements TpsonAlarmService{
                             faultType, status, isOutdoor, deviceCode, startTime, endTime, currentPage*length, length);
                 }
 //            }
-            rtnMap.put("total", total);
-            rtnMap.put("alarmList", alarmList);
-            op.setDataValue(rtnMap);
+                rtnMap.put("total", total);
+                rtnMap.put("alarmList", alarmList);
+
+                op.setDataValue(rtnMap);
 
         }catch (Exception e) {
             log.error("getFaultList ERROR! exception: {}", e);

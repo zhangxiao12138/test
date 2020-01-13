@@ -52,6 +52,12 @@
     where company_fk = #{vendorId,jdbcType=BIGINT} and task_id = #{taskId}
   </select>
 
+  <select id="getDetailId" resultType="java.lang.Long">
+    select id
+    from tb_server_patrol_task_detail
+    where company_fk = #{vendorId,jdbcType=BIGINT} and task_id = #{taskId} and check_item_id = #{checkItemId}
+  </select>
+
 
   <delete id="deleteById" parameterType="java.lang.Long">
     delete from tb_server_patrol_task_detail
@@ -75,5 +81,24 @@
       #{floorName, jdbcType=VARCHAR},#{state,jdbcType=INTEGER})
   </insert>
 
+
+
+  <!--updateTaskDetail(@Param("vendorId") Long vendorId, @Param("id") Long taskDetailId, @Param("description") String description,-->
+  <!--@Param("deviceCount") Integer deviceCount, @Param("state") Integer state-->
+  <update id="updateTaskDetail">
+    update tb_server_patrol_task_detail
+    <set>
+      <if test="description != null">
+        description = #{description},
+      </if>
+      <if test="deviceCount != null">
+        device_count = #{deviceCount},
+      </if>
+      <if test="state != null">
+        state = #{state},
+      </if>
+    </set>
+    where company_fk = #{vendorId} and id = #{id}
+  </update>
 
 </mapper>

@@ -12,4 +12,8 @@ public interface UserLoginService {
 
     OpResult newUser(Long vendorId, String userName, String password);
 
+    OpResult getUserList(Long vendorId, Long roleId);
+
+    OpResult resetPw(Long vendorId, Long userId, String newPw);
+
 }

@@ -53,6 +53,18 @@
   </select>
 
 
+  <select id="getUserList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_server_user
+    where vendor_id = #{vendorId}
+    <if test="roleId != null">
+      and role_id = #{roleId}
+    </if>
+
+  </select>
+
+
 
   <delete id="deleteById" parameterType="java.lang.Long">
     delete from tb_server_user
@@ -81,12 +93,19 @@
   <update id="updateUserToken">
     update tb_server_user
     <set>
-
       update_time = unix_timestamp(now()), token = #{token},
-
     </set>
     where id = #{id}
   </update>
+
+  <update id="resetPw">
+    update tb_server_user
+    <set>
+      update_time = unix_timestamp(now()), password = #{newPw}
+    </set>
+    where vendor_id = #{vendorId} and id = #{targetUserId}
+  </update>
+
 
 
 

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -105,11 +106,11 @@ public class UserLoginServiceImpl implements UserLoginService {
             userEntity.setVendorId(vendorId);
             userEntity.setUsername(userName);
             userEntity.setPassword(password);
+            userEntity.setRoleId(0L);
             userEntity.setSecret(vendorId + "#" + (System.currentTimeMillis() / 1000));
             userEntity.setIsDelete(false);
 
             Integer result = userEntityMapper.insert(userEntity);
-
 
         }catch (Exception e) {
             log.error("exception! e={}", e);
@@ -119,6 +120,54 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         return op;
 
+    }
+
+    @Override
+    public OpResult getUserList(Long vendorId, Long roleId) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap<>();
+
+        try{
+
+            if(vendorId == null) {
+                op.setStatus(OpResult.OP_FAILED);
+                op.setMessage(OpResult.OpMsg.OP_LOGIN_FAIL +":公司编号不可为空!");
+                return op;
+            }
+            List<UserEntity> userList = userEntityMapper.getUserList(vendorId, roleId);
+            rtnMap.put("userList", userList);
+            op.setDataValue(rtnMap);
+        }catch (Exception e) {
+            log.error("getUserList exception! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
+    }
+
+    @Override
+    public OpResult resetPw(Long vendorId, Long targetUserId, String newPw) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap<>();
+
+        try{
+            if(vendorId == null) {
+                op.setStatus(OpResult.OP_FAILED);
+                op.setMessage(OpResult.OpMsg.OP_FAIL +":公司编号不可为空!");
+                return op;
+            }
+            //TODO:管理员不能改其他管理员密码
+
+            userEntityMapper.resetPw(vendorId, targetUserId, newPw);
+        }catch (Exception e) {
+            log.error("resetPw exception! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+        return op;
     }
 
     private Boolean existedUserName(String userName, Long vendorId) {

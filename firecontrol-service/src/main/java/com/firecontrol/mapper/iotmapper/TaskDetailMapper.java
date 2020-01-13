@@ -19,5 +19,10 @@ public interface TaskDetailMapper {
 
     List<TaskDetail> getDetailByTaskId(@Param("vendorId") Long vendorId, @Param("taskId") Long taskId);
 
+    Integer updateTaskDetail(@Param("vendorId") Long vendorId, @Param("id") Long taskDetailId, @Param("description") String description,
+                             @Param("deviceCount") Integer deviceCount, @Param("state") Integer state);
+
+
+    Long getDetailId(@Param("vendorId") Long vendorId, @Param("taskId")Long taskId, @Param("checkItemId")Long checkItemId);
 
 }

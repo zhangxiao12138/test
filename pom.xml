@@ -81,8 +81,6 @@
 			<version>1.1.10</version>
 		</dependency>
 
-
-
 <!--		<dependency>
 			<groupId>org.mybatis.generator</groupId>
 			<artifactId>mybatis-generator-core</artifactId>
@@ -122,10 +120,7 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.5.0</version>
 		</dependency>
-
-
 	</dependencies>
-
 
 	<build>
 		<plugins>
@@ -172,9 +167,8 @@
 						<!--src/main/resources/mybatis-generator.xml</configurationFile>-->
 				<!--</configuration>-->
 			<!--</plugin>-->
-
-
 		</plugins>
+
 	</build>
 
 	<modules>

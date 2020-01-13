@@ -38,11 +38,10 @@ public class PatrolServiceImpl implements PatrolService{
 
 
     @Override
-    public OpResult newTask(Long vendorId, Long userId, String description) {
+    public OpResult newTask(Long vendorId, Long userId, String description, Long floorId, String floorName) {
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
         Map rtnMap = new HashMap();
         Long resultId = 0L;
-
         try{
             PatrolTask task = new PatrolTask();
             task.setCompanyFk(vendorId);
@@ -51,6 +50,8 @@ public class PatrolServiceImpl implements PatrolService{
             task.setUserFk(userId);
             task.setIsStop(false);
             task.setDescription(description);
+            task.setFloorId(floorId);
+            task.setFloorName(floorName);
             patrolTaskMapper.insert(task);
             rtnMap.put("taskId", task.getId());
 
@@ -265,18 +266,28 @@ public class PatrolServiceImpl implements PatrolService{
         }
 
         try{
-            TaskDetail detail = new TaskDetail();
-            detail.setCompanyFk(vendorId);
-            detail.setCheckItemId(checkItemId + "");
-            detail.setCheckItemName(checkItemName);
-            detail.setDescription(description);
-            detail.setCreateDate((int) (System.currentTimeMillis() / 1000));
-            detail.setDeviceCount(deviceCount);
-            detail.setTotalCount(totalCount);
-            detail.setUserFk(userId);
-            detail.setUserName(userName);
-            detail.setTaskId(taskId);
-            taskDetailMapper.insert(detail);
+
+            //检查是否已存在
+            Long taskDetailId = taskDetailMapper.getDetailId(vendorId, taskId, checkItemId);
+            if(taskDetailId != null) {
+                //已存在，更新
+                taskDetailMapper.updateTaskDetail(vendorId, taskDetailId, description, deviceCount, state);
+            }else{
+                TaskDetail detail = new TaskDetail();
+                detail.setCompanyFk(vendorId);
+                detail.setCheckItemId(checkItemId + "");
+                detail.setCheckItemName(checkItemName);
+                detail.setDescription(description);
+                detail.setCreateDate((int) (System.currentTimeMillis() / 1000));
+                detail.setDeviceCount(deviceCount);
+                //TODO: total需要根据floor和checkItem获取
+                detail.setTotalCount(totalCount);
+                detail.setUserFk(userId);
+                detail.setUserName(userName);
+                detail.setTaskId(taskId);
+                detail.setState(state);
+                taskDetailMapper.insert(detail);
+            }
 
         }catch (Exception e){
             log.error("PatrolServiceImpl.addTaskDetail error! e={}", e);
@@ -317,8 +328,61 @@ public class PatrolServiceImpl implements PatrolService{
         return op;
     }
 
+
+
     @Override
-    public OpResult setCheckItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount) {
+    public OpResult updateTaskDetail(Long vendorId, Long userId, Long taskDetailId, String description, Integer deviceCount, Integer state) {
+
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+
+        if(vendorId == null || userId == null || taskDetailId == null) {
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("vendorId or userId or taskDetail can not be null!");
+            return op;
+        }
+        try{
+
+            taskDetailMapper.updateTaskDetail(vendorId, taskDetailId, description, deviceCount, state);
+
+        }catch (Exception e){
+            log.error("PatrolServiceImpl.updateTaskDetail error! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        op.setDataValue(rtnMap);
+        return op;
+    }
+
+    @Override
+    public OpResult getTaskDetailById(Long vendorId, Long taskDetailId) {
+        OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
+        Map rtnMap = new HashMap();
+
+        if(vendorId == null || taskDetailId == null) {
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage("vendorId or taskDetail can not be null!");
+            return op;
+        }
+        try{
+            TaskDetail td = taskDetailMapper.getById(taskDetailId);
+            rtnMap.put("detail", td);
+        }catch (Exception e){
+            log.error("PatrolServiceImpl.getTaskDetailById error! e={}", e);
+            op.setStatus(OpResult.OP_FAILED);
+            op.setMessage(OpResult.OpMsg.OP_FAIL);
+            return op;
+        }
+
+        op.setDataValue(rtnMap);
+        return op;
+    }
+
+
+    @Override
+    public OpResult setCheckItemAmount(Long vendorId, Long userId, Long checkItemId, Integer amount, Long floorId) {
 
         OpResult op = new OpResult(OpResult.OP_SUCCESS, OpResult.OpMsg.OP_SUCCESS);
 

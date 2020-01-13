@@ -35,15 +35,17 @@ public class PatrolController {
             @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
             @ApiImplicitParam(name="userId",value="userId",paramType = "query"),
             @ApiImplicitParam(name="token",value="token",paramType = "query"),
+            @ApiImplicitParam(name="floorId",value="本次巡查建筑物id",paramType = "query"),
+            @ApiImplicitParam(name="floorName",value="本次巡查建筑物Name",paramType = "query"),
             @ApiImplicitParam(name="description",value="本次任务描述",paramType = "query"),
     })
     @ResponseBody
-    public OpResult newTask(Long vendorId, Long userId, String description, String token){
+    public OpResult newTask(Long vendorId, Long userId, String description,Long floorId, String token, String floorName){
         //TODO:AOP校验token有效性
         //暂时调用service方法
 
         if(patrolService.hasAuthority(userId, token)){
-            return patrolService.newTask(vendorId, userId, description);
+            return patrolService.newTask(vendorId, userId, description, floorId, floorName);
         }else{
             OpResult op = new OpResult(OpResult.OP_LOGIN_EXP, "请登录!");
             return op;
@@ -149,6 +151,53 @@ public class PatrolController {
         }
     }
 
+    @ApiOperation(value = "更新巡查明细" ,  notes="更新巡查明细")
+    @RequestMapping(value = "/updateTaskDetail", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="userId",paramType = "query"),
+            @ApiImplicitParam(name="token",value="token",paramType = "query"),
+            @ApiImplicitParam(name="taskDetailId",value="任务细节项id",paramType = "query"),
+            @ApiImplicitParam(name="description",value="详细描述",paramType = "query"),
+            @ApiImplicitParam(name="deviceCount",value="巡检设备数",paramType = "query"),
+            @ApiImplicitParam(name="state",value="单项检查结果 1正常 0不正常",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult updateTaskDetail(Long vendorId, Long userId,
+                               String token, Long taskDetailId, String description, Integer deviceCount,Integer state){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+
+        if(patrolService.hasAuthority(userId, token)){
+            return patrolService.updateTaskDetail(vendorId, userId,taskDetailId, description,
+                    deviceCount, state);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            return op;
+        }
+    }
+
+    @ApiOperation(value = "获取单条巡查明细" ,  notes="获取单条巡查明细")
+    @RequestMapping(value = "/getTaskDetailById", method = {RequestMethod.POST,RequestMethod.GET})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="vendorId",value="公司id",paramType = "query"),
+            @ApiImplicitParam(name="userId",value="userId",paramType = "query"),
+            @ApiImplicitParam(name="token",value="token",paramType = "query"),
+            @ApiImplicitParam(name="taskDetailId",value="任务细节项id",paramType = "query"),
+    })
+    @ResponseBody
+    public OpResult getTaskDetailById(Long vendorId, Long userId, String token, Long taskDetailId){
+        //TODO:AOP校验token有效性
+        //暂时调用service方法
+
+        if(patrolService.hasAuthority(userId, token)){
+            return patrolService.getTaskDetailById(vendorId,taskDetailId);
+        }else{
+            OpResult op = new OpResult(OpResult.OP_FAILED, "请登录!");
+            return op;
+        }
+    }
+
 
     @ApiOperation(value = "获取巡查一级节点" ,  notes="获取巡查一级节点")
     @RequestMapping(value = "/topNode", method = {RequestMethod.POST,RequestMethod.GET})
@@ -234,7 +283,6 @@ public class PatrolController {
             return op;
         }
     }
-
 
 
 
