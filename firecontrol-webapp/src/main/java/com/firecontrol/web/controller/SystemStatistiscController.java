@@ -1,6 +1,9 @@
 package com.firecontrol.web.controller;
 
+import com.firecontrol.common.ExcelUtils;
 import com.firecontrol.common.OpResult;
+import com.firecontrol.domain.entity.PatrolCheckItem;
+import com.firecontrol.domain.entity.TaskDetail;
 import com.firecontrol.service.BuildingFloorService;
 import com.firecontrol.service.PatrolService;
 import com.firecontrol.service.UserLoginService;
@@ -13,6 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by mariry on 2020/1/8.
@@ -138,8 +146,34 @@ public class SystemStatistiscController {
     }
 
 
+    //导出报表
+    /**
+     * 导出
+     *
+     * @param response
+     */
+    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    public void exportExcel(HttpServletResponse response) {
+        long start = System.currentTimeMillis();
+        try{
+            List<TaskDetail> personList = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                TaskDetail item = new TaskDetail();
+                item.setCheckItemName("我是一个检查项");
+                item.setTotalCount(666);
+                item.setDeviceCount(222);
+                item.setState(1);
+                item.setDescription("我是一些描述信息哟");
+                personList.add(item);
+            }
 
+            ExcelUtils.exportExcel(personList, "巡检检查报告", "巡检报告详情", TaskDetail.class, "巡检检查报告"+new Date(), response);
 
+        }catch (Exception e){
+            return;
+        }
+
+    }
 
 
 

@@ -1,8 +1,12 @@
 package com.firecontrol.domain.entity;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
 public class TaskDetail {
+
     private Long id;
 
+    @Excel(name = "检查内容", orderNum = "1", width = 15)
     private String checkItemName;
 
     private Long userFk;
@@ -11,6 +15,7 @@ public class TaskDetail {
 
     private Integer createDate;
 
+    @Excel(name = "详细状况描述", orderNum = "5", width = 80)
     private String description;
 
     private Integer type;
@@ -19,8 +24,10 @@ public class TaskDetail {
 
     private Integer siteCount;
 
+    @Excel(name = "设备总数", orderNum = "3", width = 15)
     private Integer totalCount;
 
+    @Excel(name = "本次巡检设备数", orderNum = "2", width = 15)
     private Integer deviceCount;
 
     private Double percentage;
@@ -40,6 +47,7 @@ public class TaskDetail {
     private String floorName;
 
     //状态 1：正常 0：不正常
+    @Excel(name = "检查结果(1:正常 0:异常)", orderNum = "4", width = 25)
     private Integer state;
 
     public Long getId() {
