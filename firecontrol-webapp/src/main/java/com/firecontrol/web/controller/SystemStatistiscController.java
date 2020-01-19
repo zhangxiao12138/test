@@ -39,6 +39,7 @@ public class SystemStatistiscController {
     @Autowired
     private BuildingFloorService buildingFloorService;
 
+
     @ApiOperation(value = "设置巡检项总数量接口" ,  notes="设置巡检项总数量接口")
     @RequestMapping(value = "/checkItemAmount", method = {RequestMethod.POST,RequestMethod.GET})
     @ApiImplicitParams({
@@ -166,13 +167,11 @@ public class SystemStatistiscController {
                 item.setDescription("我是一些描述信息哟");
                 personList.add(item);
             }
-
             ExcelUtils.exportExcel(personList, "巡检检查报告", "巡检报告详情", TaskDetail.class, "巡检检查报告"+new Date(), response);
 
         }catch (Exception e){
             return;
         }
-
     }
 
 

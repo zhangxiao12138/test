@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firecontrol.mapper.MaintenConfigMapper">
+  <resultMap id="BaseResultMap" type="com.firecontrol.domain.entity.MaintenConfig">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="port_name" jdbcType="VARCHAR" property="portName" />
+    <result column="port_type" jdbcType="VARCHAR" property="portType" />
+    <result column="baud_rate" jdbcType="INTEGER" property="baudRate" />
+    <result column="data_bit" jdbcType="INTEGER" property="dataBit" />
+    <result column="stop_bit" jdbcType="INTEGER" property="stopBit" />
+    <result column="parity" jdbcType="INTEGER" property="parity" />
+    <result column="terminal_id" jdbcType="VARCHAR" property="terminalId" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, port, port_name, port_type, baud_rate, data_bit, stop_bit, parity, terminal_id, 
+    add_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mainten_conf
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from mainten_conf
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.firecontrol.domain.entity.MaintenConfig">
+    insert into mainten_conf (id, port, port_name, 
+      port_type, baud_rate, data_bit, 
+      stop_bit, parity, terminal_id, 
+      add_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{port,jdbcType=VARCHAR}, #{portName,jdbcType=VARCHAR}, 
+      #{portType,jdbcType=VARCHAR}, #{baudRate,jdbcType=INTEGER}, #{dataBit,jdbcType=INTEGER}, 
+      #{stopBit,jdbcType=INTEGER}, #{parity,jdbcType=INTEGER}, #{terminalId,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.firecontrol.domain.entity.MaintenConfig">
+    insert into mainten_conf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="portName != null">
+        port_name,
+      </if>
+      <if test="portType != null">
+        port_type,
+      </if>
+      <if test="baudRate != null">
+        baud_rate,
+      </if>
+      <if test="dataBit != null">
+        data_bit,
+      </if>
+      <if test="stopBit != null">
+        stop_bit,
+      </if>
+      <if test="parity != null">
+        parity,
+      </if>
+      <if test="terminalId != null">
+        terminal_id,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="portName != null">
+        #{portName,jdbcType=VARCHAR},
+      </if>
+      <if test="portType != null">
+        #{portType,jdbcType=VARCHAR},
+      </if>
+      <if test="baudRate != null">
+        #{baudRate,jdbcType=INTEGER},
+      </if>
+      <if test="dataBit != null">
+        #{dataBit,jdbcType=INTEGER},
+      </if>
+      <if test="stopBit != null">
+        #{stopBit,jdbcType=INTEGER},
+      </if>
+      <if test="parity != null">
+        #{parity,jdbcType=INTEGER},
+      </if>
+      <if test="terminalId != null">
+        #{terminalId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.firecontrol.domain.entity.MaintenConfig">
+    update mainten_conf
+    <set>
+      <if test="port != null">
+        port = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="portName != null">
+        port_name = #{portName,jdbcType=VARCHAR},
+      </if>
+      <if test="portType != null">
+        port_type = #{portType,jdbcType=VARCHAR},
+      </if>
+      <if test="baudRate != null">
+        baud_rate = #{baudRate,jdbcType=INTEGER},
+      </if>
+      <if test="dataBit != null">
+        data_bit = #{dataBit,jdbcType=INTEGER},
+      </if>
+      <if test="stopBit != null">
+        stop_bit = #{stopBit,jdbcType=INTEGER},
+      </if>
+      <if test="parity != null">
+        parity = #{parity,jdbcType=INTEGER},
+      </if>
+      <if test="terminalId != null">
+        terminal_id = #{terminalId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.firecontrol.domain.entity.MaintenConfig">
+    update mainten_conf
+    set port = #{port,jdbcType=VARCHAR},
+      port_name = #{portName,jdbcType=VARCHAR},
+      port_type = #{portType,jdbcType=VARCHAR},
+      baud_rate = #{baudRate,jdbcType=INTEGER},
+      data_bit = #{dataBit,jdbcType=INTEGER},
+      stop_bit = #{stopBit,jdbcType=INTEGER},
+      parity = #{parity,jdbcType=INTEGER},
+      terminal_id = #{terminalId,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
